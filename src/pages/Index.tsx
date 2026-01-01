@@ -1,13 +1,29 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Layout } from '@/components/Layout';
+import { PostGrid } from '@/components/PostGrid';
+import { usePosts } from '@/hooks/useWordPress';
 
 const Index = () => {
+  const { data: latestData, isLoading: latestLoading } = usePosts({ perPage: 6 });
+  const { data: featuredData, isLoading: featuredLoading } = usePosts({ perPage: 3 });
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <Layout>
+      <div className="container mx-auto px-4">
+        {/* Latest News Section */}
+        <PostGrid
+          posts={latestData?.posts || []}
+          isLoading={latestLoading}
+          title="Latest News"
+        />
+
+        {/* Featured Section */}
+        <PostGrid
+          posts={featuredData?.posts.slice(0, 3) || []}
+          isLoading={featuredLoading}
+          title="Featured"
+        />
       </div>
-    </div>
+    </Layout>
   );
 };
 
