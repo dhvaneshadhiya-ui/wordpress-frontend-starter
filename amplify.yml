@@ -7,6 +7,7 @@ frontend:
         - npm install
         - echo "Setting environment variables..."
         - export VITE_WORDPRESS_API_URL=https://dev.igeeksblog.com/wp-json/wp/v2
+        - export SITE_URL=https://dev.igeeksblog.com
         - echo "Fetching WordPress content for static generation..."
         - node scripts/fetch-wp-content.js
     build:
@@ -14,7 +15,7 @@ frontend:
         - echo "Generating static HTML pages..."
         - node scripts/build-static.js
         - echo "Building Vite application..."
-        - npm run build
+        - npx vite build
         - echo "Copying static pages to dist..."
         - cp -r static/* dist/ 2>/dev/null || true
     postBuild:
@@ -22,6 +23,7 @@ frontend:
         - echo "Generating sitemaps and robots.txt..."
         - node scripts/generate-seo-files.js
         - echo "Build complete!"
+        - ls -la dist/
   artifacts:
     baseDirectory: dist
     files:
@@ -31,5 +33,5 @@ frontend:
       - node_modules/**/*
       - src/data/**/*
 
-# Environment variables are now set inline in preBuild commands
-# You can also set them in AWS Amplify Console for security
+# Environment variables set inline in preBuild commands
+# VITE_WORDPRESS_API_URL and SITE_URL both use dev.igeeksblog.com
