@@ -56,7 +56,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.igeeksblog.com/about/"
+                  href="https://dev.igeeksblog.com/about/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
@@ -66,7 +66,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.igeeksblog.com/contact-us/"
+                  href="https://dev.igeeksblog.com/contact-us/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
@@ -76,7 +76,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.igeeksblog.com/privacy-policy/"
+                  href="https://dev.igeeksblog.com/privacy-policy/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
