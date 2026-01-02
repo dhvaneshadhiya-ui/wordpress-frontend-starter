@@ -33,117 +33,137 @@ function getViteAssets() {
 }
 
 function generateStaticHTML() {
-  console.log('🏗️ Generating static HTML files...');
-  console.log(`📁 Data directory: ${DATA_DIR}`);
-  console.log(`📁 Dist directory: ${DIST_DIR}`);
+  try {
+    console.log('🏗️ Generating static HTML files...');
+    console.log(`📁 Data directory: ${DATA_DIR}`);
+    console.log(`📁 Dist directory: ${DIST_DIR}`);
 
-  // Check if data exists with detailed logging
-  const postsPath = path.join(DATA_DIR, 'posts.json');
-  console.log(`🔍 Looking for posts.json at: ${postsPath}`);
-  
-  if (!fs.existsSync(postsPath)) {
-    console.error('❌ No posts.json found. Run fetch-content first.');
-    console.error('📂 Contents of DATA_DIR:');
-    if (fs.existsSync(DATA_DIR)) {
-      fs.readdirSync(DATA_DIR).forEach(file => console.log(`   - ${file}`));
-    } else {
-      console.error('   DATA_DIR does not exist!');
+    // Check if data exists with detailed logging
+    const postsPath = path.join(DATA_DIR, 'posts.json');
+    console.log(`🔍 Looking for posts.json at: ${postsPath}`);
+    
+    if (!fs.existsSync(postsPath)) {
+      console.error('❌ No posts.json found. Run fetch-content first.');
+      process.exit(1);
     }
+
+    // Get Vite asset paths
+    const viteAssets = getViteAssets();
+
+    // Load data with verification
+    console.log('📖 Loading data files...');
+    const postsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'posts.json'), 'utf8'));
+    console.log(`  ✅ Loaded ${postsData.length} posts`);
+    
+    const categoriesData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'categories.json'), 'utf8'));
+    console.log(`  ✅ Loaded ${categoriesData.length} categories`);
+    
+    const tagsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'tags.json'), 'utf8'));
+    console.log(`  ✅ Loaded ${tagsData.length} tags`);
+    
+    const authorsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'authors.json'), 'utf8'));
+    console.log(`  ✅ Loaded ${authorsData.length} authors`);
+
+    // Generate HTML for each post with progress logging
+    let postCount = 0;
+    for (const post of postsData) {
+      try {
+        const html = generatePostHTML(post, viteAssets);
+        const postDir = path.join(DIST_DIR, post.slug);
+        
+        if (!fs.existsSync(postDir)) {
+          fs.mkdirSync(postDir, { recursive: true });
+        }
+        
+        fs.writeFileSync(path.join(postDir, 'index.html'), html);
+        postCount++;
+        
+        if (postCount % 50 === 0) {
+          console.log(`  📝 Generated ${postCount}/${postsData.length} posts...`);
+        }
+      } catch (err) {
+        console.error(`  ❌ Failed to generate post: ${post.slug}`, err.message);
+      }
+    }
+    console.log(`✅ Generated ${postCount} post pages`);
+
+    // Generate category pages
+    let categoryCount = 0;
+    for (const category of categoriesData) {
+      try {
+        const categoryPosts = postsData.filter(post => 
+          post.categories?.some(cat => cat.slug === category.slug)
+        );
+        const html = generateCategoryHTML(category, categoryPosts, viteAssets);
+        const catDir = path.join(DIST_DIR, 'category', category.slug);
+        
+        if (!fs.existsSync(catDir)) {
+          fs.mkdirSync(catDir, { recursive: true });
+        }
+        
+        fs.writeFileSync(path.join(catDir, 'index.html'), html);
+        categoryCount++;
+      } catch (err) {
+        console.error(`  ❌ Failed to generate category: ${category.slug}`, err.message);
+      }
+    }
+    console.log(`✅ Generated ${categoryCount} category pages`);
+
+    // Generate tag pages
+    let tagCount = 0;
+    for (const tag of tagsData) {
+      try {
+        const tagPosts = postsData.filter(post => 
+          post.tags?.some(t => t.slug === tag.slug)
+        );
+        const html = generateTagHTML(tag, tagPosts, viteAssets);
+        const tagDir = path.join(DIST_DIR, 'tag', tag.slug);
+        
+        if (!fs.existsSync(tagDir)) {
+          fs.mkdirSync(tagDir, { recursive: true });
+        }
+        
+        fs.writeFileSync(path.join(tagDir, 'index.html'), html);
+        tagCount++;
+      } catch (err) {
+        console.error(`  ❌ Failed to generate tag: ${tag.slug}`, err.message);
+      }
+    }
+    console.log(`✅ Generated ${tagCount} tag pages`);
+
+    // Generate author pages
+    let authorCount = 0;
+    for (const author of authorsData) {
+      try {
+        const authorPosts = postsData.filter(post => 
+          post.author?.slug === author.slug
+        );
+        const html = generateAuthorHTML(author, authorPosts, viteAssets);
+        const authorDir = path.join(DIST_DIR, 'author', author.slug);
+        
+        if (!fs.existsSync(authorDir)) {
+          fs.mkdirSync(authorDir, { recursive: true });
+        }
+        
+        fs.writeFileSync(path.join(authorDir, 'index.html'), html);
+        authorCount++;
+      } catch (err) {
+        console.error(`  ❌ Failed to generate author: ${author.slug}`, err.message);
+      }
+    }
+    console.log(`✅ Generated ${authorCount} author pages`);
+
+    // Update the index.html with SEO content
+    const indexHTML = generateIndexHTML(postsData, viteAssets);
+    fs.writeFileSync(path.join(DIST_DIR, 'index.html'), indexHTML);
+    console.log(`✅ Updated index page with SEO content`);
+
+    console.log('\n🎉 Static HTML generation complete!');
+  } catch (error) {
+    console.error('❌ Static HTML generation failed:', error.message);
+    console.error('Stack:', error.stack);
     process.exit(1);
   }
-
-  // Get Vite asset paths
-  const viteAssets = getViteAssets();
-
-  // Load data with verification
-  console.log('📖 Loading data files...');
-  const postsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'posts.json'), 'utf8'));
-  console.log(`  ✅ Loaded ${postsData.length} posts`);
-  
-  const categoriesData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'categories.json'), 'utf8'));
-  console.log(`  ✅ Loaded ${categoriesData.length} categories`);
-  
-  const tagsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'tags.json'), 'utf8'));
-  console.log(`  ✅ Loaded ${tagsData.length} tags`);
-  
-  const authorsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'authors.json'), 'utf8'));
-  console.log(`  ✅ Loaded ${authorsData.length} authors`);
-
-  // Generate HTML for each post
-  let postCount = 0;
-  postsData.forEach(post => {
-    const html = generatePostHTML(post, viteAssets);
-    const postDir = path.join(DIST_DIR, post.slug);
-    
-    if (!fs.existsSync(postDir)) {
-      fs.mkdirSync(postDir, { recursive: true });
-    }
-    
-    fs.writeFileSync(path.join(postDir, 'index.html'), html);
-    postCount++;
-  });
-  console.log(`✅ Generated ${postCount} post pages`);
-
-  // Generate category pages
-  let categoryCount = 0;
-  categoriesData.forEach(category => {
-    const categoryPosts = postsData.filter(post => 
-      post.categories.some(cat => cat.slug === category.slug)
-    );
-    const html = generateCategoryHTML(category, categoryPosts, viteAssets);
-    const catDir = path.join(DIST_DIR, 'category', category.slug);
-    
-    if (!fs.existsSync(catDir)) {
-      fs.mkdirSync(catDir, { recursive: true });
-    }
-    
-    fs.writeFileSync(path.join(catDir, 'index.html'), html);
-    categoryCount++;
-  });
-  console.log(`✅ Generated ${categoryCount} category pages`);
-
-  // Generate tag pages
-  let tagCount = 0;
-  tagsData.forEach(tag => {
-    const tagPosts = postsData.filter(post => 
-      post.tags.some(t => t.slug === tag.slug)
-    );
-    const html = generateTagHTML(tag, tagPosts, viteAssets);
-    const tagDir = path.join(DIST_DIR, 'tag', tag.slug);
-    
-    if (!fs.existsSync(tagDir)) {
-      fs.mkdirSync(tagDir, { recursive: true });
-    }
-    
-    fs.writeFileSync(path.join(tagDir, 'index.html'), html);
-    tagCount++;
-  });
-  console.log(`✅ Generated ${tagCount} tag pages`);
-
-  // Generate author pages
-  let authorCount = 0;
-  authorsData.forEach(author => {
-    const authorPosts = postsData.filter(post => 
-      post.author?.slug === author.slug
-    );
-    const html = generateAuthorHTML(author, authorPosts, viteAssets);
-    const authorDir = path.join(DIST_DIR, 'author', author.slug);
-    
-    if (!fs.existsSync(authorDir)) {
-      fs.mkdirSync(authorDir, { recursive: true });
-    }
-    
-    fs.writeFileSync(path.join(authorDir, 'index.html'), html);
-    authorCount++;
-  });
-  console.log(`✅ Generated ${authorCount} author pages`);
-
-  // Update the index.html with SEO content (don't overwrite, inject)
-  const indexHTML = generateIndexHTML(postsData, viteAssets);
-  fs.writeFileSync(path.join(DIST_DIR, 'index.html'), indexHTML);
-  console.log(`✅ Updated index page with SEO content`);
-
-  console.log('\n🎉 Static HTML generation complete!');
 }
 
 function escapeHtml(str) {
