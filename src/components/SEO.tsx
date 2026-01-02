@@ -16,16 +16,26 @@ const DEFAULT_IMAGE = 'https://dev.igeeksblog.com/wp-content/uploads/2020/12/ige
 const SITE_URL = 'https://dev.igeeksblog.com';
 
 export function SEO({ title, description, image, url, type = 'website', post }: SEOProps) {
-  // Extract SEO data from WordPress post if available (AIOSEO/Yoast)
-  const seoData = post?.yoast_head_json;
+  // Priority: AIOSEO > Yoast > Props > Defaults
+  const aioseoData = post?.aioseo_head_json;
+  const yoastData = post?.yoast_head_json;
   
-  const finalTitle = seoData?.title || title 
-    ? `${title} | ${SITE_NAME}` 
-    : SITE_NAME;
+  const finalTitle = 
+    aioseoData?.title || 
+    yoastData?.title || 
+    (title ? `${title} | ${SITE_NAME}` : SITE_NAME);
   
-  const finalDescription = seoData?.description || description || DEFAULT_DESCRIPTION;
+  const finalDescription = 
+    aioseoData?.description || 
+    yoastData?.description || 
+    description || 
+    DEFAULT_DESCRIPTION;
   
-  const finalImage = seoData?.og_image?.[0]?.url || image || DEFAULT_IMAGE;
+  const finalImage = 
+    aioseoData?.og_image || 
+    yoastData?.og_image?.[0]?.url || 
+    image || 
+    DEFAULT_IMAGE;
   
   const finalUrl = url || SITE_URL;
 

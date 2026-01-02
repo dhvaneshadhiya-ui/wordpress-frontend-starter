@@ -40,6 +40,19 @@ export interface WPPost {
       taxonomy: string;
     }>>;
   };
+  // AIOSEO fields (All in One SEO plugin)
+  aioseo_head_json?: {
+    title?: string;
+    description?: string;
+    og_title?: string;
+    og_description?: string;
+    og_image?: string;
+    twitter_title?: string;
+    twitter_description?: string;
+    twitter_image?: string;
+    canonical?: string;
+  };
+  // Yoast fallback for backwards compatibility
   yoast_head_json?: {
     title?: string;
     description?: string;
