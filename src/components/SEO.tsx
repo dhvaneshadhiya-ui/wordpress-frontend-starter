@@ -225,7 +225,8 @@ export function SEO({
       <meta name="description" content={finalDescription} />
       
       {/* Robots */}
-      <meta name="robots" content={noindex ? "noindex,nofollow" : "index,follow"} />
+      {/* Robots - Force noindex for staging */}
+      <meta name="robots" content="noindex, nofollow" />
       
       {/* Open Graph - Common */}
       <meta property="og:type" content={type} />
