@@ -2,22 +2,18 @@
   command = "npm run build"
   publish = "dist"
 
-# Environment variables
 [build.environment]
   VITE_WORDPRESS_API_URL = "https://dev.igeeksblog.com/wp-json/wp/v2"
 
-# Edge Functions for SEO meta tag injection
 [[edge_functions]]
   function = "seo-inject"
   path = "/*"
 
-# SPA fallback - redirect all routes to index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Headers for caching and security
 [[headers]]
   for = "/*"
   [headers.values]
