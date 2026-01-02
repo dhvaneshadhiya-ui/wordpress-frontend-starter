@@ -1,0 +1,33 @@
+version: 1
+
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm install
+        - echo "Fetching WordPress content for static generation..."
+        - node scripts/fetch-wp-content.js
+    build:
+      commands:
+        - echo "Generating static HTML pages..."
+        - node scripts/build-static.js
+        - echo "Building Vite application..."
+        - npm run build
+        - echo "Copying static pages to dist..."
+        - cp -r static/* dist/ 2>/dev/null || true
+    postBuild:
+      commands:
+        - echo "Generating sitemaps and robots.txt..."
+        - node scripts/generate-seo-files.js
+        - echo "Build complete!"
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - src/data/**/*
+
+# Environment variables (set these in AWS Amplify Console)
+# VITE_WORDPRESS_API_URL: https://dev.igeeksblog.com/wp-json/wp/v2

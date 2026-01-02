@@ -1,0 +1,2 @@
+# This directory stores fetched WordPress content during build
+# The actual JSON files are generated at build time and should not be committed
