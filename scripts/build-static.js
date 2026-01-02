@@ -1,9 +1,36 @@
 import fs from 'fs';
 import path from 'path';
 
-const SITE_URL = 'https://dev.igeeksblog.com';
+const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com';
 const DATA_DIR = './src/data';
-const STATIC_DIR = './static';
+const DIST_DIR = './dist';
+
+// Read Vite's built index.html to get correct asset references
+function getViteAssets() {
+  const indexPath = path.join(DIST_DIR, 'index.html');
+  
+  if (!fs.existsSync(indexPath)) {
+    console.error('❌ Vite build output not found. Run vite build first.');
+    process.exit(1);
+  }
+  
+  const indexHtml = fs.readFileSync(indexPath, 'utf8');
+  
+  // Extract script and link tags from Vite's index.html
+  const scriptMatch = indexHtml.match(/<script[^>]*type="module"[^>]*src="([^"]+)"[^>]*>/);
+  const cssMatches = indexHtml.matchAll(/<link[^>]*rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g);
+  
+  const jsPath = scriptMatch ? scriptMatch[1] : '/assets/index.js';
+  const cssPaths = [];
+  
+  for (const match of cssMatches) {
+    cssPaths.push(match[1]);
+  }
+  
+  console.log(`📦 Found Vite assets: JS=${jsPath}, CSS=${cssPaths.join(', ') || 'none'}`);
+  
+  return { jsPath, cssPaths };
+}
 
 function generateStaticHTML() {
   console.log('🏗️ Generating static HTML files...');
@@ -14,21 +41,19 @@ function generateStaticHTML() {
     process.exit(1);
   }
 
+  // Get Vite asset paths
+  const viteAssets = getViteAssets();
+
   const postsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'posts.json'), 'utf8'));
   const categoriesData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'categories.json'), 'utf8'));
   const tagsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'tags.json'), 'utf8'));
   const authorsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'authors.json'), 'utf8'));
 
-  // Create static directory
-  if (!fs.existsSync(STATIC_DIR)) {
-    fs.mkdirSync(STATIC_DIR, { recursive: true });
-  }
-
   // Generate HTML for each post
   let postCount = 0;
   postsData.forEach(post => {
-    const html = generatePostHTML(post);
-    const postDir = path.join(STATIC_DIR, post.slug);
+    const html = generatePostHTML(post, viteAssets);
+    const postDir = path.join(DIST_DIR, post.slug);
     
     if (!fs.existsSync(postDir)) {
       fs.mkdirSync(postDir, { recursive: true });
@@ -45,8 +70,8 @@ function generateStaticHTML() {
     const categoryPosts = postsData.filter(post => 
       post.categories.some(cat => cat.slug === category.slug)
     );
-    const html = generateCategoryHTML(category, categoryPosts);
-    const catDir = path.join(STATIC_DIR, 'category', category.slug);
+    const html = generateCategoryHTML(category, categoryPosts, viteAssets);
+    const catDir = path.join(DIST_DIR, 'category', category.slug);
     
     if (!fs.existsSync(catDir)) {
       fs.mkdirSync(catDir, { recursive: true });
@@ -63,8 +88,8 @@ function generateStaticHTML() {
     const tagPosts = postsData.filter(post => 
       post.tags.some(t => t.slug === tag.slug)
     );
-    const html = generateTagHTML(tag, tagPosts);
-    const tagDir = path.join(STATIC_DIR, 'tag', tag.slug);
+    const html = generateTagHTML(tag, tagPosts, viteAssets);
+    const tagDir = path.join(DIST_DIR, 'tag', tag.slug);
     
     if (!fs.existsSync(tagDir)) {
       fs.mkdirSync(tagDir, { recursive: true });
@@ -81,8 +106,8 @@ function generateStaticHTML() {
     const authorPosts = postsData.filter(post => 
       post.author?.slug === author.slug
     );
-    const html = generateAuthorHTML(author, authorPosts);
-    const authorDir = path.join(STATIC_DIR, 'author', author.slug);
+    const html = generateAuthorHTML(author, authorPosts, viteAssets);
+    const authorDir = path.join(DIST_DIR, 'author', author.slug);
     
     if (!fs.existsSync(authorDir)) {
       fs.mkdirSync(authorDir, { recursive: true });
@@ -93,10 +118,10 @@ function generateStaticHTML() {
   });
   console.log(`✅ Generated ${authorCount} author pages`);
 
-  // Generate index page
-  const indexHTML = generateIndexHTML(postsData);
-  fs.writeFileSync(path.join(STATIC_DIR, 'index.html'), indexHTML);
-  console.log(`✅ Generated index page`);
+  // Update the index.html with SEO content (don't overwrite, inject)
+  const indexHTML = generateIndexHTML(postsData, viteAssets);
+  fs.writeFileSync(path.join(DIST_DIR, 'index.html'), indexHTML);
+  console.log(`✅ Updated index page with SEO content`);
 
   console.log('\n🎉 Static HTML generation complete!');
 }
@@ -116,7 +141,17 @@ function stripHtml(html) {
   return html.replace(/<[^>]*>/g, '').trim();
 }
 
-function generatePostHTML(post) {
+function generateAssetTags(viteAssets) {
+  const cssTags = viteAssets.cssPaths.map(css => 
+    `<link rel="stylesheet" crossorigin href="${css}">`
+  ).join('\n    ');
+  
+  const jsTag = `<script type="module" crossorigin src="${viteAssets.jsPath}"></script>`;
+  
+  return { cssTags, jsTag };
+}
+
+function generatePostHTML(post, viteAssets) {
   const title = escapeHtml(stripHtml(post.seo.title || post.title?.rendered || ''));
   const description = escapeHtml(post.seo.description || '');
   const ogTitle = escapeHtml(post.seo.ogTitle || title);
@@ -124,6 +159,7 @@ function generatePostHTML(post) {
   const image = post.seo.image || '';
   const canonical = `${SITE_URL}/${post.slug}`;
   const authorName = escapeHtml(post.author?.name || 'iGeeksBlog');
+  const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
   // Generate JSON-LD for article
   const jsonLd = {
@@ -185,6 +221,9 @@ function generatePostHTML(post) {
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
+    <!-- Vite CSS -->
+    ${cssTags}
+    
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
     ${JSON.stringify(jsonLd, null, 2)}
@@ -216,15 +255,16 @@ function generatePostHTML(post) {
     <script>
         window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'post', data: post })};
     </script>
-    <script type="module" src="/src/main.tsx"></script>
+    ${jsTag}
 </body>
 </html>`;
 }
 
-function generateCategoryHTML(category, posts) {
+function generateCategoryHTML(category, posts, viteAssets) {
   const title = escapeHtml(category.seo?.title || `${category.name} - iGeeksBlog`);
   const description = escapeHtml(category.seo?.description || category.description || `Browse all ${category.name} articles on iGeeksBlog`);
   const canonical = `${SITE_URL}/category/${category.slug}`;
+  const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -265,6 +305,9 @@ function generateCategoryHTML(category, posts) {
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
+    <!-- Vite CSS -->
+    ${cssTags}
+    
     <script type="application/ld+json">
     ${JSON.stringify(jsonLd, null, 2)}
     </script>
@@ -288,15 +331,16 @@ function generateCategoryHTML(category, posts) {
     <script>
         window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'category', data: { category, posts: posts.slice(0, 10) } })};
     </script>
-    <script type="module" src="/src/main.tsx"></script>
+    ${jsTag}
 </body>
 </html>`;
 }
 
-function generateTagHTML(tag, posts) {
+function generateTagHTML(tag, posts, viteAssets) {
   const title = escapeHtml(`${tag.name} - iGeeksBlog`);
   const description = escapeHtml(`Browse all articles tagged with ${tag.name} on iGeeksBlog`);
   const canonical = `${SITE_URL}/tag/${tag.slug}`;
+  const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -315,6 +359,9 @@ function generateTagHTML(tag, posts) {
     
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Vite CSS -->
+    ${cssTags}
 </head>
 <body>
     <div id="root">
@@ -334,15 +381,16 @@ function generateTagHTML(tag, posts) {
     <script>
         window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'tag', data: { tag, posts: posts.slice(0, 10) } })};
     </script>
-    <script type="module" src="/src/main.tsx"></script>
+    ${jsTag}
 </body>
 </html>`;
 }
 
-function generateAuthorHTML(author, posts) {
+function generateAuthorHTML(author, posts, viteAssets) {
   const title = escapeHtml(`${author.name} - iGeeksBlog`);
   const description = escapeHtml(author.description || `Articles by ${author.name} on iGeeksBlog`);
   const canonical = `${SITE_URL}/author/${author.slug}`;
+  const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -375,6 +423,9 @@ function generateAuthorHTML(author, posts) {
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
+    <!-- Vite CSS -->
+    ${cssTags}
+    
     <script type="application/ld+json">
     ${JSON.stringify(jsonLd, null, 2)}
     </script>
@@ -401,15 +452,16 @@ function generateAuthorHTML(author, posts) {
     <script>
         window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'author', data: { author, posts: posts.slice(0, 10) } })};
     </script>
-    <script type="module" src="/src/main.tsx"></script>
+    ${jsTag}
 </body>
 </html>`;
 }
 
-function generateIndexHTML(posts) {
+function generateIndexHTML(posts, viteAssets) {
   const recentPosts = posts.slice(0, 12);
   const title = 'iGeeksBlog - Apple News, How-To Guides, Tips & App Reviews';
   const description = 'Your daily source for Apple news, how-to guides, tips, and app reviews.';
+  const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -447,6 +499,9 @@ function generateIndexHTML(posts) {
     <link rel="canonical" href="${SITE_URL}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
+    <!-- Vite CSS -->
+    ${cssTags}
+    
     <script type="application/ld+json">
     ${JSON.stringify(jsonLd, null, 2)}
     </script>
@@ -474,7 +529,7 @@ function generateIndexHTML(posts) {
     <script>
         window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'home', data: { posts: recentPosts } })};
     </script>
-    <script type="module" src="/src/main.tsx"></script>
+    ${jsTag}
 </body>
 </html>`;
 }

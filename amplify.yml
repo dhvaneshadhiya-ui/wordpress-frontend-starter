@@ -7,21 +7,27 @@ frontend:
         - npm install
     build:
       commands:
-        - echo "Setting environment variables..."
+        - echo "=== Setting environment variables ==="
         - export VITE_WORDPRESS_API_URL=https://dev.igeeksblog.com/wp-json/wp/v2
         - export SITE_URL=https://dev.igeeksblog.com
-        - echo "Fetching WordPress content for static generation..."
+        - echo "VITE_WORDPRESS_API_URL=$VITE_WORDPRESS_API_URL"
+        - echo "SITE_URL=$SITE_URL"
+        - echo ""
+        - echo "=== Step 1: Fetching WordPress content ==="
         - node scripts/fetch-wp-content.js
-        - echo "Generating static HTML pages..."
-        - node scripts/build-static.js
-        - echo "Building Vite application..."
+        - echo ""
+        - echo "=== Step 2: Building Vite application ==="
         - npx vite build
-        - echo "Copying static pages to dist..."
-        - cp -r static/* dist/ 2>/dev/null || true
-        - echo "Generating sitemaps and robots.txt..."
+        - echo ""
+        - echo "=== Step 3: Generating static HTML with SEO ==="
+        - node scripts/build-static.js
+        - echo ""
+        - echo "=== Step 4: Generating sitemaps and robots.txt ==="
         - node scripts/generate-seo-files.js
-        - echo "Build complete!"
+        - echo ""
+        - echo "=== Build complete! Listing dist contents ==="
         - ls -la dist/
+        - ls -la dist/assets/ 2>/dev/null || echo "No assets directory found"
   artifacts:
     baseDirectory: dist
     files:
@@ -30,5 +36,5 @@ frontend:
     paths:
       - node_modules/**/*
 
-# Environment variables are set within the build phase so they persist
-# You can also set VITE_WORDPRESS_API_URL and SITE_URL in AWS Amplify Console
+# Build order: fetch content -> vite build -> generate static HTML -> SEO files
+# Static HTML is generated directly into dist/ after Vite build
