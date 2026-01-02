@@ -4,22 +4,32 @@ import path from 'path';
 const WORDPRESS_API = process.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2';
 const OUTPUT_DIR = './src/data';
 const FETCH_TIMEOUT = 30000; // 30 seconds
+const MAX_RETRIES = 3;
 
-// Fetch with timeout wrapper
-async function fetchWithTimeout(url, timeout = FETCH_TIMEOUT) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
-  
-  try {
-    const response = await fetch(url, { signal: controller.signal });
-    clearTimeout(timeoutId);
-    return response;
-  } catch (error) {
-    clearTimeout(timeoutId);
-    if (error.name === 'AbortError') {
-      throw new Error(`Request timed out after ${timeout}ms: ${url}`);
+// Fetch with timeout and retry wrapper
+async function fetchWithTimeout(url, timeout = FETCH_TIMEOUT, retries = MAX_RETRIES) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      return response;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      
+      if (attempt === retries) {
+        if (error.name === 'AbortError') {
+          throw new Error(`Request timed out after ${timeout}ms: ${url}`);
+        }
+        throw error;
+      }
+      
+      const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
+      console.log(`  ⚠️ Attempt ${attempt} failed, retrying in ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
-    throw error;
   }
 }
 
