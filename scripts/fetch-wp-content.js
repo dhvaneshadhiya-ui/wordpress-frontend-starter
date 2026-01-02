@@ -4,14 +4,38 @@ import path from 'path';
 const WORDPRESS_API = process.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2';
 const OUTPUT_DIR = './src/data';
 
+// Test API connectivity before proceeding
+async function testApiConnection() {
+  console.log('🔌 Testing API connection...');
+  try {
+    const response = await fetch(`${WORDPRESS_API}/posts?per_page=1`);
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}: ${response.statusText}`);
+    }
+    const data = await response.json();
+    console.log(`✅ API connection successful! Found posts endpoint.`);
+    return true;
+  } catch (error) {
+    console.error(`❌ API connection failed: ${error.message}`);
+    return false;
+  }
+}
+
 async function fetchWordPressContent() {
   try {
     console.log('🚀 Fetching WordPress content...');
     console.log(`📡 API URL: ${WORDPRESS_API}`);
     
+    // Test API first
+    const apiOk = await testApiConnection();
+    if (!apiOk) {
+      throw new Error('Cannot connect to WordPress API');
+    }
+    
     // Ensure output directory exists
     if (!fs.existsSync(OUTPUT_DIR)) {
       fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+      console.log(`📁 Created output directory: ${OUTPUT_DIR}`);
     }
 
     // Fetch posts with embedded data
@@ -184,10 +208,25 @@ async function fetchWordPressContent() {
     );
     console.log(`✅ Saved routes.json with ${routes.length} routes`);
 
+    // Verify files were created
+    console.log('\n📋 Verifying generated files...');
+    const requiredFiles = ['posts.json', 'categories.json', 'tags.json', 'authors.json', 'routes.json'];
+    for (const file of requiredFiles) {
+      const filePath = path.join(OUTPUT_DIR, file);
+      if (fs.existsSync(filePath)) {
+        const stats = fs.statSync(filePath);
+        console.log(`  ✅ ${file} (${stats.size} bytes)`);
+      } else {
+        console.error(`  ❌ ${file} missing!`);
+        process.exit(1);
+      }
+    }
+
     console.log('\n🎉 WordPress content fetch complete!');
     
   } catch (error) {
     console.error('❌ Error fetching WordPress content:', error);
+    console.error('Stack trace:', error.stack);
     process.exit(1);
   }
 }
