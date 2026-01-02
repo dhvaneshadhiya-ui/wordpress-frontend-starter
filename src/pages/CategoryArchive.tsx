@@ -40,7 +40,9 @@ export default function CategoryArchive() {
     <Layout>
       <SEO 
         title={category.name}
-        description={category.description || `Browse all ${category.name} articles`}
+        description={category.description || `Browse all ${category.name} articles on iGeeksBlog`}
+        url={`https://dev.igeeksblog.com/category/${category.slug}`}
+        category={category}
       />
       <div className="container mx-auto px-4 py-8">
         {/* Category Header */}

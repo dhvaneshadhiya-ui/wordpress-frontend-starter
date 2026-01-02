@@ -47,9 +47,11 @@ export default function SinglePost() {
     <Layout>
       <SEO 
         title={stripHtml(post.title.rendered)}
+        description={stripHtml(post.excerpt.rendered).substring(0, 160)}
         post={post}
         type="article"
         image={imageUrl}
+        url={`https://dev.igeeksblog.com/${post.slug}`}
       />
       <article className="container mx-auto px-4 py-8">
         {/* Hero Section */}
