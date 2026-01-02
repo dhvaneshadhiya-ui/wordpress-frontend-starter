@@ -13,20 +13,46 @@ frontend:
         - echo "VITE_WORDPRESS_API_URL=$VITE_WORDPRESS_API_URL"
         - echo "SITE_URL=$SITE_URL"
         - echo ""
+        
         - echo "=== Step 1: Fetching WordPress content ==="
         - node scripts/fetch-wp-content.js
         - echo ""
+        - echo "--- Verifying Step 1 ---"
+        - test -f src/data/posts.json && echo "✅ posts.json exists" || (echo "❌ posts.json missing!" && exit 1)
+        - test -f src/data/categories.json && echo "✅ categories.json exists" || (echo "❌ categories.json missing!" && exit 1)
+        - echo "Preview of posts.json:"
+        - head -c 500 src/data/posts.json
+        - echo ""
+        
         - echo "=== Step 2: Building Vite application ==="
         - npx vite build
         - echo ""
+        - echo "--- Verifying Step 2 ---"
+        - test -f dist/index.html && echo "✅ dist/index.html exists" || (echo "❌ dist/index.html missing!" && exit 1)
+        - ls -la dist/
+        - echo ""
+        
         - echo "=== Step 3: Generating static HTML with SEO ==="
         - node scripts/build-static.js
         - echo ""
+        - echo "--- Verifying Step 3 ---"
+        - echo "Counting generated HTML files:"
+        - find dist -name "index.html" | wc -l
+        - echo "Sample of generated directories:"
+        - ls -la dist/ | head -20
+        - echo ""
+        
         - echo "=== Step 4: Generating sitemaps and robots.txt ==="
         - node scripts/generate-seo-files.js
         - echo ""
-        - echo "=== Build complete! Listing dist contents ==="
-        - ls -la dist/
+        - echo "--- Verifying Step 4 ---"
+        - test -f dist/sitemap.xml && echo "✅ sitemap.xml exists" || echo "⚠️ sitemap.xml missing"
+        - test -f dist/robots.txt && echo "✅ robots.txt exists" || echo "⚠️ robots.txt missing"
+        
+        - echo ""
+        - echo "=== Build complete! Final verification ==="
+        - echo "Total HTML files generated:"
+        - find dist -name "*.html" | wc -l
         - ls -la dist/assets/ 2>/dev/null || echo "No assets directory found"
   artifacts:
     baseDirectory: dist

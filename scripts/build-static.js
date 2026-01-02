@@ -34,20 +34,40 @@ function getViteAssets() {
 
 function generateStaticHTML() {
   console.log('🏗️ Generating static HTML files...');
+  console.log(`📁 Data directory: ${DATA_DIR}`);
+  console.log(`📁 Dist directory: ${DIST_DIR}`);
 
-  // Check if data exists
-  if (!fs.existsSync(path.join(DATA_DIR, 'posts.json'))) {
+  // Check if data exists with detailed logging
+  const postsPath = path.join(DATA_DIR, 'posts.json');
+  console.log(`🔍 Looking for posts.json at: ${postsPath}`);
+  
+  if (!fs.existsSync(postsPath)) {
     console.error('❌ No posts.json found. Run fetch-content first.');
+    console.error('📂 Contents of DATA_DIR:');
+    if (fs.existsSync(DATA_DIR)) {
+      fs.readdirSync(DATA_DIR).forEach(file => console.log(`   - ${file}`));
+    } else {
+      console.error('   DATA_DIR does not exist!');
+    }
     process.exit(1);
   }
 
   // Get Vite asset paths
   const viteAssets = getViteAssets();
 
+  // Load data with verification
+  console.log('📖 Loading data files...');
   const postsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'posts.json'), 'utf8'));
+  console.log(`  ✅ Loaded ${postsData.length} posts`);
+  
   const categoriesData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'categories.json'), 'utf8'));
+  console.log(`  ✅ Loaded ${categoriesData.length} categories`);
+  
   const tagsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'tags.json'), 'utf8'));
+  console.log(`  ✅ Loaded ${tagsData.length} tags`);
+  
   const authorsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'authors.json'), 'utf8'));
+  console.log(`  ✅ Loaded ${authorsData.length} authors`);
 
   // Generate HTML for each post
   let postCount = 0;
