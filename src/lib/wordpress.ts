@@ -41,16 +41,17 @@ export interface WPPost {
     }>>;
   };
   // AIOSEO fields (All in One SEO plugin)
+  aioseo_head?: string; // Raw HTML meta tags
   aioseo_head_json?: {
     title?: string;
     description?: string;
-    og_title?: string;
-    og_description?: string;
-    og_image?: string;
-    twitter_title?: string;
-    twitter_description?: string;
-    twitter_image?: string;
-    canonical?: string;
+    'og:title'?: string;
+    'og:description'?: string;
+    'og:image'?: string;
+    'twitter:title'?: string;
+    'twitter:description'?: string;
+    'twitter:image'?: string;
+    canonical_url?: string;
   };
   // Yoast fallback for backwards compatibility
   yoast_head_json?: {
