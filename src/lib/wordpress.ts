@@ -1,6 +1,6 @@
 // WordPress REST API service layer for dev.igeeksblog.com
 
-const API_BASE = 'https://dev.igeeksblog.com/wp-json/wp/v2';
+const API_BASE = import.meta.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2';
 
 export interface WPPost {
   id: number;
@@ -29,6 +29,7 @@ export interface WPPost {
     author?: Array<{
       id: number;
       name: string;
+      slug: string;
       avatar_urls?: { [key: string]: string };
       description?: string;
     }>;
@@ -75,6 +76,7 @@ export async function fetchPosts(params: {
   perPage?: number;
   categories?: number[];
   tags?: number[];
+  author?: number;
   search?: string;
   slug?: string;
 } = {}): Promise<{ posts: WPPost[]; totalPages: number; total: number }> {
@@ -88,6 +90,9 @@ export async function fetchPosts(params: {
   }
   if (params.tags?.length) {
     searchParams.set('tags', params.tags.join(','));
+  }
+  if (params.author) {
+    searchParams.set('author', String(params.author));
   }
   if (params.search) {
     searchParams.set('search', params.search);
@@ -147,6 +152,66 @@ export async function fetchCategoryBySlug(slug: string): Promise<WPCategory | nu
   return categories[0] || null;
 }
 
+// Fetch tags
+export async function fetchTags(params: {
+  perPage?: number;
+  hideEmpty?: boolean;
+} = {}): Promise<WPTag[]> {
+  const searchParams = new URLSearchParams();
+  searchParams.set('per_page', String(params.perPage || 100));
+  if (params.hideEmpty !== false) {
+    searchParams.set('hide_empty', 'true');
+  }
+
+  const response = await fetch(`${API_BASE}/tags?${searchParams}`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch tags: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Fetch single tag by slug
+export async function fetchTagBySlug(slug: string): Promise<WPTag | null> {
+  const response = await fetch(`${API_BASE}/tags?slug=${slug}`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch tag: ${response.status}`);
+  }
+
+  const tags = await response.json();
+  return tags[0] || null;
+}
+
+// Fetch authors/users
+export async function fetchAuthors(params: {
+  perPage?: number;
+} = {}): Promise<WPAuthor[]> {
+  const searchParams = new URLSearchParams();
+  searchParams.set('per_page', String(params.perPage || 100));
+
+  const response = await fetch(`${API_BASE}/users?${searchParams}`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch authors: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Fetch single author by slug
+export async function fetchAuthorBySlug(slug: string): Promise<WPAuthor | null> {
+  const response = await fetch(`${API_BASE}/users?slug=${slug}`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch author: ${response.status}`);
+  }
+
+  const authors = await response.json();
+  return authors[0] || null;
+}
+
 // Helper functions
 export function getFeaturedImageUrl(post: WPPost, size: 'full' | 'large' | 'medium' = 'large'): string {
   const media = post._embedded?.['wp:featuredmedia']?.[0];
@@ -156,11 +221,12 @@ export function getFeaturedImageUrl(post: WPPost, size: 'full' | 'large' | 'medi
   return sizes?.[size]?.source_url || sizes?.full?.source_url || media.source_url || '/placeholder.svg';
 }
 
-export function getAuthor(post: WPPost): { name: string; avatar: string } {
+export function getAuthor(post: WPPost): { name: string; avatar: string; slug: string } {
   const author = post._embedded?.author?.[0];
   return {
     name: author?.name || 'Unknown',
     avatar: author?.avatar_urls?.['48'] || author?.avatar_urls?.['96'] || '/placeholder.svg',
+    slug: author?.slug || '',
   };
 }
 
@@ -170,6 +236,15 @@ export function getCategories(post: WPPost): Array<{ id: number; name: string; s
     id: cat.id,
     name: cat.name,
     slug: cat.slug,
+  }));
+}
+
+export function getTags(post: WPPost): Array<{ id: number; name: string; slug: string }> {
+  const terms = post._embedded?.['wp:term']?.[1] || [];
+  return terms.filter(term => term.taxonomy === 'post_tag').map(tag => ({
+    id: tag.id,
+    name: tag.name,
+    slug: tag.slug,
   }));
 }
 
