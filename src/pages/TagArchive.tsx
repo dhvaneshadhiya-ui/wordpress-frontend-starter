@@ -40,7 +40,8 @@ export default function TagArchive() {
     <Layout>
       <SEO 
         title={`${tag.name} Articles`}
-        description={`Browse all articles tagged with ${tag.name}`}
+        description={`Browse all articles tagged with ${tag.name} on iGeeksBlog`}
+        url={`https://dev.igeeksblog.com/tag/${tag.slug}`}
       />
       <div className="container mx-auto px-4 py-8">
         {/* Tag Header */}

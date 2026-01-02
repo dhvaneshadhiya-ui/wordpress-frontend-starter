@@ -46,7 +46,10 @@ export default function AuthorArchive() {
     <Layout>
       <SEO 
         title={`${author.name} - Author`}
-        description={author.description || `Articles written by ${author.name}`}
+        description={author.description || `Articles written by ${author.name} on iGeeksBlog`}
+        url={`https://dev.igeeksblog.com/author/${author.slug}`}
+        image={author.avatar_urls?.['96']}
+        author={author}
       />
       <div className="container mx-auto px-4 py-8">
         {/* Author Header */}
