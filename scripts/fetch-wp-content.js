@@ -3,12 +3,31 @@ import path from 'path';
 
 const WORDPRESS_API = process.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2';
 const OUTPUT_DIR = './src/data';
+const FETCH_TIMEOUT = 30000; // 30 seconds
+
+// Fetch with timeout wrapper
+async function fetchWithTimeout(url, timeout = FETCH_TIMEOUT) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new Error(`Request timed out after ${timeout}ms: ${url}`);
+    }
+    throw error;
+  }
+}
 
 // Test API connectivity before proceeding
 async function testApiConnection() {
   console.log('🔌 Testing API connection...');
   try {
-    const response = await fetch(`${WORDPRESS_API}/posts?per_page=1`);
+    const response = await fetchWithTimeout(`${WORDPRESS_API}/posts?per_page=1`);
     if (!response.ok) {
       throw new Error(`API returned ${response.status}: ${response.statusText}`);
     }
@@ -17,7 +36,7 @@ async function testApiConnection() {
     return true;
   } catch (error) {
     console.error(`❌ API connection failed: ${error.message}`);
-    return false;
+    throw error; // Re-throw to fail the build
   }
 }
 
@@ -27,10 +46,7 @@ async function fetchWordPressContent() {
     console.log(`📡 API URL: ${WORDPRESS_API}`);
     
     // Test API first
-    const apiOk = await testApiConnection();
-    if (!apiOk) {
-      throw new Error('Cannot connect to WordPress API');
-    }
+    await testApiConnection();
     
     // Ensure output directory exists
     if (!fs.existsSync(OUTPUT_DIR)) {
@@ -225,7 +241,7 @@ async function fetchWordPressContent() {
     console.log('\n🎉 WordPress content fetch complete!');
     
   } catch (error) {
-    console.error('❌ Error fetching WordPress content:', error);
+    console.error('❌ Error fetching WordPress content:', error.message);
     console.error('Stack trace:', error.stack);
     process.exit(1);
   }
@@ -238,13 +254,12 @@ async function fetchAllPosts() {
 
   while (hasMore) {
     console.log(`  Fetching posts page ${page}...`);
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `${WORDPRESS_API}/posts?page=${page}&per_page=100&_embed=true`
     );
     
     if (!response.ok) {
       if (response.status === 400) {
-        // No more pages
         hasMore = false;
         break;
       }
@@ -259,7 +274,6 @@ async function fetchAllPosts() {
     
     allPosts = [...allPosts, ...posts];
     
-    // Check if there are more pages
     const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
     hasMore = page < totalPages;
     page++;
@@ -274,7 +288,7 @@ async function fetchAllCategories() {
   let hasMore = true;
 
   while (hasMore) {
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `${WORDPRESS_API}/categories?page=${page}&per_page=100`
     );
     
@@ -302,7 +316,7 @@ async function fetchAllTags() {
   let hasMore = true;
 
   while (hasMore) {
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `${WORDPRESS_API}/tags?page=${page}&per_page=100`
     );
     
@@ -325,14 +339,19 @@ async function fetchAllTags() {
 }
 
 async function fetchAllAuthors() {
-  const response = await fetch(`${WORDPRESS_API}/users?per_page=100`);
-  
-  if (!response.ok) {
-    console.warn('Could not fetch authors, using empty array');
+  try {
+    const response = await fetchWithTimeout(`${WORDPRESS_API}/users?per_page=100`);
+    
+    if (!response.ok) {
+      console.warn('Could not fetch authors, using empty array');
+      return [];
+    }
+
+    return response.json();
+  } catch (error) {
+    console.warn('Authors fetch failed, using empty array:', error.message);
     return [];
   }
-
-  return response.json();
 }
 
 function stripHtml(html) {

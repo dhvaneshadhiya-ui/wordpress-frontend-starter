@@ -4,7 +4,9 @@ frontend:
   phases:
     preBuild:
       commands:
+        - echo "=== Environment Check ==="
         - node --version
+        - npm --version
         - npm install
     build:
       commands:
@@ -12,12 +14,16 @@ frontend:
         - export SITE_URL=https://dev.igeeksblog.com
         
         - echo "=== Step 1: Fetching WordPress content ==="
+        - echo "Testing API connectivity..."
+        - curl -s -o /dev/null -w "API Status: %{http_code}\n" https://dev.igeeksblog.com/wp-json/wp/v2/posts?per_page=1 || echo "curl test failed"
         - node scripts/fetch-wp-content.js
-        - test -f src/data/posts.json && echo "✅ posts.json exists" || exit 1
+        - echo "Checking generated files..."
+        - ls -la src/data/
+        - test -f src/data/posts.json && echo "posts.json exists" || (echo "posts.json MISSING" && exit 1)
         
         - echo "=== Step 2: Building Vite application ==="
         - npx vite build
-        - test -f dist/index.html && echo "✅ dist/index.html exists" || exit 1
+        - test -f dist/index.html && echo "dist/index.html exists" || exit 1
         
         - echo "=== Step 3: Generating static HTML with SEO ==="
         - node scripts/build-static.js
@@ -25,8 +31,10 @@ frontend:
         - echo "=== Step 4: Generating sitemaps and robots.txt ==="
         - node scripts/generate-seo-files.js
         
-        - echo "=== Build complete ==="
+        - echo "=== Build Verification ==="
+        - echo "Total HTML files:"
         - find dist -name "index.html" | wc -l
+        - ls -la dist/
   artifacts:
     baseDirectory: dist
     files:
