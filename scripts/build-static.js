@@ -195,7 +195,7 @@ function generatePostHTML(post, viteAssets) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
     <meta name="description" content="${description}">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="noindex, nofollow">
     
     <!-- Open Graph -->
     <meta property="og:type" content="article">
@@ -290,7 +290,7 @@ function generateCategoryHTML(category, posts, viteAssets) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
     <meta name="description" content="${description}">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="noindex, nofollow">
     
     <meta property="og:type" content="website">
     <meta property="og:title" content="${title}">
@@ -349,7 +349,7 @@ function generateTagHTML(tag, posts, viteAssets) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
     <meta name="description" content="${description}">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="noindex, nofollow">
     
     <meta property="og:type" content="website">
     <meta property="og:title" content="${title}">
@@ -411,7 +411,7 @@ function generateAuthorHTML(author, posts, viteAssets) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
     <meta name="description" content="${description}">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="noindex, nofollow">
     
     <meta property="og:type" content="profile">
     <meta property="og:title" content="${title}">
@@ -483,7 +483,7 @@ function generateIndexHTML(posts, viteAssets) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
     <meta name="description" content="${description}">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="noindex, nofollow">
     
     <meta property="og:type" content="website">
     <meta property="og:title" content="${title}">
