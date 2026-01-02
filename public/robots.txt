@@ -1,14 +1,5 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
+# Staging site - Block all crawlers
 User-agent: *
-Allow: /
+Disallow: /
+
+# Note: Remove this and restore Allow rules when moving to production
