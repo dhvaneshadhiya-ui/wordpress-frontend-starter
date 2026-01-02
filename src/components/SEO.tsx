@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { WPPost } from '@/lib/wordpress';
+import { WPPost, stripHtml } from '@/lib/wordpress';
 
 interface SEOProps {
   title?: string;
@@ -14,6 +14,38 @@ const SITE_NAME = 'iGeeksBlog';
 const DEFAULT_DESCRIPTION = 'Your daily source for Apple news, how-to guides, tips, and app reviews.';
 const DEFAULT_IMAGE = 'https://dev.igeeksblog.com/wp-content/uploads/2020/12/igeeksblog-logo.png';
 const SITE_URL = 'https://dev.igeeksblog.com';
+
+// Generate Article JSON-LD schema for blog posts
+function generateArticleSchema(post: WPPost, imageUrl: string, description: string) {
+  const author = post._embedded?.author?.[0];
+  
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": stripHtml(post.title.rendered),
+    "description": description,
+    "image": imageUrl,
+    "datePublished": post.date,
+    "dateModified": post.modified,
+    "author": {
+      "@type": "Person",
+      "name": author?.name || "iGeeksBlog",
+      "url": author?.slug ? `${SITE_URL}/author/${author.slug}` : SITE_URL
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "iGeeksBlog",
+      "logo": {
+        "@type": "ImageObject",
+        "url": DEFAULT_IMAGE
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/${post.slug}`
+    }
+  };
+}
 
 // Parse meta tags from raw AIOSEO HTML
 function parseAioseoHead(html: string): Record<string, string> {
@@ -77,6 +109,11 @@ export function SEO({ title, description, image, url, type = 'website', post }: 
   
   const finalUrl = aioseoParsed.canonical || url || SITE_URL;
 
+  // Generate Article schema for blog posts
+  const articleSchema = (type === 'article' && post) 
+    ? generateArticleSchema(post, finalImage, finalDescription)
+    : null;
+
   return (
     <Helmet>
       {/* Basic Meta */}
@@ -99,6 +136,13 @@ export function SEO({ title, description, image, url, type = 'website', post }: 
       
       {/* Canonical URL */}
       <link rel="canonical" href={finalUrl} />
+      
+      {/* JSON-LD Schema for Articles */}
+      {articleSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(articleSchema)}
+        </script>
+      )}
     </Helmet>
   );
 }
