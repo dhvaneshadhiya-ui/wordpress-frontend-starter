@@ -167,31 +167,14 @@ ${recentPosts.map(post => `  <url>
 }
 
 function generateRobots() {
-  return `# robots.txt for ${SITE_URL}
+  return `# Staging site - Block all crawlers
 User-agent: *
-Allow: /
+Disallow: /
 
-# Sitemaps
-Sitemap: ${SITE_URL}/sitemap.xml
-Sitemap: ${SITE_URL}/sitemap-news.xml
-
-# Crawl-delay (optional, adjust as needed)
-Crawl-delay: 1
-
-# Disallow admin/private paths
-Disallow: /api/
-Disallow: /admin/
-Disallow: /_next/
-Disallow: /static/
-
-# Allow search engines to access all content
-Allow: /*.css
-Allow: /*.js
-Allow: /*.png
-Allow: /*.jpg
-Allow: /*.gif
-Allow: /*.svg
-Allow: /*.webp
+# Note: Remove this and restore Allow rules when moving to production
+# Sitemaps (commented out for staging)
+# Sitemap: ${SITE_URL}/sitemap.xml
+# Sitemap: ${SITE_URL}/sitemap-news.xml
 `;
 }
 
