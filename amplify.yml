@@ -4,8 +4,6 @@ frontend:
   phases:
     preBuild:
       commands:
-        - nvm install 18
-        - nvm use 18
         - node --version
         - npm install
     build:
@@ -14,18 +12,18 @@ frontend:
         - export SITE_URL=https://dev.igeeksblog.com
         
         - echo "=== Step 1: Fetching WordPress content ==="
-        - nvm use 18 && node scripts/fetch-wp-content.js
+        - node scripts/fetch-wp-content.js
         - test -f src/data/posts.json && echo "✅ posts.json exists" || exit 1
         
         - echo "=== Step 2: Building Vite application ==="
-        - nvm use 18 && npx vite build
+        - npx vite build
         - test -f dist/index.html && echo "✅ dist/index.html exists" || exit 1
         
         - echo "=== Step 3: Generating static HTML with SEO ==="
-        - nvm use 18 && node scripts/build-static.js
+        - node scripts/build-static.js
         
         - echo "=== Step 4: Generating sitemaps and robots.txt ==="
-        - nvm use 18 && node scripts/generate-seo-files.js
+        - node scripts/generate-seo-files.js
         
         - echo "=== Build complete ==="
         - find dist -name "index.html" | wc -l
