@@ -5,6 +5,8 @@ frontend:
     preBuild:
       commands:
         - npm install
+        - echo "Setting environment variables..."
+        - export VITE_WORDPRESS_API_URL=https://dev.igeeksblog.com/wp-json/wp/v2
         - echo "Fetching WordPress content for static generation..."
         - node scripts/fetch-wp-content.js
     build:
@@ -29,5 +31,5 @@ frontend:
       - node_modules/**/*
       - src/data/**/*
 
-# Environment variables (set these in AWS Amplify Console)
-# VITE_WORDPRESS_API_URL: https://dev.igeeksblog.com/wp-json/wp/v2
+# Environment variables are now set inline in preBuild commands
+# You can also set them in AWS Amplify Console for security
