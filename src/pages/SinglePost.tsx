@@ -1,7 +1,8 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
+import { SEO } from '@/components/SEO';
 import { usePost, usePosts } from '@/hooks/useWordPress';
-import { getFeaturedImageUrl, getAuthor, getCategories, getReadingTime, formatDate, stripHtml } from '@/lib/wordpress';
+import { getFeaturedImageUrl, getAuthor, getCategories, getTags, getReadingTime, formatDate, stripHtml } from '@/lib/wordpress';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PostGrid } from '@/components/PostGrid';
@@ -26,6 +27,7 @@ export default function SinglePost() {
   if (error || !post) {
     return (
       <Layout>
+        <SEO title="Post Not Found" />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-foreground">Post not found</h1>
           <p className="mt-2 text-muted-foreground">The article you're looking for doesn't exist.</p>
@@ -37,24 +39,34 @@ export default function SinglePost() {
   const imageUrl = getFeaturedImageUrl(post, 'full');
   const author = getAuthor(post);
   const categories = getCategories(post);
+  const tags = getTags(post);
   const readingTime = getReadingTime(post.content.rendered);
   const primaryCategory = categories[0];
 
   return (
     <Layout>
+      <SEO 
+        title={stripHtml(post.title.rendered)}
+        post={post}
+        type="article"
+        image={imageUrl}
+      />
       <article className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <header className="mb-8">
           {primaryCategory && (
-            <span className="mb-3 inline-block rounded bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-foreground">
+            <Link 
+              to={`/category/${primaryCategory.slug}`}
+              className="mb-3 inline-block rounded bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-foreground hover:opacity-90 transition-opacity"
+            >
               {primaryCategory.name}
-            </span>
+            </Link>
           )}
           <h1 className="mb-4 text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
             {stripHtml(post.title.rendered)}
           </h1>
           <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
-            <div className="flex items-center gap-2">
+            <Link to={author.slug ? `/author/${author.slug}` : '#'} className="flex items-center gap-2 hover:text-primary transition-colors">
               <Avatar className="h-10 w-10 border border-border">
                 <AvatarImage src={author.avatar} alt={author.name} />
                 <AvatarFallback className="bg-primary text-primary-foreground">
@@ -62,7 +74,7 @@ export default function SinglePost() {
                 </AvatarFallback>
               </Avatar>
               <span className="font-medium text-foreground">{author.name}</span>
-            </div>
+            </Link>
             <span>{formatDate(post.date)}</span>
             <span>•</span>
             <span>{readingTime} min read</span>
@@ -84,17 +96,36 @@ export default function SinglePost() {
           dangerouslySetInnerHTML={{ __html: post.content.rendered }}
         />
 
+        {/* Tags */}
+        {tags.length > 0 && (
+          <div className="mt-8 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <Link
+                key={tag.id}
+                to={`/tag/${tag.slug}`}
+                className="px-3 py-1 text-sm rounded-full bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
+                #{tag.name}
+              </Link>
+            ))}
+          </div>
+        )}
+
         {/* Author Box */}
         <div className="mt-12 rounded-lg border border-border bg-card p-6">
           <div className="flex items-start gap-4">
-            <Avatar className="h-16 w-16 border border-border">
-              <AvatarImage src={author.avatar} alt={author.name} />
-              <AvatarFallback className="text-xl bg-primary text-primary-foreground">
-                {author.name.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+            <Link to={author.slug ? `/author/${author.slug}` : '#'}>
+              <Avatar className="h-16 w-16 border border-border">
+                <AvatarImage src={author.avatar} alt={author.name} />
+                <AvatarFallback className="text-xl bg-primary text-primary-foreground">
+                  {author.name.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
             <div>
-              <h3 className="text-lg font-bold text-foreground">{author.name}</h3>
+              <Link to={author.slug ? `/author/${author.slug}` : '#'} className="hover:text-primary transition-colors">
+                <h3 className="text-lg font-bold text-foreground">{author.name}</h3>
+              </Link>
               <p className="mt-1 text-muted-foreground">
                 Author at iGeeksBlog
               </p>

@@ -1,6 +1,8 @@
 import { ReactNode, useEffect } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import { Header } from './Header';
 import { TrendingBar } from './TrendingBar';
+import { Footer } from './Footer';
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,10 +18,13 @@ export function Layout({ children }: LayoutProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <TrendingBar />
-      <main>{children}</main>
-    </div>
+    <HelmetProvider>
+      <div className="min-h-screen bg-background flex flex-col">
+        <Header />
+        <TrendingBar />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </div>
+    </HelmetProvider>
   );
 }

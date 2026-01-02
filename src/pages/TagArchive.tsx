@@ -4,16 +4,16 @@ import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
 import { PaginationNav } from '@/components/PaginationNav';
 import { SEO } from '@/components/SEO';
-import { useCategory, useCategoryPosts } from '@/hooks/useWordPress';
+import { useTag, useTagPosts } from '@/hooks/useWordPress';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export default function CategoryArchive() {
+export default function TagArchive() {
   const { slug } = useParams<{ slug: string }>();
   const [page, setPage] = useState(1);
-  const { data: category, isLoading: categoryLoading } = useCategory(slug);
-  const { data: postsData, isLoading: postsLoading } = useCategoryPosts(slug, page);
+  const { data: tag, isLoading: tagLoading } = useTag(slug);
+  const { data: postsData, isLoading: postsLoading } = useTagPosts(slug, page);
 
-  if (categoryLoading) {
+  if (tagLoading) {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8">
@@ -24,13 +24,13 @@ export default function CategoryArchive() {
     );
   }
 
-  if (!category) {
+  if (!tag) {
     return (
       <Layout>
-        <SEO title="Category Not Found" />
+        <SEO title="Tag Not Found" />
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-2xl font-bold text-foreground">Category not found</h1>
-          <p className="mt-2 text-muted-foreground">The category you're looking for doesn't exist.</p>
+          <h1 className="text-2xl font-bold text-foreground">Tag not found</h1>
+          <p className="mt-2 text-muted-foreground">The tag you're looking for doesn't exist.</p>
         </div>
       </Layout>
     );
@@ -39,20 +39,18 @@ export default function CategoryArchive() {
   return (
     <Layout>
       <SEO 
-        title={category.name}
-        description={category.description || `Browse all ${category.name} articles`}
+        title={`${tag.name} Articles`}
+        description={`Browse all articles tagged with ${tag.name}`}
       />
       <div className="container mx-auto px-4 py-8">
-        {/* Category Header */}
+        {/* Tag Header */}
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground sm:text-4xl">
-            {category.name}
+          <span className="text-sm font-medium text-primary uppercase tracking-wide">Tag</span>
+          <h1 className="text-3xl font-bold text-foreground sm:text-4xl mt-1">
+            {tag.name}
           </h1>
-          {category.description && (
-            <p className="mt-2 text-muted-foreground">{category.description}</p>
-          )}
-          <p className="mt-2 text-sm text-muted-foreground">
-            {category.count} {category.count === 1 ? 'article' : 'articles'}
+          <p className="mt-2 text-muted-foreground">
+            {tag.count} {tag.count === 1 ? 'article' : 'articles'}
           </p>
         </header>
 
