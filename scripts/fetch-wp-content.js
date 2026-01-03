@@ -62,6 +62,46 @@ async function testApiConnection() {
   }
 }
 
+// Fetch a single media item by ID
+async function fetchMedia(mediaId) {
+  if (!mediaId) return null;
+  try {
+    const response = await fetchWithTimeout(`${WORDPRESS_API}/media/${mediaId}`, 15000, 2);
+    if (!response.ok) return null;
+    const media = await response.json();
+    return media.source_url || media.media_details?.sizes?.full?.source_url || null;
+  } catch {
+    return null;
+  }
+}
+
+// Batch fetch media for multiple posts
+async function fetchMediaBatch(mediaIds) {
+  const uniqueIds = [...new Set(mediaIds.filter(id => id))];
+  if (uniqueIds.length === 0) return {};
+  
+  console.log(`  📷 Fetching ${uniqueIds.length} featured images...`);
+  
+  const mediaMap = {};
+  
+  // Fetch in batches of 10 to avoid overwhelming the server
+  for (let i = 0; i < uniqueIds.length; i += 10) {
+    const batch = uniqueIds.slice(i, i + 10);
+    const results = await Promise.all(batch.map(id => fetchMedia(id)));
+    
+    batch.forEach((id, index) => {
+      mediaMap[id] = results[index];
+    });
+    
+    // Small delay between batches
+    if (i + 10 < uniqueIds.length) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+  }
+  
+  return mediaMap;
+}
+
 async function fetchWordPressContent() {
   try {
     console.log('🚀 Fetching WordPress content...');
@@ -76,38 +116,49 @@ async function fetchWordPressContent() {
       console.log(`📁 Created output directory: ${OUTPUT_DIR}`);
     }
 
-    // Fetch posts with embedded data
-    const posts = await fetchAllPosts();
-    console.log(`📦 Fetched ${posts.length} posts`);
-
-    // Fetch categories
+    // Fetch categories, tags, and authors FIRST (these are lightweight)
     const categories = await fetchAllCategories();
     console.log(`📂 Fetched ${categories.length} categories`);
 
-    // Fetch tags
     const tags = await fetchAllTags();
     console.log(`🏷️ Fetched ${tags.length} tags`);
 
-    // Fetch authors
     const authors = await fetchAllAuthors();
     console.log(`👤 Fetched ${authors.length} authors`);
 
-    // Process posts with SEO metadata
+    // Create lookup maps for efficient joining
+    const authorMap = Object.fromEntries(authors.map(a => [a.id, a]));
+    const categoryMap = Object.fromEntries(categories.map(c => [c.id, c]));
+    const tagMap = Object.fromEntries(tags.map(t => [t.id, t]));
+
+    // Fetch posts WITHOUT _embed (much faster!)
+    const posts = await fetchAllPosts();
+    console.log(`📦 Fetched ${posts.length} posts`);
+
+    // Batch fetch all featured media
+    const mediaIds = posts.map(post => post.featured_media);
+    const mediaMap = await fetchMediaBatch(mediaIds);
+
+    // Process posts with SEO metadata using lookup maps
     const postsWithMeta = posts.map((post) => {
       const aioseoJson = post.aioseo_head_json || {};
       const yoastJson = post.yoast_head_json || {};
       
-      // Extract featured image
-      const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
-      const featuredImage = featuredMedia?.source_url || featuredMedia?.media_details?.sizes?.full?.source_url;
+      // Get featured image from our fetched media
+      const featuredImage = mediaMap[post.featured_media] || null;
       
-      // Extract author
-      const author = post._embedded?.author?.[0];
+      // Get author from lookup map
+      const author = authorMap[post.author] || null;
       
-      // Extract categories and tags from embedded terms
-      const embeddedTerms = post._embedded?.['wp:term'] || [];
-      const postCategories = embeddedTerms[0] || [];
-      const postTags = embeddedTerms[1] || [];
+      // Get categories from lookup map
+      const postCategories = (post.categories || [])
+        .map(catId => categoryMap[catId])
+        .filter(Boolean);
+      
+      // Get tags from lookup map
+      const postTags = (post.tags || [])
+        .map(tagId => tagMap[tagId])
+        .filter(Boolean);
 
       // Build SEO data with fallbacks
       const seo = {
@@ -269,6 +320,7 @@ async function fetchWordPressContent() {
   }
 }
 
+// Fetch posts WITHOUT _embed - much lighter queries!
 async function fetchAllPosts() {
   let allPosts = [];
   let page = 1;
@@ -277,7 +329,7 @@ async function fetchAllPosts() {
   while (hasMore) {
     console.log(`  Fetching posts page ${page}...`);
     const response = await fetchWithTimeout(
-      `${WORDPRESS_API}/posts?page=${page}&per_page=20&_embed=true`
+      `${WORDPRESS_API}/posts?page=${page}&per_page=20`
     );
     
     if (!response.ok) {
@@ -302,7 +354,7 @@ async function fetchAllPosts() {
     
     // Add delay between requests to avoid overwhelming the server
     if (hasMore) {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 300));
     }
   }
 
