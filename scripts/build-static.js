@@ -1,11 +1,47 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com';
 const DATA_DIR = './src/data';
 const DIST_DIR = './dist';
+const CACHE_DIR = './.build-cache';
+const PARALLEL_WRITES = 50; // Number of files to write in parallel
 
-// Read Vite's built index.html to get correct asset references
+// ============= Caching Utilities =============
+
+function ensureCacheDir() {
+  if (!fs.existsSync(CACHE_DIR)) {
+    fs.mkdirSync(CACHE_DIR, { recursive: true });
+  }
+}
+
+function getStaticCache() {
+  const cachePath = path.join(CACHE_DIR, 'static-cache.json');
+  if (fs.existsSync(cachePath)) {
+    try {
+      return JSON.parse(fs.readFileSync(cachePath, 'utf8'));
+    } catch {
+      return { hashes: {} };
+    }
+  }
+  return { hashes: {} };
+}
+
+function saveStaticCache(cache) {
+  ensureCacheDir();
+  fs.writeFileSync(
+    path.join(CACHE_DIR, 'static-cache.json'),
+    JSON.stringify(cache, null, 2)
+  );
+}
+
+function getContentHash(content) {
+  return crypto.createHash('md5').update(content).digest('hex');
+}
+
+// ============= Vite Assets =============
+
 function getViteAssets() {
   const indexPath = path.join(DIST_DIR, 'index.html');
   
@@ -16,7 +52,6 @@ function getViteAssets() {
   
   const indexHtml = fs.readFileSync(indexPath, 'utf8');
   
-  // Extract script and link tags from Vite's index.html
   const scriptMatch = indexHtml.match(/<script[^>]*type="module"[^>]*src="([^"]+)"[^>]*>/);
   const cssMatches = indexHtml.matchAll(/<link[^>]*rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g);
   
@@ -27,144 +62,43 @@ function getViteAssets() {
     cssPaths.push(match[1]);
   }
   
-  console.log(`📦 Found Vite assets: JS=${jsPath}, CSS=${cssPaths.join(', ') || 'none'}`);
+  console.log(`📦 Vite assets: JS=${jsPath}, CSS=${cssPaths.length} files`);
   
   return { jsPath, cssPaths };
 }
 
-function generateStaticHTML() {
-  try {
-    console.log('🏗️ Generating static HTML files...');
-    console.log(`📁 Data directory: ${DATA_DIR}`);
-    console.log(`📁 Dist directory: ${DIST_DIR}`);
+// ============= Parallel File Writing =============
 
-    // Check if data exists with detailed logging
-    const postsPath = path.join(DATA_DIR, 'posts.json');
-    console.log(`🔍 Looking for posts.json at: ${postsPath}`);
+async function writeFilesInParallel(files, cache) {
+  const results = { written: 0, skipped: 0 };
+  
+  for (let i = 0; i < files.length; i += PARALLEL_WRITES) {
+    const batch = files.slice(i, i + PARALLEL_WRITES);
     
-    if (!fs.existsSync(postsPath)) {
-      console.error('❌ No posts.json found. Run fetch-content first.');
-      process.exit(1);
-    }
-
-    // Get Vite asset paths
-    const viteAssets = getViteAssets();
-
-    // Load data with verification
-    console.log('📖 Loading data files...');
-    const postsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'posts.json'), 'utf8'));
-    console.log(`  ✅ Loaded ${postsData.length} posts`);
-    
-    const categoriesData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'categories.json'), 'utf8'));
-    console.log(`  ✅ Loaded ${categoriesData.length} categories`);
-    
-    const tagsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'tags.json'), 'utf8'));
-    console.log(`  ✅ Loaded ${tagsData.length} tags`);
-    
-    const authorsData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'authors.json'), 'utf8'));
-    console.log(`  ✅ Loaded ${authorsData.length} authors`);
-
-    // Generate HTML for each post with progress logging
-    let postCount = 0;
-    for (const post of postsData) {
-      try {
-        const html = generatePostHTML(post, viteAssets);
-        const postDir = path.join(DIST_DIR, post.slug);
-        
-        if (!fs.existsSync(postDir)) {
-          fs.mkdirSync(postDir, { recursive: true });
-        }
-        
-        fs.writeFileSync(path.join(postDir, 'index.html'), html);
-        postCount++;
-        
-        if (postCount % 50 === 0) {
-          console.log(`  📝 Generated ${postCount}/${postsData.length} posts...`);
-        }
-      } catch (err) {
-        console.error(`  ❌ Failed to generate post: ${post.slug}`, err.message);
+    await Promise.all(batch.map(async ({ filePath, content, cacheKey }) => {
+      const hash = getContentHash(content);
+      
+      // Skip if content hasn't changed
+      if (cache.hashes[cacheKey] === hash && fs.existsSync(filePath)) {
+        results.skipped++;
+        return;
       }
-    }
-    console.log(`✅ Generated ${postCount} post pages`);
-
-    // Generate category pages
-    let categoryCount = 0;
-    for (const category of categoriesData) {
-      try {
-        const categoryPosts = postsData.filter(post => 
-          post.categories?.some(cat => cat.slug === category.slug)
-        );
-        const html = generateCategoryHTML(category, categoryPosts, viteAssets);
-        const catDir = path.join(DIST_DIR, 'category', category.slug);
-        
-        if (!fs.existsSync(catDir)) {
-          fs.mkdirSync(catDir, { recursive: true });
-        }
-        
-        fs.writeFileSync(path.join(catDir, 'index.html'), html);
-        categoryCount++;
-      } catch (err) {
-        console.error(`  ❌ Failed to generate category: ${category.slug}`, err.message);
+      
+      const dir = path.dirname(filePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
       }
-    }
-    console.log(`✅ Generated ${categoryCount} category pages`);
-
-    // Generate tag pages
-    let tagCount = 0;
-    for (const tag of tagsData) {
-      try {
-        const tagPosts = postsData.filter(post => 
-          post.tags?.some(t => t.slug === tag.slug)
-        );
-        const html = generateTagHTML(tag, tagPosts, viteAssets);
-        const tagDir = path.join(DIST_DIR, 'tag', tag.slug);
-        
-        if (!fs.existsSync(tagDir)) {
-          fs.mkdirSync(tagDir, { recursive: true });
-        }
-        
-        fs.writeFileSync(path.join(tagDir, 'index.html'), html);
-        tagCount++;
-      } catch (err) {
-        console.error(`  ❌ Failed to generate tag: ${tag.slug}`, err.message);
-      }
-    }
-    console.log(`✅ Generated ${tagCount} tag pages`);
-
-    // Generate author pages
-    let authorCount = 0;
-    for (const author of authorsData) {
-      try {
-        const authorPosts = postsData.filter(post => 
-          post.author?.slug === author.slug
-        );
-        const html = generateAuthorHTML(author, authorPosts, viteAssets);
-        const authorDir = path.join(DIST_DIR, 'author', author.slug);
-        
-        if (!fs.existsSync(authorDir)) {
-          fs.mkdirSync(authorDir, { recursive: true });
-        }
-        
-        fs.writeFileSync(path.join(authorDir, 'index.html'), html);
-        authorCount++;
-      } catch (err) {
-        console.error(`  ❌ Failed to generate author: ${author.slug}`, err.message);
-      }
-    }
-    console.log(`✅ Generated ${authorCount} author pages`);
-
-    // Update the index.html with SEO content
-    const indexHTML = generateIndexHTML(postsData, viteAssets);
-    fs.writeFileSync(path.join(DIST_DIR, 'index.html'), indexHTML);
-    console.log(`✅ Updated index page with SEO content`);
-
-    console.log('\n🎉 Static HTML generation complete!');
-  } catch (error) {
-    console.error('❌ Static HTML generation failed:', error.message);
-    console.error('Stack:', error.stack);
-    process.exit(1);
+      
+      fs.writeFileSync(filePath, content);
+      cache.hashes[cacheKey] = hash;
+      results.written++;
+    }));
   }
+  
+  return results;
 }
+
+// ============= HTML Generators =============
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -192,40 +126,30 @@ function generateAssetTags(viteAssets) {
 }
 
 function generatePostHTML(post, viteAssets) {
-  const title = escapeHtml(stripHtml(post.seo.title || post.title?.rendered || ''));
-  const description = escapeHtml(post.seo.description || '');
-  const ogTitle = escapeHtml(post.seo.ogTitle || title);
-  const ogDescription = escapeHtml(post.seo.ogDescription || description);
-  const image = post.seo.image || '';
+  const title = escapeHtml(stripHtml(post.seo?.title || post.title?.rendered || ''));
+  const description = escapeHtml(post.seo?.description || '');
+  const ogTitle = escapeHtml(post.seo?.ogTitle || title);
+  const ogDescription = escapeHtml(post.seo?.ogDescription || description);
+  const image = post.seo?.image || post.featuredImage || '';
   const canonical = `${SITE_URL}/${post.slug}`;
   const authorName = escapeHtml(post.author?.name || 'iGeeksBlog');
   const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
-  // Generate JSON-LD for article
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": stripHtml(post.title?.rendered || ''),
     "description": stripHtml(post.excerpt?.rendered || ''),
     "image": image,
-    "author": {
-      "@type": "Person",
-      "name": post.author?.name || 'iGeeksBlog'
-    },
+    "author": { "@type": "Person", "name": post.author?.name || 'iGeeksBlog' },
     "publisher": {
       "@type": "Organization",
       "name": "iGeeksBlog",
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${SITE_URL}/favicon.ico`
-      }
+      "logo": { "@type": "ImageObject", "url": `${SITE_URL}/favicon.ico` }
     },
     "datePublished": post.date,
     "dateModified": post.modified,
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": canonical
-    }
+    "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }
   };
 
   return `<!DOCTYPE html>
@@ -236,42 +160,27 @@ function generatePostHTML(post, viteAssets) {
     <title>${title}</title>
     <meta name="description" content="${description}">
     <meta name="robots" content="noindex, nofollow">
-    
-    <!-- Open Graph -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="${ogTitle}">
     <meta property="og:description" content="${ogDescription}">
     <meta property="og:url" content="${canonical}">
     <meta property="og:site_name" content="iGeeksBlog">
     ${image ? `<meta property="og:image" content="${image}">` : ''}
-    
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@iaborahimali">
-    <meta name="twitter:title" content="${escapeHtml(post.seo.twitterTitle || title)}">
-    <meta name="twitter:description" content="${escapeHtml(post.seo.twitterDescription || description)}">
-    ${post.seo.twitterImage ? `<meta name="twitter:image" content="${post.seo.twitterImage}">` : ''}
-    
-    <!-- Article meta -->
-    <meta property="article:published_time" content="${post.seo.publishedTime}">
-    <meta property="article:modified_time" content="${post.seo.modifiedTime}">
+    <meta name="twitter:title" content="${escapeHtml(post.seo?.twitterTitle || title)}">
+    <meta name="twitter:description" content="${escapeHtml(post.seo?.twitterDescription || description)}">
+    ${post.seo?.twitterImage ? `<meta name="twitter:image" content="${post.seo.twitterImage}">` : ''}
+    <meta property="article:published_time" content="${post.seo?.publishedTime || post.date}">
+    <meta property="article:modified_time" content="${post.seo?.modifiedTime || post.modified}">
     <meta property="article:author" content="${authorName}">
-    
-    <!-- Canonical URL -->
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    
-    <!-- Vite CSS -->
     ${cssTags}
-    
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    ${JSON.stringify(jsonLd, null, 2)}
-    </script>
+    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body>
     <div id="root">
-        <!-- Pre-rendered content for SEO -->
         <article itemscope itemtype="https://schema.org/Article">
             <header>
                 <h1 itemprop="headline">${post.title?.rendered || ''}</h1>
@@ -285,16 +194,10 @@ function generatePostHTML(post, viteAssets) {
                 </div>
                 ${image ? `<img itemprop="image" src="${image}" alt="${title}" loading="lazy">` : ''}
             </header>
-            <div itemprop="articleBody" class="content">
-                ${post.content?.rendered || ''}
-            </div>
+            <div itemprop="articleBody" class="content">${post.content?.rendered || ''}</div>
         </article>
     </div>
-    
-    <!-- Initial data for React hydration -->
-    <script>
-        window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'post', data: post })};
-    </script>
+    <script>window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'post', data: post })};</script>
     ${jsTag}
 </body>
 </html>`;
@@ -302,7 +205,7 @@ function generatePostHTML(post, viteAssets) {
 
 function generateCategoryHTML(category, posts, viteAssets) {
   const title = escapeHtml(category.seo?.title || `${category.name} - iGeeksBlog`);
-  const description = escapeHtml(category.seo?.description || category.description || `Browse all ${category.name} articles on iGeeksBlog`);
+  const description = escapeHtml(category.seo?.description || category.description || `Browse all ${category.name} articles`);
   const canonical = `${SITE_URL}/category/${category.slug}`;
   const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
@@ -315,9 +218,9 @@ function generateCategoryHTML(category, posts, viteAssets) {
     "mainEntity": {
       "@type": "ItemList",
       "numberOfItems": posts.length,
-      "itemListElement": posts.slice(0, 10).map((post, index) => ({
+      "itemListElement": posts.slice(0, 10).map((post, i) => ({
         "@type": "ListItem",
-        "position": index + 1,
+        "position": i + 1,
         "url": `${SITE_URL}/${post.slug}`
       }))
     }
@@ -331,26 +234,18 @@ function generateCategoryHTML(category, posts, viteAssets) {
     <title>${title}</title>
     <meta name="description" content="${description}">
     <meta name="robots" content="noindex, nofollow">
-    
     <meta property="og:type" content="website">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
     <meta property="og:url" content="${canonical}">
     <meta property="og:site_name" content="iGeeksBlog">
-    
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${description}">
-    
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    
-    <!-- Vite CSS -->
     ${cssTags}
-    
-    <script type="application/ld+json">
-    ${JSON.stringify(jsonLd, null, 2)}
-    </script>
+    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body>
     <div id="root">
@@ -367,10 +262,7 @@ function generateCategoryHTML(category, posts, viteAssets) {
             </div>
         </main>
     </div>
-    
-    <script>
-        window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'category', data: { category, posts: posts.slice(0, 10) } })};
-    </script>
+    <script>window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'category', data: { category, posts: posts.slice(0, 10) } })};</script>
     ${jsTag}
 </body>
 </html>`;
@@ -378,7 +270,7 @@ function generateCategoryHTML(category, posts, viteAssets) {
 
 function generateTagHTML(tag, posts, viteAssets) {
   const title = escapeHtml(`${tag.name} - iGeeksBlog`);
-  const description = escapeHtml(`Browse all articles tagged with ${tag.name} on iGeeksBlog`);
+  const description = escapeHtml(`Browse all articles tagged with ${tag.name}`);
   const canonical = `${SITE_URL}/tag/${tag.slug}`;
   const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
@@ -390,17 +282,13 @@ function generateTagHTML(tag, posts, viteAssets) {
     <title>${title}</title>
     <meta name="description" content="${description}">
     <meta name="robots" content="noindex, nofollow">
-    
     <meta property="og:type" content="website">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
     <meta property="og:url" content="${canonical}">
     <meta property="og:site_name" content="iGeeksBlog">
-    
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    
-    <!-- Vite CSS -->
     ${cssTags}
 </head>
 <body>
@@ -417,10 +305,7 @@ function generateTagHTML(tag, posts, viteAssets) {
             </div>
         </main>
     </div>
-    
-    <script>
-        window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'tag', data: { tag, posts: posts.slice(0, 10) } })};
-    </script>
+    <script>window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'tag', data: { tag, posts: posts.slice(0, 10) } })};</script>
     ${jsTag}
 </body>
 </html>`;
@@ -428,7 +313,7 @@ function generateTagHTML(tag, posts, viteAssets) {
 
 function generateAuthorHTML(author, posts, viteAssets) {
   const title = escapeHtml(`${author.name} - iGeeksBlog`);
-  const description = escapeHtml(author.description || `Articles by ${author.name} on iGeeksBlog`);
+  const description = escapeHtml(author.description || `Articles by ${author.name}`);
   const canonical = `${SITE_URL}/author/${author.slug}`;
   const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
@@ -452,23 +337,16 @@ function generateAuthorHTML(author, posts, viteAssets) {
     <title>${title}</title>
     <meta name="description" content="${description}">
     <meta name="robots" content="noindex, nofollow">
-    
     <meta property="og:type" content="profile">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
     <meta property="og:url" content="${canonical}">
     <meta property="og:site_name" content="iGeeksBlog">
     ${author.avatar ? `<meta property="og:image" content="${author.avatar}">` : ''}
-    
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    
-    <!-- Vite CSS -->
     ${cssTags}
-    
-    <script type="application/ld+json">
-    ${JSON.stringify(jsonLd, null, 2)}
-    </script>
+    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body>
     <div id="root">
@@ -488,19 +366,15 @@ function generateAuthorHTML(author, posts, viteAssets) {
             </div>
         </main>
     </div>
-    
-    <script>
-        window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'author', data: { author, posts: posts.slice(0, 10) } })};
-    </script>
+    <script>window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'author', data: { author, posts: posts.slice(0, 10) } })};</script>
     ${jsTag}
 </body>
 </html>`;
 }
 
 function generateIndexHTML(posts, viteAssets) {
-  const recentPosts = posts.slice(0, 12);
-  const title = 'iGeeksBlog - Apple News, How-To Guides, Tips & App Reviews';
-  const description = 'Your daily source for Apple news, how-to guides, tips, and app reviews.';
+  const title = 'iGeeksBlog - Apple News, iPhone Tips & Tech Reviews';
+  const description = 'Your source for the latest Apple news, iPhone tips, Mac tutorials, and comprehensive tech reviews.';
   const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
   const jsonLd = {
@@ -509,6 +383,11 @@ function generateIndexHTML(posts, viteAssets) {
     "name": "iGeeksBlog",
     "url": SITE_URL,
     "description": description,
+    "publisher": {
+      "@type": "Organization",
+      "name": "iGeeksBlog",
+      "logo": { "@type": "ImageObject", "url": `${SITE_URL}/favicon.ico` }
+    },
     "potentialAction": {
       "@type": "SearchAction",
       "target": `${SITE_URL}/?s={search_term_string}`,
@@ -524,54 +403,146 @@ function generateIndexHTML(posts, viteAssets) {
     <title>${title}</title>
     <meta name="description" content="${description}">
     <meta name="robots" content="noindex, nofollow">
-    
     <meta property="og:type" content="website">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
     <meta property="og:url" content="${SITE_URL}">
     <meta property="og:site_name" content="iGeeksBlog">
-    
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@iaborahimali">
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${description}">
-    
     <link rel="canonical" href="${SITE_URL}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    
-    <!-- Vite CSS -->
     ${cssTags}
-    
-    <script type="application/ld+json">
-    ${JSON.stringify(jsonLd, null, 2)}
-    </script>
+    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body>
     <div id="root">
         <main>
-            <h1>Latest Posts</h1>
+            <h1>iGeeksBlog</h1>
+            <p>${description}</p>
             <div class="posts-grid">
-                ${recentPosts.map(post => `
+                ${posts.slice(0, 9).map(post => `
                     <article>
                         ${post.featuredImage ? `<img src="${post.featuredImage}" alt="${escapeHtml(stripHtml(post.title?.rendered || ''))}" loading="lazy">` : ''}
                         <h2><a href="/${post.slug}">${post.title?.rendered || ''}</a></h2>
                         <p>${stripHtml(post.excerpt?.rendered || '').substring(0, 160)}...</p>
-                        <div class="meta">
-                            <span>${post.author?.name || 'iGeeksBlog'}</span>
-                            <time datetime="${post.date}">${new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</time>
-                        </div>
                     </article>
                 `).join('')}
             </div>
         </main>
     </div>
-    
-    <script>
-        window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'home', data: { posts: recentPosts } })};
-    </script>
+    <script>window.__INITIAL_DATA__ = ${JSON.stringify({ type: 'home', data: { posts: posts.slice(0, 9) } })};</script>
     ${jsTag}
 </body>
 </html>`;
+}
+
+// ============= Main Build Function =============
+
+async function generateStaticHTML() {
+  const startTime = Date.now();
+  
+  try {
+    console.log('🏗️ Generating static HTML files with caching...');
+
+    const postsPath = path.join(DATA_DIR, 'posts.json');
+    if (!fs.existsSync(postsPath)) {
+      console.error('❌ No posts.json found. Run fetch-content first.');
+      process.exit(1);
+    }
+
+    const viteAssets = getViteAssets();
+    const cache = getStaticCache();
+
+    // Load all data
+    console.log('📖 Loading data files...');
+    const [postsData, categoriesData, tagsData, authorsData] = await Promise.all([
+      JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'posts.json'), 'utf8')),
+      JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'categories.json'), 'utf8')),
+      JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'tags.json'), 'utf8')),
+      JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'authors.json'), 'utf8'))
+    ]);
+
+    console.log(`  Posts: ${postsData.length}, Categories: ${categoriesData.length}, Tags: ${tagsData.length}, Authors: ${authorsData.length}`);
+
+    // Prepare all files to write
+    const filesToWrite = [];
+
+    // Post pages
+    for (const post of postsData) {
+      const html = generatePostHTML(post, viteAssets);
+      filesToWrite.push({
+        filePath: path.join(DIST_DIR, post.slug, 'index.html'),
+        content: html,
+        cacheKey: `post:${post.slug}:${post.modified}`
+      });
+    }
+
+    // Category pages
+    for (const category of categoriesData) {
+      const categoryPosts = postsData.filter(post => 
+        post.categories?.some(cat => cat.slug === category.slug)
+      );
+      const html = generateCategoryHTML(category, categoryPosts, viteAssets);
+      filesToWrite.push({
+        filePath: path.join(DIST_DIR, 'category', category.slug, 'index.html'),
+        content: html,
+        cacheKey: `category:${category.slug}`
+      });
+    }
+
+    // Tag pages
+    for (const tag of tagsData) {
+      const tagPosts = postsData.filter(post => 
+        post.tags?.some(t => t.slug === tag.slug)
+      );
+      const html = generateTagHTML(tag, tagPosts, viteAssets);
+      filesToWrite.push({
+        filePath: path.join(DIST_DIR, 'tag', tag.slug, 'index.html'),
+        content: html,
+        cacheKey: `tag:${tag.slug}`
+      });
+    }
+
+    // Author pages
+    for (const author of authorsData) {
+      const authorPosts = postsData.filter(post => 
+        post.author?.slug === author.slug
+      );
+      const html = generateAuthorHTML(author, authorPosts, viteAssets);
+      filesToWrite.push({
+        filePath: path.join(DIST_DIR, 'author', author.slug, 'index.html'),
+        content: html,
+        cacheKey: `author:${author.slug}`
+      });
+    }
+
+    // Index page
+    const indexHTML = generateIndexHTML(postsData, viteAssets);
+    filesToWrite.push({
+      filePath: path.join(DIST_DIR, 'index.html'),
+      content: indexHTML,
+      cacheKey: 'index'
+    });
+
+    // Write all files in parallel with caching
+    console.log(`📝 Writing ${filesToWrite.length} HTML files...`);
+    const results = await writeFilesInParallel(filesToWrite, cache);
+    
+    // Save updated cache
+    saveStaticCache(cache);
+
+    const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+    console.log(`\n🎉 Static HTML generation complete in ${duration}s!`);
+    console.log(`   Written: ${results.written}, Skipped (cached): ${results.skipped}`);
+
+  } catch (error) {
+    console.error('❌ Static HTML generation failed:', error.message);
+    console.error('Stack:', error.stack);
+    process.exit(1);
+  }
 }
 
 generateStaticHTML();

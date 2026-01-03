@@ -1,12 +1,48 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 const WORDPRESS_API = process.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2';
 const OUTPUT_DIR = './src/data';
-const FETCH_TIMEOUT = 30000; // 30 seconds
+const CACHE_DIR = './.build-cache';
+const FETCH_TIMEOUT = 30000;
 const MAX_RETRIES = 3;
+const INCREMENTAL_MODE = process.env.INCREMENTAL_BUILD !== 'false';
 
-// Fetch with timeout and retry wrapper
+// ============= Caching Utilities =============
+
+function ensureCacheDir() {
+  if (!fs.existsSync(CACHE_DIR)) {
+    fs.mkdirSync(CACHE_DIR, { recursive: true });
+  }
+}
+
+function getCacheData() {
+  const cachePath = path.join(CACHE_DIR, 'content-cache.json');
+  if (fs.existsSync(cachePath)) {
+    try {
+      return JSON.parse(fs.readFileSync(cachePath, 'utf8'));
+    } catch {
+      return { posts: {}, lastFetch: null, etags: {} };
+    }
+  }
+  return { posts: {}, lastFetch: null, etags: {} };
+}
+
+function saveCacheData(cache) {
+  ensureCacheDir();
+  fs.writeFileSync(
+    path.join(CACHE_DIR, 'content-cache.json'),
+    JSON.stringify(cache, null, 2)
+  );
+}
+
+function getContentHash(content) {
+  return crypto.createHash('md5').update(JSON.stringify(content)).digest('hex');
+}
+
+// ============= Fetch Utilities =============
+
 async function fetchWithTimeout(url, timeout = FETCH_TIMEOUT, retries = MAX_RETRIES) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     const controller = new AbortController();
@@ -16,12 +52,11 @@ async function fetchWithTimeout(url, timeout = FETCH_TIMEOUT, retries = MAX_RETR
       const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       
-      // Retry on gateway errors (502, 503, 504)
       if ([502, 503, 504].includes(response.status)) {
         if (attempt === retries) {
-          throw new Error(`Server error after ${retries} attempts: ${response.status} ${response.statusText}`);
+          throw new Error(`Server error after ${retries} attempts: ${response.status}`);
         }
-        const delay = Math.pow(2, attempt) * 2000; // Longer delay for server errors
+        const delay = Math.pow(2, attempt) * 2000;
         console.log(`  ⚠️ Server error ${response.status}, retrying in ${delay}ms...`);
         await new Promise(resolve => setTimeout(resolve, delay));
         continue;
@@ -38,31 +73,25 @@ async function fetchWithTimeout(url, timeout = FETCH_TIMEOUT, retries = MAX_RETR
         throw error;
       }
       
-      const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
+      const delay = Math.pow(2, attempt) * 1000;
       console.log(`  ⚠️ Attempt ${attempt} failed, retrying in ${delay}ms...`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
 }
 
-// Test API connectivity before proceeding
 async function testApiConnection() {
   console.log('🔌 Testing API connection...');
-  try {
-    const response = await fetchWithTimeout(`${WORDPRESS_API}/posts?per_page=1`);
-    if (!response.ok) {
-      throw new Error(`API returned ${response.status}: ${response.statusText}`);
-    }
-    const data = await response.json();
-    console.log(`✅ API connection successful! Found posts endpoint.`);
-    return true;
-  } catch (error) {
-    console.error(`❌ API connection failed: ${error.message}`);
-    throw error; // Re-throw to fail the build
+  const response = await fetchWithTimeout(`${WORDPRESS_API}/posts?per_page=1`);
+  if (!response.ok) {
+    throw new Error(`API returned ${response.status}: ${response.statusText}`);
   }
+  console.log(`✅ API connection successful!`);
+  return true;
 }
 
-// Fetch a single media item by ID
+// ============= Media Fetching =============
+
 async function fetchMedia(mediaId) {
   if (!mediaId) return null;
   try {
@@ -75,92 +104,217 @@ async function fetchMedia(mediaId) {
   }
 }
 
-// Batch fetch media for multiple posts
 async function fetchMediaBatch(mediaIds) {
   const uniqueIds = [...new Set(mediaIds.filter(id => id))];
   if (uniqueIds.length === 0) return {};
   
-  console.log(`  📷 Fetching ${uniqueIds.length} featured images...`);
+  console.log(`  📷 Fetching ${uniqueIds.length} featured images (parallel batches)...`);
   
   const mediaMap = {};
+  const BATCH_SIZE = 20; // Increased parallelism
   
-  // Fetch in batches of 10 to avoid overwhelming the server
-  for (let i = 0; i < uniqueIds.length; i += 10) {
-    const batch = uniqueIds.slice(i, i + 10);
+  for (let i = 0; i < uniqueIds.length; i += BATCH_SIZE) {
+    const batch = uniqueIds.slice(i, i + BATCH_SIZE);
     const results = await Promise.all(batch.map(id => fetchMedia(id)));
     
     batch.forEach((id, index) => {
       mediaMap[id] = results[index];
     });
     
-    // Small delay between batches
-    if (i + 10 < uniqueIds.length) {
-      await new Promise(resolve => setTimeout(resolve, 200));
+    // Minimal delay between batches
+    if (i + BATCH_SIZE < uniqueIds.length) {
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
   }
   
   return mediaMap;
 }
 
+// ============= Incremental Post Fetching =============
+
+async function fetchModifiedPostsSince(lastModified) {
+  if (!lastModified) {
+    console.log('  📥 No cache found, fetching all posts...');
+    return { posts: await fetchAllPosts(), isFullFetch: true };
+  }
+
+  console.log(`  🔍 Checking for posts modified since ${lastModified}...`);
+  
+  try {
+    // Fetch posts modified after our last fetch
+    const modifiedAfter = new Date(lastModified).toISOString();
+    const response = await fetchWithTimeout(
+      `${WORDPRESS_API}/posts?per_page=100&modified_after=${modifiedAfter}&orderby=modified&order=desc`
+    );
+    
+    if (!response.ok) {
+      console.log('  ⚠️ Modified posts query failed, falling back to full fetch');
+      return { posts: await fetchAllPosts(), isFullFetch: true };
+    }
+    
+    const modifiedPosts = await response.json();
+    const totalModified = parseInt(response.headers.get('X-WP-Total') || '0');
+    
+    if (modifiedPosts.length === 0) {
+      console.log('  ✨ No posts modified since last fetch!');
+      return { posts: [], isFullFetch: false, noChanges: true };
+    }
+    
+    console.log(`  📝 Found ${totalModified} modified posts`);
+    return { posts: modifiedPosts, isFullFetch: false };
+  } catch (error) {
+    console.log(`  ⚠️ Incremental fetch failed: ${error.message}, falling back to full fetch`);
+    return { posts: await fetchAllPosts(), isFullFetch: true };
+  }
+}
+
+async function fetchAllPosts() {
+  let allPosts = [];
+  let page = 1;
+  let hasMore = true;
+
+  while (hasMore) {
+    console.log(`  Fetching posts page ${page}...`);
+    const response = await fetchWithTimeout(
+      `${WORDPRESS_API}/posts?page=${page}&per_page=50` // Increased per_page for fewer requests
+    );
+    
+    if (!response.ok) {
+      if (response.status === 400) break;
+      throw new Error(`Failed to fetch posts: ${response.status}`);
+    }
+
+    const posts = await response.json();
+    if (posts.length === 0) break;
+    
+    allPosts = [...allPosts, ...posts];
+    
+    const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
+    hasMore = page < totalPages;
+    page++;
+    
+    if (hasMore) {
+      await new Promise(resolve => setTimeout(resolve, 150)); // Reduced delay
+    }
+  }
+
+  return allPosts;
+}
+
+// ============= Parallel Category/Tag/Author Fetching =============
+
+async function fetchAllCategories() {
+  const response = await fetchWithTimeout(`${WORDPRESS_API}/categories?per_page=100`);
+  if (!response.ok) throw new Error(`Failed to fetch categories: ${response.statusText}`);
+  return response.json();
+}
+
+async function fetchAllTags() {
+  const response = await fetchWithTimeout(`${WORDPRESS_API}/tags?per_page=100`);
+  if (!response.ok) throw new Error(`Failed to fetch tags: ${response.statusText}`);
+  return response.json();
+}
+
+async function fetchAllAuthors() {
+  try {
+    const response = await fetchWithTimeout(`${WORDPRESS_API}/users?per_page=100`);
+    if (!response.ok) return [];
+    return response.json();
+  } catch {
+    return [];
+  }
+}
+
+// ============= Main Fetch Function =============
+
 async function fetchWordPressContent() {
+  const startTime = Date.now();
+  
   try {
     console.log('🚀 Fetching WordPress content...');
     console.log(`📡 API URL: ${WORDPRESS_API}`);
+    console.log(`🔄 Incremental mode: ${INCREMENTAL_MODE ? 'enabled' : 'disabled'}`);
     
-    // Test API first
     await testApiConnection();
     
-    // Ensure output directory exists
+    // Ensure directories exist
     if (!fs.existsSync(OUTPUT_DIR)) {
       fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-      console.log(`📁 Created output directory: ${OUTPUT_DIR}`);
     }
+    ensureCacheDir();
 
-    // Fetch categories, tags, and authors FIRST (these are lightweight)
-    const categories = await fetchAllCategories();
-    console.log(`📂 Fetched ${categories.length} categories`);
+    // Load cache for incremental builds
+    const cache = INCREMENTAL_MODE ? getCacheData() : { posts: {}, lastFetch: null };
 
-    const tags = await fetchAllTags();
-    console.log(`🏷️ Fetched ${tags.length} tags`);
+    // Fetch taxonomy data in parallel (these rarely change)
+    console.log('📂 Fetching taxonomies in parallel...');
+    const [categories, tags, authors] = await Promise.all([
+      fetchAllCategories(),
+      fetchAllTags(),
+      fetchAllAuthors()
+    ]);
+    console.log(`  ✅ Categories: ${categories.length}, Tags: ${tags.length}, Authors: ${authors.length}`);
 
-    const authors = await fetchAllAuthors();
-    console.log(`👤 Fetched ${authors.length} authors`);
-
-    // Create lookup maps for efficient joining
+    // Create lookup maps
     const authorMap = Object.fromEntries(authors.map(a => [a.id, a]));
     const categoryMap = Object.fromEntries(categories.map(c => [c.id, c]));
     const tagMap = Object.fromEntries(tags.map(t => [t.id, t]));
 
-    // Fetch posts WITHOUT _embed (much faster!)
-    const posts = await fetchAllPosts();
-    console.log(`📦 Fetched ${posts.length} posts`);
+    // Incremental post fetching
+    let allPosts;
+    let postsNeedProcessing;
+    
+    if (INCREMENTAL_MODE && cache.lastFetch) {
+      const { posts: modifiedPosts, isFullFetch, noChanges } = await fetchModifiedPostsSince(cache.lastFetch);
+      
+      if (noChanges) {
+        // Use cached posts, just update taxonomies
+        console.log('  📦 Using cached posts data');
+        allPosts = Object.values(cache.posts);
+        postsNeedProcessing = [];
+      } else if (isFullFetch) {
+        allPosts = modifiedPosts;
+        postsNeedProcessing = modifiedPosts;
+      } else {
+        // Merge modified posts with cache
+        const cachedPosts = { ...cache.posts };
+        for (const post of modifiedPosts) {
+          cachedPosts[post.id] = post;
+        }
+        allPosts = Object.values(cachedPosts);
+        postsNeedProcessing = modifiedPosts;
+      }
+    } else {
+      allPosts = await fetchAllPosts();
+      postsNeedProcessing = allPosts;
+    }
+    
+    console.log(`📦 Total posts: ${allPosts.length}, Need processing: ${postsNeedProcessing.length}`);
 
-    // Batch fetch all featured media
-    const mediaIds = posts.map(post => post.featured_media);
+    // Batch fetch featured media only for posts that need processing
+    const mediaIds = postsNeedProcessing.map(post => post.featured_media);
     const mediaMap = await fetchMediaBatch(mediaIds);
 
-    // Process posts with SEO metadata using lookup maps
-    const postsWithMeta = posts.map((post) => {
+    // Process posts
+    const processPost = (post, existingProcessed = null) => {
+      // If already processed and not in new batch, keep existing
+      if (existingProcessed && !postsNeedProcessing.find(p => p.id === post.id)) {
+        return existingProcessed;
+      }
+
       const aioseoJson = post.aioseo_head_json || {};
       const yoastJson = post.yoast_head_json || {};
-      
-      // Get featured image from our fetched media
       const featuredImage = mediaMap[post.featured_media] || null;
-      
-      // Get author from lookup map
       const author = authorMap[post.author] || null;
       
-      // Get categories from lookup map
       const postCategories = (post.categories || [])
         .map(catId => categoryMap[catId])
         .filter(Boolean);
       
-      // Get tags from lookup map
       const postTags = (post.tags || [])
         .map(tagId => tagMap[tagId])
         .filter(Boolean);
 
-      // Build SEO data with fallbacks
       const seo = {
         title: aioseoJson.title || yoastJson.title || post.title?.rendered || '',
         description: aioseoJson.description || yoastJson.description || stripHtml(post.excerpt?.rendered || '').substring(0, 160),
@@ -205,231 +359,121 @@ async function fetchWordPressContent() {
         })),
         seo
       };
-    });
+    };
 
-    // Save posts data
-    fs.writeFileSync(
-      path.join(OUTPUT_DIR, 'posts.json'),
-      JSON.stringify(postsWithMeta, null, 2)
-    );
-    console.log(`✅ Saved posts.json`);
-
-    // Save categories
-    const categoriesWithSeo = categories.map(cat => {
-      const aioseoJson = cat.aioseo_head_json || {};
-      return {
-        id: cat.id,
-        name: cat.name,
-        slug: cat.slug,
-        description: cat.description,
-        count: cat.count,
-        seo: {
-          title: aioseoJson.title || `${cat.name} - iGeeksBlog`,
-          description: aioseoJson.description || cat.description || `Browse all ${cat.name} articles on iGeeksBlog`,
-          ogTitle: aioseoJson.og_title || cat.name,
-          ogDescription: aioseoJson.og_description || cat.description
-        }
-      };
-    });
-    fs.writeFileSync(
-      path.join(OUTPUT_DIR, 'categories.json'),
-      JSON.stringify(categoriesWithSeo, null, 2)
-    );
-    console.log(`✅ Saved categories.json`);
-
-    // Save tags
-    fs.writeFileSync(
-      path.join(OUTPUT_DIR, 'tags.json'),
-      JSON.stringify(tags.map(tag => ({
-        id: tag.id,
-        name: tag.name,
-        slug: tag.slug,
-        count: tag.count
-      })), null, 2)
-    );
-    console.log(`✅ Saved tags.json`);
-
-    // Save authors
-    fs.writeFileSync(
-      path.join(OUTPUT_DIR, 'authors.json'),
-      JSON.stringify(authors.map(author => ({
-        id: author.id,
-        name: author.name,
-        slug: author.slug,
-        description: author.description,
-        avatar: author.avatar_urls?.['96'] || author.avatar_urls?.['48']
-      })), null, 2)
-    );
-    console.log(`✅ Saved authors.json`);
-
-    // Generate routes for all content types
-    const routes = [
-      { path: '/', type: 'home' },
-      ...postsWithMeta.map(post => ({
-        path: `/${post.slug}`,
-        type: 'post',
-        id: post.id,
-        slug: post.slug
-      })),
-      ...categoriesWithSeo.map(cat => ({
-        path: `/category/${cat.slug}`,
-        type: 'category',
-        id: cat.id,
-        slug: cat.slug
-      })),
-      ...tags.map(tag => ({
-        path: `/tag/${tag.slug}`,
-        type: 'tag',
-        id: tag.id,
-        slug: tag.slug
-      })),
-      ...authors.map(author => ({
-        path: `/author/${author.slug}`,
-        type: 'author',
-        id: author.id,
-        slug: author.slug
-      }))
-    ];
-
-    fs.writeFileSync(
-      path.join(OUTPUT_DIR, 'routes.json'),
-      JSON.stringify(routes, null, 2)
-    );
-    console.log(`✅ Saved routes.json with ${routes.length} routes`);
-
-    // Verify files were created
-    console.log('\n📋 Verifying generated files...');
-    const requiredFiles = ['posts.json', 'categories.json', 'tags.json', 'authors.json', 'routes.json'];
-    for (const file of requiredFiles) {
-      const filePath = path.join(OUTPUT_DIR, file);
-      if (fs.existsSync(filePath)) {
-        const stats = fs.statSync(filePath);
-        console.log(`  ✅ ${file} (${stats.size} bytes)`);
-      } else {
-        console.error(`  ❌ ${file} missing!`);
-        process.exit(1);
-      }
+    // Load existing processed posts for incremental merge
+    let existingProcessedMap = {};
+    const existingPostsPath = path.join(OUTPUT_DIR, 'posts.json');
+    if (INCREMENTAL_MODE && fs.existsSync(existingPostsPath)) {
+      try {
+        const existing = JSON.parse(fs.readFileSync(existingPostsPath, 'utf8'));
+        existingProcessedMap = Object.fromEntries(existing.map(p => [p.id, p]));
+      } catch {}
     }
 
-    console.log('\n🎉 WordPress content fetch complete!');
+    // Process all posts
+    const postsWithMeta = allPosts.map(post => 
+      processPost(post, existingProcessedMap[post.id])
+    );
+
+    // Sort by date (newest first)
+    postsWithMeta.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // Save all data files in parallel
+    console.log('💾 Saving data files...');
+    
+    const saveOperations = [
+      {
+        file: 'posts.json',
+        data: postsWithMeta
+      },
+      {
+        file: 'categories.json',
+        data: categories.map(cat => ({
+          id: cat.id,
+          name: cat.name,
+          slug: cat.slug,
+          description: cat.description,
+          count: cat.count,
+          seo: {
+            title: cat.aioseo_head_json?.title || `${cat.name} - iGeeksBlog`,
+            description: cat.aioseo_head_json?.description || cat.description || `Browse all ${cat.name} articles`
+          }
+        }))
+      },
+      {
+        file: 'tags.json',
+        data: tags.map(tag => ({
+          id: tag.id,
+          name: tag.name,
+          slug: tag.slug,
+          count: tag.count
+        }))
+      },
+      {
+        file: 'authors.json',
+        data: authors.map(author => ({
+          id: author.id,
+          name: author.name,
+          slug: author.slug,
+          description: author.description,
+          avatar: author.avatar_urls?.['96'] || author.avatar_urls?.['48']
+        }))
+      },
+      {
+        file: 'routes.json',
+        data: [
+          { path: '/', type: 'home' },
+          ...postsWithMeta.map(post => ({
+            path: `/${post.slug}`,
+            type: 'post',
+            id: post.id,
+            slug: post.slug
+          })),
+          ...categories.map(cat => ({
+            path: `/category/${cat.slug}`,
+            type: 'category',
+            id: cat.id,
+            slug: cat.slug
+          })),
+          ...tags.map(tag => ({
+            path: `/tag/${tag.slug}`,
+            type: 'tag',
+            id: tag.id,
+            slug: tag.slug
+          })),
+          ...authors.map(author => ({
+            path: `/author/${author.slug}`,
+            type: 'author',
+            id: author.id,
+            slug: author.slug
+          }))
+        ]
+      }
+    ];
+
+    for (const { file, data } of saveOperations) {
+      fs.writeFileSync(path.join(OUTPUT_DIR, file), JSON.stringify(data, null, 2));
+      console.log(`  ✅ Saved ${file}`);
+    }
+
+    // Update cache
+    const newCache = {
+      posts: Object.fromEntries(allPosts.map(p => [p.id, p])),
+      lastFetch: new Date().toISOString(),
+      contentHash: getContentHash(postsWithMeta)
+    };
+    saveCacheData(newCache);
+    console.log('  ✅ Updated build cache');
+
+    const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+    console.log(`\n🎉 WordPress content fetch complete in ${duration}s!`);
+    console.log(`   Posts: ${postsWithMeta.length}, Categories: ${categories.length}, Tags: ${tags.length}, Authors: ${authors.length}`);
     
   } catch (error) {
     console.error('❌ Error fetching WordPress content:', error.message);
     console.error('Stack trace:', error.stack);
     process.exit(1);
-  }
-}
-
-// Fetch posts WITHOUT _embed - much lighter queries!
-async function fetchAllPosts() {
-  let allPosts = [];
-  let page = 1;
-  let hasMore = true;
-
-  while (hasMore) {
-    console.log(`  Fetching posts page ${page}...`);
-    const response = await fetchWithTimeout(
-      `${WORDPRESS_API}/posts?page=${page}&per_page=20`
-    );
-    
-    if (!response.ok) {
-      if (response.status === 400) {
-        hasMore = false;
-        break;
-      }
-      throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`);
-    }
-
-    const posts = await response.json();
-    if (posts.length === 0) {
-      hasMore = false;
-      break;
-    }
-    
-    allPosts = [...allPosts, ...posts];
-    
-    const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
-    hasMore = page < totalPages;
-    page++;
-    
-    // Add delay between requests to avoid overwhelming the server
-    if (hasMore) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-    }
-  }
-
-  return allPosts;
-}
-
-async function fetchAllCategories() {
-  let allCategories = [];
-  let page = 1;
-  let hasMore = true;
-
-  while (hasMore) {
-    const response = await fetchWithTimeout(
-      `${WORDPRESS_API}/categories?page=${page}&per_page=100`
-    );
-    
-    if (!response.ok) {
-      if (response.status === 400) break;
-      throw new Error(`Failed to fetch categories: ${response.statusText}`);
-    }
-
-    const categories = await response.json();
-    if (categories.length === 0) break;
-    
-    allCategories = [...allCategories, ...categories];
-    
-    const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
-    hasMore = page < totalPages;
-    page++;
-  }
-
-  return allCategories;
-}
-
-async function fetchAllTags() {
-  let allTags = [];
-  let page = 1;
-  let hasMore = true;
-
-  while (hasMore) {
-    const response = await fetchWithTimeout(
-      `${WORDPRESS_API}/tags?page=${page}&per_page=100`
-    );
-    
-    if (!response.ok) {
-      if (response.status === 400) break;
-      throw new Error(`Failed to fetch tags: ${response.statusText}`);
-    }
-
-    const tags = await response.json();
-    if (tags.length === 0) break;
-    
-    allTags = [...allTags, ...tags];
-    
-    const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
-    hasMore = page < totalPages;
-    page++;
-  }
-
-  return allTags;
-}
-
-async function fetchAllAuthors() {
-  try {
-    const response = await fetchWithTimeout(`${WORDPRESS_API}/users?per_page=100`);
-    
-    if (!response.ok) {
-      console.warn('Could not fetch authors, using empty array');
-      return [];
-    }
-
-    return response.json();
-  } catch (error) {
-    console.warn('Authors fetch failed, using empty array:', error.message);
-    return [];
   }
 }
 
