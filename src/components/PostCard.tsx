@@ -1,81 +1,72 @@
 import { Link } from 'react-router-dom';
-import { WPPost, getFeaturedImageUrl, getAuthor, getCategories, getReadingTime, formatDate } from '@/lib/wordpress';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { User } from 'lucide-react';
+import { WPPost, getFeaturedImageUrl, getAuthor, getCategories, getReadingTime, formatDate, stripHtml } from '@/lib/wordpress';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 interface PostCardProps {
   post: WPPost;
   variant?: 'default' | 'featured';
 }
 
-const getCategoryColor = (slug: string): string => {
-  const colors: Record<string, string> = {
-    'iphone': 'bg-blue-500',
-    'mac': 'bg-gray-700',
-    'ipad': 'bg-purple-500',
-    'apps': 'bg-green-500',
-    'how-to': 'bg-orange-500',
+// Map category slugs to color classes
+function getCategoryColor(slug: string): string {
+  const colorMap: Record<string, string> = {
+    'how-to': 'bg-[hsl(var(--category-howto))]',
+    'news': 'bg-[hsl(var(--category-news))]',
+    'apps': 'bg-[hsl(var(--category-apps))]',
+    'iphone': 'bg-[hsl(var(--category-iphone))]',
   };
-  return colors[slug] || 'bg-primary';
-};
+  return colorMap[slug] || 'bg-[hsl(var(--category-default))]';
+}
 
 export function PostCard({ post, variant = 'default' }: PostCardProps) {
-  const featuredImage = getFeaturedImageUrl(post, 'medium_large');
+  const imageUrl = getFeaturedImageUrl(post, 'large');
   const author = getAuthor(post);
   const categories = getCategories(post);
   const readingTime = getReadingTime(post.content.rendered);
-  const formattedDate = formatDate(post.date);
   const primaryCategory = categories[0];
 
   return (
     <Link
       to={`/${post.slug}`}
-      className="group relative block overflow-hidden rounded-xl aspect-[4/3]"
+      className="group relative block overflow-hidden rounded-lg bg-card aspect-[4/3]"
     >
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-        style={{
-          backgroundImage: featuredImage
-            ? `url(${featuredImage})`
-            : 'linear-gradient(135deg, hsl(var(--muted)) 0%, hsl(var(--muted-foreground)) 100%)',
-        }}
+      <img
+        src={imageUrl}
+        alt={stripHtml(post.title.rendered)}
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
       />
-
+      
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+      <div className="absolute inset-0 post-card-gradient" />
 
       {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-end p-4">
+      <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-5">
         {/* Category Badge */}
         {primaryCategory && (
-          <Badge className={`${getCategoryColor(primaryCategory.slug)} text-white mb-2 w-fit`}>
+          <span
+            className={`mb-2 inline-block self-start rounded px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-white ${getCategoryColor(primaryCategory.slug)}`}
+          >
             {primaryCategory.name}
-          </Badge>
+          </span>
         )}
 
         {/* Title */}
-        <h3
-          className="text-white font-bold text-lg line-clamp-2 mb-2"
-          dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-        />
+        <h3 className="mb-2 text-lg font-bold leading-tight text-white line-clamp-2 sm:text-xl">
+          {stripHtml(post.title.rendered)}
+        </h3>
 
         {/* Meta */}
-        <div className="flex items-center gap-3 text-white/80 text-sm">
-          {author && (
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src={author.avatar} alt={author.name} />
-                <AvatarFallback><User className="h-3 w-3" /></AvatarFallback>
-              </Avatar>
-              <span>{author.name}</span>
-            </div>
-          )}
+        <div className="flex items-center gap-3 text-sm text-white/80">
+          <Avatar className="h-6 w-6 border border-white/20">
+            <AvatarImage src={author.avatar} alt={author.name} />
+            <AvatarFallback className="text-xs bg-primary text-primary-foreground">
+              {author.name.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <span>{formatDate(post.date)}</span>
           <span>•</span>
-          <span>{formattedDate}</span>
-          <span>•</span>
-          <span>{readingTime} min</span>
+          <span>{readingTime} min read</span>
         </div>
       </div>
     </Link>

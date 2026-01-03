@@ -2,38 +2,62 @@ import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
 import { PaginationNav } from '@/components/PaginationNav';
+import { NewsletterSignup } from '@/components/NewsletterSignup';
 import { SEO } from '@/components/SEO';
-import { usePosts } from '@/hooks/useWordPress';
+import { usePosts, useCategories } from '@/hooks/useWordPress';
+import { Link } from 'react-router-dom';
 
-export default function Index() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading } = usePosts({ page: currentPage, perPage: 9 });
+const Index = () => {
+  const [page, setPage] = useState(1);
+  const { data: latestData, isLoading: latestLoading } = usePosts({ page, perPage: 9 });
+  const { data: categories } = useCategories();
+
+  const topCategories = categories?.slice(0, 8) || [];
 
   return (
     <Layout>
-      <SEO 
-        title="iGeeksBlog - Apple News, Tips & Reviews"
-        description="Get the latest Apple news, iPhone tips, Mac tutorials, and expert reviews from iGeeksBlog."
-      />
-      
-      <main className="container mx-auto px-4 py-8">
-        <section className="mb-12">
-          <h1 className="text-4xl font-bold mb-2">Latest Articles</h1>
-          <p className="text-muted-foreground">
-            Stay updated with the latest Apple news, tips, and reviews
-          </p>
-        </section>
+      <SEO />
+      <div className="container mx-auto px-4">
+        {/* Category Quick Links */}
+        {topCategories.length > 0 && (
+          <section className="py-6 border-b border-border">
+            <div className="flex flex-wrap gap-2">
+              {topCategories.map((category) => (
+                <Link
+                  key={category.id}
+                  to={`/category/${category.slug}`}
+                  className="px-4 py-2 text-sm font-medium rounded-full bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
-        <PostGrid posts={data?.posts || []} isLoading={isLoading} />
-        
-        {data && (
+        {/* Latest News Section */}
+        <PostGrid
+          posts={latestData?.posts || []}
+          isLoading={latestLoading}
+          title="Latest Articles"
+        />
+
+        {/* Pagination */}
+        {latestData && (
           <PaginationNav
-            currentPage={currentPage}
-            totalPages={data.totalPages}
-            onPageChange={setCurrentPage}
+            currentPage={page}
+            totalPages={latestData.totalPages}
+            onPageChange={setPage}
           />
         )}
-      </main>
+
+        {/* Newsletter Section */}
+        <section className="py-12">
+          <NewsletterSignup />
+        </section>
+      </div>
     </Layout>
   );
-}
+};
+
+export default Index;

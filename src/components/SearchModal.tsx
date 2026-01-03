@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Search, X, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { usePosts } from '@/hooks/useWordPress';
+import { getFeaturedImageUrl, stripHtml, formatDate } from '@/lib/wordpress';
 import { useDebounce } from '@/hooks/useDebounce';
-import { getFeaturedImageUrl, formatDate } from '@/lib/wordpress';
-import { Search, X, Loader2 } from 'lucide-react';
 
 interface SearchModalProps {
   open: boolean;
@@ -17,20 +17,22 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
   const debouncedQuery = useDebounce(query, 300);
   const navigate = useNavigate();
 
-  const { data, isLoading } = usePosts(
-    { search: debouncedQuery, perPage: 5 },
-    { enabled: debouncedQuery.length >= 2 }
-  );
+  const { data, isLoading } = usePosts({
+    search: debouncedQuery,
+    perPage: 5,
+  });
 
-  const handleSelect = (slug: string) => {
-    navigate(`/${slug}`);
+  const handleSelect = useCallback((slug: string) => {
     onOpenChange(false);
     setQuery('');
-  };
+    navigate(`/${slug}`);
+  }, [navigate, onOpenChange]);
 
   // Reset query when modal closes
   useEffect(() => {
-    if (!open) setQuery('');
+    if (!open) {
+      setQuery('');
+    }
   }, [open]);
 
   // Keyboard shortcut
@@ -41,78 +43,86 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
         onOpenChange(true);
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onOpenChange]);
+
+  const results = debouncedQuery.length >= 2 ? data?.posts || [] : [];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-xl p-0 gap-0">
-        <div className="flex items-center border-b px-4">
-          <Search className="h-5 w-5 text-muted-foreground shrink-0" />
+      <DialogContent className="max-w-2xl gap-0 p-0">
+        {/* Search Input */}
+        <div className="flex items-center border-b border-border px-4">
+          <Search className="h-5 w-5 text-muted-foreground" />
           <Input
+            placeholder="Search articles..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search articles..."
-            className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-base"
+            className="border-0 focus-visible:ring-0 text-lg h-14"
             autoFocus
           />
           {query && (
-            <button onClick={() => setQuery('')} className="shrink-0">
-              <X className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+            <button
+              onClick={() => setQuery('')}
+              className="p-1 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
             </button>
           )}
         </div>
 
-        <div className="max-h-80 overflow-y-auto">
-          {isLoading && (
+        {/* Results */}
+        <div className="max-h-[60vh] overflow-y-auto">
+          {isLoading && debouncedQuery.length >= 2 && (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
             </div>
           )}
 
-          {!isLoading && debouncedQuery.length >= 2 && data?.posts.length === 0 && (
+          {!isLoading && debouncedQuery.length >= 2 && results.length === 0 && (
             <div className="py-8 text-center text-muted-foreground">
-              No results found for "{debouncedQuery}"
+              No articles found for "{debouncedQuery}"
             </div>
           )}
 
-          {!isLoading && data?.posts && data.posts.length > 0 && (
-            <div className="py-2">
-              {data.posts.map((post) => {
-                const image = getFeaturedImageUrl(post, 'thumbnail');
-                return (
+          {results.length > 0 && (
+            <ul className="py-2">
+              {results.map((post) => (
+                <li key={post.id}>
                   <button
-                    key={post.id}
                     onClick={() => handleSelect(post.slug)}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left"
+                    className="flex w-full items-center gap-4 px-4 py-3 text-left hover:bg-accent transition-colors"
                   >
-                    {image && (
-                      <img
-                        src={image}
-                        alt=""
-                        className="h-12 w-12 rounded object-cover shrink-0"
-                      />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p
-                        className="font-medium line-clamp-1"
-                        dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-                      />
-                      <p className="text-sm text-muted-foreground">
+                    <img
+                      src={getFeaturedImageUrl(post, 'medium')}
+                      alt=""
+                      className="h-16 w-24 rounded object-cover flex-shrink-0"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-medium text-foreground line-clamp-1">
+                        {stripHtml(post.title.rendered)}
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-1 mt-1">
+                        {stripHtml(post.excerpt.rendered)}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
                         {formatDate(post.date)}
                       </p>
                     </div>
                   </button>
-                );
-              })}
-            </div>
+                </li>
+              ))}
+            </ul>
           )}
 
-          {query.length < 2 && (
+          {debouncedQuery.length < 2 && (
             <div className="py-8 text-center text-muted-foreground">
               <p>Type at least 2 characters to search</p>
-              <p className="text-sm mt-2">Press ⌘K to open search</p>
+              <p className="text-xs mt-2">
+                Press <kbd className="px-1.5 py-0.5 rounded bg-muted text-xs">⌘K</kbd> to open search
+              </p>
             </div>
           )}
         </div>

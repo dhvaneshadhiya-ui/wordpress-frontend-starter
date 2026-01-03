@@ -1,151 +1,146 @@
 import { useParams, Link } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { SEO } from '@/components/SEO';
-import { usePosts } from '@/hooks/useWordPress';
-import { getFeaturedImageUrl, getAuthor, getCategories, getTags, getReadingTime, formatDate } from '@/lib/wordpress';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, User } from 'lucide-react';
+import { usePost, usePosts } from '@/hooks/useWordPress';
+import { getFeaturedImageUrl, getAuthor, getCategories, getTags, getReadingTime, formatDate, stripHtml } from '@/lib/wordpress';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PostGrid } from '@/components/PostGrid';
 
 export default function SinglePost() {
   const { slug } = useParams<{ slug: string }>();
-  const { data, isLoading } = usePosts({ search: slug, perPage: 1 });
-  
-  const post = data?.posts?.find(p => p.slug === slug);
+  const { data: post, isLoading, error } = usePost(slug);
+  const { data: relatedData } = usePosts({ perPage: 3 });
 
   if (isLoading) {
     return (
       <Layout>
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-          <Skeleton className="h-12 w-3/4 mb-4" />
-          <Skeleton className="h-6 w-1/2 mb-8" />
-          <Skeleton className="h-96 w-full mb-8" />
-          <div className="space-y-4">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-          </div>
+        <div className="container mx-auto px-4 py-8">
+          <Skeleton className="mb-4 h-8 w-3/4" />
+          <Skeleton className="mb-8 h-4 w-1/2" />
+          <Skeleton className="aspect-video w-full rounded-lg" />
         </div>
       </Layout>
     );
   }
 
-  if (!post) {
+  if (error || !post) {
     return (
       <Layout>
+        <SEO title="Post Not Found" />
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-2xl font-bold mb-4">Post not found</h1>
-          <Link to="/" className="text-primary hover:underline">
-            Return to homepage
-          </Link>
+          <h1 className="text-2xl font-bold text-foreground">Post not found</h1>
+          <p className="mt-2 text-muted-foreground">The article you're looking for doesn't exist.</p>
         </div>
       </Layout>
     );
   }
 
-  const featuredImage = getFeaturedImageUrl(post, 'full');
+  const imageUrl = getFeaturedImageUrl(post, 'full');
   const author = getAuthor(post);
   const categories = getCategories(post);
   const tags = getTags(post);
   const readingTime = getReadingTime(post.content.rendered);
-  const formattedDate = formatDate(post.date);
+  const primaryCategory = categories[0];
 
   return (
     <Layout>
       <SEO 
-        title={post.title.rendered}
-        description={post.excerpt.rendered.replace(/<[^>]*>/g, '').slice(0, 160)}
-        image={featuredImage}
+        title={stripHtml(post.title.rendered)}
+        description={stripHtml(post.excerpt.rendered).substring(0, 160)}
+        post={post}
         type="article"
+        image={imageUrl}
+        url={`https://dev.igeeksblog.com/${post.slug}`}
       />
-      
-      <article className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Categories */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {categories.map((category) => (
-            <Link key={category.id} to={`/category/${category.slug}`}>
-              <Badge variant="secondary">{category.name}</Badge>
-            </Link>
-          ))}
-        </div>
-
-        {/* Title */}
-        <h1 
-          className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight"
-          dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-        />
-
-        {/* Meta */}
-        <div className="flex flex-wrap items-center gap-4 mb-8 text-muted-foreground">
-          {author && (
-            <Link to={`/author/${author.slug}`} className="flex items-center gap-2 hover:text-foreground">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={author.avatar} alt={author.name} />
-                <AvatarFallback><User className="h-4 w-4" /></AvatarFallback>
-              </Avatar>
-              <span className="font-medium">{author.name}</span>
+      <article className="container mx-auto px-4 py-8">
+        {/* Hero Section */}
+        <header className="mb-8">
+          {primaryCategory && (
+            <Link 
+              to={`/category/${primaryCategory.slug}`}
+              className="mb-3 inline-block rounded bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-foreground hover:opacity-90 transition-opacity"
+            >
+              {primaryCategory.name}
             </Link>
           )}
-          <div className="flex items-center gap-1">
-            <Calendar className="h-4 w-4" />
-            <span>{formattedDate}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4" />
+          <h1 className="mb-4 text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
+            {stripHtml(post.title.rendered)}
+          </h1>
+          <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
+            <Link to={author.slug ? `/author/${author.slug}` : '#'} className="flex items-center gap-2 hover:text-primary transition-colors">
+              <Avatar className="h-10 w-10 border border-border">
+                <AvatarImage src={author.avatar} alt={author.name} />
+                <AvatarFallback className="bg-primary text-primary-foreground">
+                  {author.name.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="font-medium text-foreground">{author.name}</span>
+            </Link>
+            <span>{formatDate(post.date)}</span>
+            <span>•</span>
             <span>{readingTime} min read</span>
           </div>
-        </div>
+        </header>
 
         {/* Featured Image */}
-        {featuredImage && (
-          <div className="mb-8 rounded-xl overflow-hidden">
-            <img 
-              src={featuredImage} 
-              alt={post.title.rendered.replace(/<[^>]*>/g, '')}
-              className="w-full h-auto"
-            />
-          </div>
-        )}
+        <div className="mb-8 overflow-hidden rounded-lg">
+          <img
+            src={imageUrl}
+            alt={stripHtml(post.title.rendered)}
+            className="w-full object-cover"
+          />
+        </div>
 
         {/* Content */}
-        <div 
-          className="prose prose-lg dark:prose-invert max-w-none"
+        <div
+          className="prose prose-lg max-w-none dark:prose-invert prose-headings:text-foreground prose-p:text-foreground/90 prose-a:text-primary prose-strong:text-foreground"
           dangerouslySetInnerHTML={{ __html: post.content.rendered }}
         />
 
         {/* Tags */}
         {tags.length > 0 && (
-          <div className="mt-8 pt-8 border-t">
-            <h3 className="text-sm font-medium mb-3">Tags</h3>
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <Link key={tag.id} to={`/tag/${tag.slug}`}>
-                  <Badge variant="outline">{tag.name}</Badge>
-                </Link>
-              ))}
-            </div>
+          <div className="mt-8 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <Link
+                key={tag.id}
+                to={`/tag/${tag.slug}`}
+                className="px-3 py-1 text-sm rounded-full bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
+                #{tag.name}
+              </Link>
+            ))}
           </div>
         )}
 
         {/* Author Box */}
-        {author && (
-          <div className="mt-8 p-6 bg-muted rounded-xl">
-            <div className="flex items-start gap-4">
-              <Avatar className="h-16 w-16">
+        <div className="mt-12 rounded-lg border border-border bg-card p-6">
+          <div className="flex items-start gap-4">
+            <Link to={author.slug ? `/author/${author.slug}` : '#'}>
+              <Avatar className="h-16 w-16 border border-border">
                 <AvatarImage src={author.avatar} alt={author.name} />
-                <AvatarFallback><User className="h-8 w-8" /></AvatarFallback>
+                <AvatarFallback className="text-xl bg-primary text-primary-foreground">
+                  {author.name.charAt(0)}
+                </AvatarFallback>
               </Avatar>
-              <div>
-                <Link to={`/author/${author.slug}`} className="font-bold text-lg hover:text-primary">
-                  {author.name}
-                </Link>
-                <p className="text-muted-foreground mt-1">
-                  Author at iGeeksBlog
-                </p>
-              </div>
+            </Link>
+            <div>
+              <Link to={author.slug ? `/author/${author.slug}` : '#'} className="hover:text-primary transition-colors">
+                <h3 className="text-lg font-bold text-foreground">{author.name}</h3>
+              </Link>
+              <p className="mt-1 text-muted-foreground">
+                Author at iGeeksBlog
+              </p>
             </div>
           </div>
+        </div>
+
+        {/* Related Posts */}
+        {relatedData?.posts && relatedData.posts.length > 0 && (
+          <PostGrid
+            posts={relatedData.posts.filter((p) => p.id !== post.id).slice(0, 3)}
+            title="Related Articles"
+          />
         )}
       </article>
     </Layout>
