@@ -4,7 +4,14 @@
   "framework": null,
   "installCommand": "npm install",
   "cacheDirectory": ".build-cache",
+  "functions": {
+    "api/wp/[...path].js": {
+      "memory": 128,
+      "maxDuration": 10
+    }
+  },
   "rewrites": [
+    { "source": "/api/wp/:path*", "destination": "/api/wp/[...path]" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
