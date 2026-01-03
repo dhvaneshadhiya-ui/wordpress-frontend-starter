@@ -57,14 +57,20 @@ async function fetchWithTimeout(url, timeout = FETCH_TIMEOUT, retries = MAX_RETR
     const timeoutId = setTimeout(() => controller.abort(), timeout);
     
     try {
-      const response = await fetch(url, { signal: controller.signal });
+      const response = await fetch(url, { 
+        signal: controller.signal,
+        headers: {
+          'Connection': 'keep-alive',
+          'Accept': 'application/json'
+        }
+      });
       clearTimeout(timeoutId);
       
       if ([502, 503, 504].includes(response.status)) {
         if (attempt === retries) {
           throw new Error(`Server error after ${retries} attempts: ${response.status}`);
         }
-        const delay = Math.pow(2, attempt) * 3000; // 3s, 6s for gateway errors
+        const delay = Math.pow(2, attempt) * 4000; // 4s, 8s, 16s for gateway errors
         console.log(`  ⚠️ Server error ${response.status}, retrying in ${delay}ms...`);
         await new Promise(resolve => setTimeout(resolve, delay));
         continue;
@@ -81,7 +87,7 @@ async function fetchWithTimeout(url, timeout = FETCH_TIMEOUT, retries = MAX_RETR
         throw error;
       }
       
-      const delay = Math.pow(2, attempt) * 1000;
+      const delay = Math.pow(2, attempt) * 2000; // 2s, 4s for other errors
       console.log(`  ⚠️ Attempt ${attempt} failed, retrying in ${delay}ms...`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
@@ -176,15 +182,51 @@ async function fetchModifiedPostsSince(lastModified) {
   }
 }
 
+async function checkServerHealth() {
+  try {
+    const response = await fetchWithTimeout(`${WORDPRESS_API}/posts?per_page=1`, 10000, 1);
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
 async function fetchAllPosts() {
   let allPosts = [];
   let page = 1;
   let hasMore = true;
+  const CHECKPOINT_FILE = path.join(CACHE_DIR, 'fetch-checkpoint.json');
+  const POSTS_PER_PAGE = 100; // Increased from 20 to reduce API calls
+  const CHECKPOINT_INTERVAL = 5; // Save progress every 5 pages
+
+  // Load checkpoint if exists
+  if (fs.existsSync(CHECKPOINT_FILE)) {
+    try {
+      const checkpoint = JSON.parse(fs.readFileSync(CHECKPOINT_FILE, 'utf8'));
+      if (Date.now() - checkpoint.timestamp < 600000) { // Valid for 10 minutes
+        allPosts = checkpoint.posts;
+        page = checkpoint.nextPage;
+        console.log(`  🔄 Resuming from checkpoint: page ${page}, ${allPosts.length} posts loaded`);
+      }
+    } catch {}
+  }
 
   while (hasMore) {
+    // Health check every 10 pages
+    if (page > 1 && page % 10 === 1) {
+      console.log(`  🏥 Checking server health...`);
+      const isHealthy = await checkServerHealth();
+      if (!isHealthy) {
+        console.log(`  ⚠️ Server stressed, waiting 10s before continuing...`);
+        await new Promise(resolve => setTimeout(resolve, 10000));
+      }
+    }
+
     console.log(`  Fetching posts page ${page}...`);
     const response = await fetchWithTimeout(
-      `${WORDPRESS_API}/posts?page=${page}&per_page=20` // Reduced to prevent EC2 timeouts
+      `${WORDPRESS_API}/posts?page=${page}&per_page=${POSTS_PER_PAGE}`,
+      45000, // Longer timeout for larger pages
+      3
     );
     
     if (!response.ok) {
@@ -201,12 +243,27 @@ async function fetchAllPosts() {
     hasMore = page < totalPages;
     page++;
     
-    if (hasMore) {
-      // Progressive backoff: more delay for later pages when server is stressed
-      const baseDelay = 400;
-      const progressiveDelay = page > 20 ? baseDelay + (page - 20) * 100 : baseDelay;
-      await new Promise(resolve => setTimeout(resolve, progressiveDelay));
+    // Save checkpoint periodically
+    if (page % CHECKPOINT_INTERVAL === 0) {
+      fs.writeFileSync(CHECKPOINT_FILE, JSON.stringify({
+        posts: allPosts,
+        nextPage: page,
+        timestamp: Date.now()
+      }));
+      console.log(`  💾 Checkpoint saved: ${allPosts.length} posts`);
     }
+    
+    if (hasMore) {
+      // Progressive backoff: start at 800ms, increase for later pages
+      const baseDelay = 800;
+      const progressiveDelay = page > 10 ? baseDelay + (page - 10) * 150 : baseDelay;
+      await new Promise(resolve => setTimeout(resolve, Math.min(progressiveDelay, 3000)));
+    }
+  }
+
+  // Clean up checkpoint on successful completion
+  if (fs.existsSync(CHECKPOINT_FILE)) {
+    fs.unlinkSync(CHECKPOINT_FILE);
   }
 
   return allPosts;
