@@ -195,11 +195,17 @@ async function fetchAllPosts() {
   let allPosts = [];
   let page = 1;
   let hasMore = true;
+  let consecutiveSlowRequests = 0;
+  let consecutiveFailures = 0;
+  
   const CHECKPOINT_FILE = path.join(CACHE_DIR, 'fetch-checkpoint.json');
-  const POSTS_PER_PAGE = 100; // Increased from 20 to reduce API calls
-  const CHECKPOINT_INTERVAL = 5; // Save progress every 5 pages
+  const POSTS_PER_PAGE = 50; // Reduced from 100 for server reliability
+  const CHECKPOINT_INTERVAL = 3; // Save progress every 3 pages
+  const REQUEST_TIMEOUT = 30000; // 30s timeout
+  const SLOW_REQUEST_THRESHOLD = 20000; // 20s = slow request
 
   // Load checkpoint if exists
+  ensureCacheDir();
   if (fs.existsSync(CHECKPOINT_FILE)) {
     try {
       const checkpoint = JSON.parse(fs.readFileSync(CHECKPOINT_FILE, 'utf8'));
@@ -212,52 +218,86 @@ async function fetchAllPosts() {
   }
 
   while (hasMore) {
-    // Health check every 10 pages
-    if (page > 1 && page % 10 === 1) {
+    // After 2 consecutive failures, wait 30s for server recovery
+    if (consecutiveFailures >= 2) {
+      console.log(`  🚨 Multiple failures detected, waiting 30s for server recovery...`);
+      await new Promise(resolve => setTimeout(resolve, 30000));
+      consecutiveFailures = 0;
+    }
+
+    // Health check every 5 pages or after slow requests
+    if (page > 1 && (page % 5 === 1 || consecutiveSlowRequests >= 2)) {
       console.log(`  🏥 Checking server health...`);
       const isHealthy = await checkServerHealth();
       if (!isHealthy) {
-        console.log(`  ⚠️ Server stressed, waiting 10s before continuing...`);
-        await new Promise(resolve => setTimeout(resolve, 10000));
+        console.log(`  ⚠️ Server stressed, waiting 15s before continuing...`);
+        await new Promise(resolve => setTimeout(resolve, 15000));
       }
+      consecutiveSlowRequests = 0;
     }
 
     console.log(`  Fetching posts page ${page}...`);
-    const response = await fetchWithTimeout(
-      `${WORDPRESS_API}/posts?page=${page}&per_page=${POSTS_PER_PAGE}`,
-      45000, // Longer timeout for larger pages
-      3
-    );
+    const requestStart = Date.now();
     
-    if (!response.ok) {
-      if (response.status === 400) break;
-      throw new Error(`Failed to fetch posts: ${response.status}`);
-    }
+    try {
+      const response = await fetchWithTimeout(
+        `${WORDPRESS_API}/posts?page=${page}&per_page=${POSTS_PER_PAGE}`,
+        REQUEST_TIMEOUT,
+        3
+      );
+      
+      const requestDuration = Date.now() - requestStart;
+      
+      if (!response.ok) {
+        if (response.status === 400) break;
+        throw new Error(`Failed to fetch posts: ${response.status}`);
+      }
 
-    const posts = await response.json();
-    if (posts.length === 0) break;
-    
-    allPosts = [...allPosts, ...posts];
-    
-    const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
-    hasMore = page < totalPages;
-    page++;
-    
-    // Save checkpoint periodically
-    if (page % CHECKPOINT_INTERVAL === 0) {
-      fs.writeFileSync(CHECKPOINT_FILE, JSON.stringify({
-        posts: allPosts,
-        nextPage: page,
-        timestamp: Date.now()
-      }));
-      console.log(`  💾 Checkpoint saved: ${allPosts.length} posts`);
-    }
-    
-    if (hasMore) {
-      // Progressive backoff: start at 800ms, increase for later pages
-      const baseDelay = 800;
-      const progressiveDelay = page > 10 ? baseDelay + (page - 10) * 150 : baseDelay;
-      await new Promise(resolve => setTimeout(resolve, Math.min(progressiveDelay, 3000)));
+      const posts = await response.json();
+      if (posts.length === 0) break;
+      
+      allPosts = [...allPosts, ...posts];
+      consecutiveFailures = 0;
+      
+      // Track slow requests for adaptive throttling
+      if (requestDuration > SLOW_REQUEST_THRESHOLD) {
+        consecutiveSlowRequests++;
+        console.log(`  ⏱️ Slow request: ${Math.round(requestDuration / 1000)}s`);
+      } else {
+        consecutiveSlowRequests = Math.max(0, consecutiveSlowRequests - 1);
+      }
+      
+      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
+      hasMore = page < totalPages;
+      page++;
+      
+      // Save checkpoint every 3 pages
+      if (page % CHECKPOINT_INTERVAL === 0) {
+        fs.writeFileSync(CHECKPOINT_FILE, JSON.stringify({
+          posts: allPosts,
+          nextPage: page,
+          timestamp: Date.now()
+        }));
+        console.log(`  💾 Checkpoint saved: ${allPosts.length} posts`);
+      }
+      
+      if (hasMore) {
+        // Adaptive delay based on request speed
+        let delay = 1000; // Base delay 1s
+        if (requestDuration > SLOW_REQUEST_THRESHOLD) {
+          delay = 2500; // Slow down if server is struggling
+        } else if (consecutiveSlowRequests > 0) {
+          delay = 1500; // Slightly slower after slow requests
+        }
+        // Progressive increase for later pages
+        if (page > 15) {
+          delay += (page - 15) * 100;
+        }
+        await new Promise(resolve => setTimeout(resolve, Math.min(delay, 4000)));
+      }
+    } catch (error) {
+      consecutiveFailures++;
+      throw error;
     }
   }
 
@@ -266,6 +306,7 @@ async function fetchAllPosts() {
     fs.unlinkSync(CHECKPOINT_FILE);
   }
 
+  console.log(`  ✅ Fetched ${allPosts.length} posts total`);
   return allPosts;
 }
 
