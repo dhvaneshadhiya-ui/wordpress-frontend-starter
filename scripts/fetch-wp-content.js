@@ -15,6 +15,18 @@ async function fetchWithTimeout(url, timeout = FETCH_TIMEOUT, retries = MAX_RETR
     try {
       const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
+      
+      // Retry on gateway errors (502, 503, 504)
+      if ([502, 503, 504].includes(response.status)) {
+        if (attempt === retries) {
+          throw new Error(`Server error after ${retries} attempts: ${response.status} ${response.statusText}`);
+        }
+        const delay = Math.pow(2, attempt) * 2000; // Longer delay for server errors
+        console.log(`  ⚠️ Server error ${response.status}, retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      
       return response;
     } catch (error) {
       clearTimeout(timeoutId);
@@ -265,7 +277,7 @@ async function fetchAllPosts() {
   while (hasMore) {
     console.log(`  Fetching posts page ${page}...`);
     const response = await fetchWithTimeout(
-      `${WORDPRESS_API}/posts?page=${page}&per_page=100&_embed=true`
+      `${WORDPRESS_API}/posts?page=${page}&per_page=20&_embed=true`
     );
     
     if (!response.ok) {
@@ -287,6 +299,11 @@ async function fetchAllPosts() {
     const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
     hasMore = page < totalPages;
     page++;
+    
+    // Add delay between requests to avoid overwhelming the server
+    if (hasMore) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
   }
 
   return allPosts;
