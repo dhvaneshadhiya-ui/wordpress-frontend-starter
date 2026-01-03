@@ -1,5 +1,5 @@
 {
-  "buildCommand": "node scripts/fetch-wp-content.js && vite build && node scripts/build-static.js && node scripts/generate-seo-files.js",
+  "buildCommand": "vite build && node scripts/build-static.js && node scripts/generate-seo-files.js",
   "outputDirectory": "dist",
   "framework": null,
   "installCommand": "npm install",
