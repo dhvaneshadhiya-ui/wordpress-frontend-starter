@@ -64,7 +64,7 @@ async function fetchWithTimeout(url, timeout = FETCH_TIMEOUT, retries = MAX_RETR
         if (attempt === retries) {
           throw new Error(`Server error after ${retries} attempts: ${response.status}`);
         }
-        const delay = Math.pow(2, attempt) * 2000;
+        const delay = Math.pow(2, attempt) * 3000; // 3s, 6s for gateway errors
         console.log(`  ⚠️ Server error ${response.status}, retrying in ${delay}ms...`);
         await new Promise(resolve => setTimeout(resolve, delay));
         continue;
@@ -184,7 +184,7 @@ async function fetchAllPosts() {
   while (hasMore) {
     console.log(`  Fetching posts page ${page}...`);
     const response = await fetchWithTimeout(
-      `${WORDPRESS_API}/posts?page=${page}&per_page=50` // Increased per_page for fewer requests
+      `${WORDPRESS_API}/posts?page=${page}&per_page=20` // Reduced to prevent EC2 timeouts
     );
     
     if (!response.ok) {
@@ -202,7 +202,10 @@ async function fetchAllPosts() {
     page++;
     
     if (hasMore) {
-      await new Promise(resolve => setTimeout(resolve, 150)); // Reduced delay
+      // Progressive backoff: more delay for later pages when server is stressed
+      const baseDelay = 400;
+      const progressiveDelay = page > 20 ? baseDelay + (page - 20) * 100 : baseDelay;
+      await new Promise(resolve => setTimeout(resolve, progressiveDelay));
     }
   }
 
