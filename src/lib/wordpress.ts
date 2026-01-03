@@ -5,6 +5,7 @@ const API_BASE = import.meta.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksbl
 export interface WPPost {
   id: number;
   slug: string;
+  status?: string;
   title: { rendered: string };
   excerpt: { rendered: string };
   content: { rendered: string };
@@ -279,4 +280,20 @@ export function formatDate(dateString: string): string {
 
 export function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim();
+}
+
+// Preview API - fetch draft posts with token validation
+const PREVIEW_API_BASE = import.meta.env.VITE_WORDPRESS_API_URL?.replace('/wp/v2', '') || 'https://dev.igeeksblog.com/wp-json';
+
+export async function fetchPreviewPost(postId: number, token: string): Promise<WPPost> {
+  const response = await fetch(
+    `${PREVIEW_API_BASE}/igeeksblog/v1/preview?id=${postId}&token=${encodeURIComponent(token)}`
+  );
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+    throw new Error(error.message || `Failed to fetch preview: ${response.status}`);
+  }
+
+  return response.json();
 }

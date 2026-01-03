@@ -8,6 +8,7 @@ import {
   fetchTagBySlug,
   fetchAuthors,
   fetchAuthorBySlug,
+  fetchPreviewPost,
 } from '@/lib/wordpress';
 
 // Fetch posts with pagination
@@ -126,5 +127,16 @@ export function useAuthorPosts(authorSlug: string | undefined, page: number = 1)
     queryFn: () => fetchPosts({ author: author!.id, page, perPage: 12 }),
     enabled: !!author,
     staleTime: 5 * 60 * 1000,
+  });
+}
+
+// Fetch preview post with token
+export function usePreviewPost(postId: number | undefined, token: string | undefined) {
+  return useQuery({
+    queryKey: ['preview', postId, token],
+    queryFn: () => fetchPreviewPost(postId!, token!),
+    enabled: !!postId && !!token,
+    staleTime: 0, // Never cache previews
+    retry: false, // Don't retry on invalid tokens
   });
 }

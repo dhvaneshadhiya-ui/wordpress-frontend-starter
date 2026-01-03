@@ -11,6 +11,7 @@ import TagArchive from "./pages/TagArchive";
 import AuthorArchive from "./pages/AuthorArchive";
 import NotFound from "./pages/NotFound";
 import BuildDashboard from "./pages/BuildDashboard";
+import PreviewPost from "./pages/PreviewPost";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/preview" element={<PreviewPost />} />
             <Route path="/admin/builds" element={<BuildDashboard />} />
             <Route path="/category/:slug" element={<CategoryArchive />} />
             <Route path="/tag/:slug" element={<TagArchive />} />
