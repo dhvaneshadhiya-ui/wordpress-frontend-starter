@@ -3,7 +3,6 @@
   "outputDirectory": "dist",
   "framework": null,
   "installCommand": "npm install",
-  "cacheDirectory": ".build-cache",
   "functions": {
     "api/wp/[...path].js": {
       "memory": 128,
