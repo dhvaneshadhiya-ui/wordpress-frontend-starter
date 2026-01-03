@@ -1,6 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import {
+  createBuildMetrics,
+  recordTiming,
+  recordStat,
+  finalizeBuildMetrics,
+  saveBuildMetrics,
+  printMetricsSummary
+} from './build-metrics.js';
 
 const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com';
 const DATA_DIR = './src/data';
@@ -442,7 +450,7 @@ function generateIndexHTML(posts, viteAssets) {
 // ============= Main Build Function =============
 
 async function generateStaticHTML() {
-  const startTime = Date.now();
+  const metrics = createBuildMetrics('static-html');
   
   try {
     console.log('🏗️ Generating static HTML files with caching...');
@@ -458,12 +466,18 @@ async function generateStaticHTML() {
 
     // Load all data
     console.log('📖 Loading data files...');
+    const dataLoadStart = Date.now();
     const [postsData, categoriesData, tagsData, authorsData] = await Promise.all([
       JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'posts.json'), 'utf8')),
       JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'categories.json'), 'utf8')),
       JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'tags.json'), 'utf8')),
       JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'authors.json'), 'utf8'))
     ]);
+    recordTiming(metrics, 'Data Loading', dataLoadStart);
+    recordStat(metrics, 'posts', postsData.length);
+    recordStat(metrics, 'categories', categoriesData.length);
+    recordStat(metrics, 'tags', tagsData.length);
+    recordStat(metrics, 'authors', authorsData.length);
 
     console.log(`  Posts: ${postsData.length}, Categories: ${categoriesData.length}, Tags: ${tagsData.length}, Authors: ${authorsData.length}`);
 
@@ -529,14 +543,22 @@ async function generateStaticHTML() {
 
     // Write all files in parallel with caching
     console.log(`📝 Writing ${filesToWrite.length} HTML files...`);
+    const htmlGenStart = Date.now();
+    recordStat(metrics, 'totalFiles', filesToWrite.length);
     const results = await writeFilesInParallel(filesToWrite, cache);
+    recordTiming(metrics, 'HTML Generation', htmlGenStart);
+    recordStat(metrics, 'filesWritten', results.written);
+    recordStat(metrics, 'filesSkipped', results.skipped);
     
     // Save updated cache
     saveStaticCache(cache);
 
-    const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-    console.log(`\n🎉 Static HTML generation complete in ${duration}s!`);
-    console.log(`   Written: ${results.written}, Skipped (cached): ${results.skipped}`);
+    // Finalize and save metrics
+    finalizeBuildMetrics(metrics);
+    const allMetrics = saveBuildMetrics(metrics);
+    
+    console.log(`\n🎉 Static HTML generation complete!`);
+    printMetricsSummary(metrics, allMetrics);
 
   } catch (error) {
     console.error('❌ Static HTML generation failed:', error.message);

@@ -1,6 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import {
+  createBuildMetrics,
+  recordTiming,
+  recordStat,
+  finalizeBuildMetrics,
+  saveBuildMetrics,
+  printMetricsSummary
+} from './build-metrics.js';
 
 const WORDPRESS_API = process.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2';
 const OUTPUT_DIR = './src/data';
@@ -228,14 +236,16 @@ async function fetchAllAuthors() {
 // ============= Main Fetch Function =============
 
 async function fetchWordPressContent() {
-  const startTime = Date.now();
+  const metrics = createBuildMetrics('content-fetch');
   
   try {
     console.log('🚀 Fetching WordPress content...');
     console.log(`📡 API URL: ${WORDPRESS_API}`);
     console.log(`🔄 Incremental mode: ${INCREMENTAL_MODE ? 'enabled' : 'disabled'}`);
     
+    const apiTestStart = Date.now();
     await testApiConnection();
+    recordTiming(metrics, 'API Connection Test', apiTestStart);
     
     // Ensure directories exist
     if (!fs.existsSync(OUTPUT_DIR)) {
@@ -248,11 +258,16 @@ async function fetchWordPressContent() {
 
     // Fetch taxonomy data in parallel (these rarely change)
     console.log('📂 Fetching taxonomies in parallel...');
+    const taxonomyStart = Date.now();
     const [categories, tags, authors] = await Promise.all([
       fetchAllCategories(),
       fetchAllTags(),
       fetchAllAuthors()
     ]);
+    recordTiming(metrics, 'Taxonomy Fetch', taxonomyStart);
+    recordStat(metrics, 'categories', categories.length);
+    recordStat(metrics, 'tags', tags.length);
+    recordStat(metrics, 'authors', authors.length);
     console.log(`  ✅ Categories: ${categories.length}, Tags: ${tags.length}, Authors: ${authors.length}`);
 
     // Create lookup maps
@@ -264,6 +279,7 @@ async function fetchWordPressContent() {
     let allPosts;
     let postsNeedProcessing;
     
+    const postFetchStart = Date.now();
     if (INCREMENTAL_MODE && cache.lastFetch) {
       const { posts: modifiedPosts, isFullFetch, noChanges } = await fetchModifiedPostsSince(cache.lastFetch);
       
@@ -272,9 +288,11 @@ async function fetchWordPressContent() {
         console.log('  📦 Using cached posts data');
         allPosts = Object.values(cache.posts);
         postsNeedProcessing = [];
+        recordStat(metrics, 'fetchType', 'cached');
       } else if (isFullFetch) {
         allPosts = modifiedPosts;
         postsNeedProcessing = modifiedPosts;
+        recordStat(metrics, 'fetchType', 'full');
       } else {
         // Merge modified posts with cache
         const cachedPosts = { ...cache.posts };
@@ -283,17 +301,25 @@ async function fetchWordPressContent() {
         }
         allPosts = Object.values(cachedPosts);
         postsNeedProcessing = modifiedPosts;
+        recordStat(metrics, 'fetchType', 'incremental');
       }
     } else {
       allPosts = await fetchAllPosts();
       postsNeedProcessing = allPosts;
+      recordStat(metrics, 'fetchType', 'full');
     }
+    recordTiming(metrics, 'Post Fetch', postFetchStart);
+    recordStat(metrics, 'totalPosts', allPosts.length);
+    recordStat(metrics, 'postsModified', postsNeedProcessing.length);
     
     console.log(`📦 Total posts: ${allPosts.length}, Need processing: ${postsNeedProcessing.length}`);
 
     // Batch fetch featured media only for posts that need processing
+    const mediaFetchStart = Date.now();
     const mediaIds = postsNeedProcessing.map(post => post.featured_media);
     const mediaMap = await fetchMediaBatch(mediaIds);
+    recordTiming(metrics, 'Media Fetch', mediaFetchStart);
+    recordStat(metrics, 'mediaFetched', Object.keys(mediaMap).length);
 
     // Process posts
     const processPost = (post, existingProcessed = null) => {
@@ -466,9 +492,12 @@ async function fetchWordPressContent() {
     saveCacheData(newCache);
     console.log('  ✅ Updated build cache');
 
-    const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-    console.log(`\n🎉 WordPress content fetch complete in ${duration}s!`);
-    console.log(`   Posts: ${postsWithMeta.length}, Categories: ${categories.length}, Tags: ${tags.length}, Authors: ${authors.length}`);
+    // Finalize and save metrics
+    finalizeBuildMetrics(metrics);
+    const allMetrics = saveBuildMetrics(metrics);
+    
+    console.log(`\n🎉 WordPress content fetch complete!`);
+    printMetricsSummary(metrics, allMetrics);
     
   } catch (error) {
     console.error('❌ Error fetching WordPress content:', error.message);
