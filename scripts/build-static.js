@@ -557,6 +557,11 @@ async function generateStaticHTML() {
     finalizeBuildMetrics(metrics);
     const allMetrics = saveBuildMetrics(metrics);
     
+    // Export metrics to public folder for dashboard
+    const metricsPublicPath = path.join(DIST_DIR, 'build-metrics.json');
+    fs.writeFileSync(metricsPublicPath, JSON.stringify(allMetrics, null, 2));
+    console.log(`📊 Build metrics exported to ${metricsPublicPath}`);
+    
     console.log(`\n🎉 Static HTML generation complete!`);
     printMetricsSummary(metrics, allMetrics);
 
