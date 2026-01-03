@@ -1,6 +1,12 @@
 // WordPress REST API service layer for dev.igeeksblog.com
 
-const API_BASE = import.meta.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2';
+// Use proxy in Lovable preview to bypass CORS
+const isLovablePreview = typeof window !== 'undefined' && 
+  window.location.hostname.includes('lovableproject.com');
+
+const API_BASE = isLovablePreview 
+  ? '/api/wp/wp/v2'
+  : (import.meta.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2');
 
 export interface WPPost {
   id: number;
@@ -283,7 +289,9 @@ export function stripHtml(html: string): string {
 }
 
 // Preview API - fetch draft posts with token validation
-const PREVIEW_API_BASE = import.meta.env.VITE_WORDPRESS_API_URL?.replace('/wp/v2', '') || 'https://dev.igeeksblog.com/wp-json';
+const PREVIEW_API_BASE = isLovablePreview 
+  ? '/api/wp'
+  : (import.meta.env.VITE_WORDPRESS_API_URL?.replace('/wp/v2', '') || 'https://dev.igeeksblog.com/wp-json');
 
 export async function fetchPreviewPost(postId: number, token: string): Promise<WPPost> {
   const response = await fetch(
