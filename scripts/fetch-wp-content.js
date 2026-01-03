@@ -122,10 +122,11 @@ async function fetchMediaBatch(mediaIds) {
   const uniqueIds = [...new Set(mediaIds.filter(id => id))];
   if (uniqueIds.length === 0) return {};
   
-  console.log(`  📷 Fetching ${uniqueIds.length} featured images (parallel batches)...`);
+  console.log(`  📷 Fetching ${uniqueIds.length} featured images (conservative batches)...`);
   
   const mediaMap = {};
-  const BATCH_SIZE = 20; // Increased parallelism
+  const BATCH_SIZE = 10; // Smaller batches for server health
+  const BATCH_DELAY = 500; // 500ms between batches
   
   for (let i = 0; i < uniqueIds.length; i += BATCH_SIZE) {
     const batch = uniqueIds.slice(i, i + BATCH_SIZE);
@@ -135,9 +136,9 @@ async function fetchMediaBatch(mediaIds) {
       mediaMap[id] = results[index];
     });
     
-    // Minimal delay between batches
+    // Longer delay between batches
     if (i + BATCH_SIZE < uniqueIds.length) {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, BATCH_DELAY));
     }
   }
   
@@ -195,45 +196,57 @@ async function fetchAllPosts() {
   let allPosts = [];
   let page = 1;
   let hasMore = true;
-  let consecutiveSlowRequests = 0;
   let consecutiveFailures = 0;
+  let totalPostsFetched = 0;
   
   const CHECKPOINT_FILE = path.join(CACHE_DIR, 'fetch-checkpoint.json');
-  const POSTS_PER_PAGE = 50; // Reduced from 100 for server reliability
-  const CHECKPOINT_INTERVAL = 3; // Save progress every 3 pages
-  const REQUEST_TIMEOUT = 30000; // 30s timeout
-  const SLOW_REQUEST_THRESHOLD = 20000; // 20s = slow request
+  
+  // Ultra-conservative settings to prevent server crashes
+  const POSTS_PER_PAGE = 20; // Small batches for t2/t3 micro instances
+  const BASE_DELAY = 2000; // 2s base delay between requests
+  const MAX_DELAY = 5000; // Cap at 5s
+  const CHECKPOINT_INTERVAL = 5; // Save every 5 pages (100 posts)
+  const BREATHING_ROOM_INTERVAL = 100; // Pause every 100 posts
+  const BREATHING_ROOM_DURATION = 10000; // 10s server rest
+  const REQUEST_TIMEOUT = 45000; // 45s timeout (server is slow)
+  const MAX_CONSECUTIVE_FAILURES = 3;
 
   // Load checkpoint if exists
   ensureCacheDir();
   if (fs.existsSync(CHECKPOINT_FILE)) {
     try {
       const checkpoint = JSON.parse(fs.readFileSync(CHECKPOINT_FILE, 'utf8'));
-      if (Date.now() - checkpoint.timestamp < 600000) { // Valid for 10 minutes
+      if (Date.now() - checkpoint.timestamp < 1800000) { // Valid for 30 minutes
         allPosts = checkpoint.posts;
         page = checkpoint.nextPage;
+        totalPostsFetched = allPosts.length;
         console.log(`  🔄 Resuming from checkpoint: page ${page}, ${allPosts.length} posts loaded`);
       }
     } catch {}
   }
 
+  console.log(`  ⚙️ Ultra-conservative mode: ${POSTS_PER_PAGE} posts/page, ${BASE_DELAY}ms base delay`);
+
   while (hasMore) {
-    // After 2 consecutive failures, wait 30s for server recovery
-    if (consecutiveFailures >= 2) {
-      console.log(`  🚨 Multiple failures detected, waiting 30s for server recovery...`);
-      await new Promise(resolve => setTimeout(resolve, 30000));
-      consecutiveFailures = 0;
+    // Abort if too many consecutive failures
+    if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+      console.log(`  🚨 ${MAX_CONSECUTIVE_FAILURES} consecutive failures - aborting to protect server`);
+      console.log(`  💾 Progress saved: ${allPosts.length} posts. Resume on next build.`);
+      break;
     }
 
-    // Health check every 5 pages or after slow requests
-    if (page > 1 && (page % 5 === 1 || consecutiveSlowRequests >= 2)) {
+    // Server breathing room every 100 posts
+    if (totalPostsFetched > 0 && totalPostsFetched % BREATHING_ROOM_INTERVAL === 0 && page > 1) {
+      console.log(`  🧘 Giving server ${BREATHING_ROOM_DURATION / 1000}s breathing room...`);
+      await new Promise(resolve => setTimeout(resolve, BREATHING_ROOM_DURATION));
+      
+      // Health check after breathing room
       console.log(`  🏥 Checking server health...`);
       const isHealthy = await checkServerHealth();
       if (!isHealthy) {
-        console.log(`  ⚠️ Server stressed, waiting 15s before continuing...`);
-        await new Promise(resolve => setTimeout(resolve, 15000));
+        console.log(`  ⚠️ Server still stressed, waiting additional 30s...`);
+        await new Promise(resolve => setTimeout(resolve, 30000));
       }
-      consecutiveSlowRequests = 0;
     }
 
     console.log(`  Fetching posts page ${page}...`);
@@ -243,13 +256,14 @@ async function fetchAllPosts() {
       const response = await fetchWithTimeout(
         `${WORDPRESS_API}/posts?page=${page}&per_page=${POSTS_PER_PAGE}`,
         REQUEST_TIMEOUT,
-        3
+        2 // Only 2 retries to be gentler on server
       );
       
       const requestDuration = Date.now() - requestStart;
       
       if (!response.ok) {
-        if (response.status === 400) break;
+        if (response.status === 400) break; // No more pages
+        consecutiveFailures++;
         throw new Error(`Failed to fetch posts: ${response.status}`);
       }
 
@@ -257,22 +271,17 @@ async function fetchAllPosts() {
       if (posts.length === 0) break;
       
       allPosts = [...allPosts, ...posts];
-      consecutiveFailures = 0;
-      
-      // Track slow requests for adaptive throttling
-      if (requestDuration > SLOW_REQUEST_THRESHOLD) {
-        consecutiveSlowRequests++;
-        console.log(`  ⏱️ Slow request: ${Math.round(requestDuration / 1000)}s`);
-      } else {
-        consecutiveSlowRequests = Math.max(0, consecutiveSlowRequests - 1);
-      }
+      totalPostsFetched += posts.length;
+      consecutiveFailures = 0; // Reset on success
       
       const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
       hasMore = page < totalPages;
+      
+      console.log(`  ✓ Page ${page}/${totalPages}: ${posts.length} posts (${Math.round(requestDuration / 1000)}s)`);
       page++;
       
-      // Save checkpoint every 3 pages
-      if (page % CHECKPOINT_INTERVAL === 0) {
+      // Save checkpoint every 5 pages
+      if ((page - 1) % CHECKPOINT_INTERVAL === 0) {
         fs.writeFileSync(CHECKPOINT_FILE, JSON.stringify({
           posts: allPosts,
           nextPage: page,
@@ -282,27 +291,33 @@ async function fetchAllPosts() {
       }
       
       if (hasMore) {
-        // Adaptive delay based on request speed
-        let delay = 1000; // Base delay 1s
-        if (requestDuration > SLOW_REQUEST_THRESHOLD) {
-          delay = 2500; // Slow down if server is struggling
-        } else if (consecutiveSlowRequests > 0) {
-          delay = 1500; // Slightly slower after slow requests
-        }
-        // Progressive increase for later pages
-        if (page > 15) {
-          delay += (page - 15) * 100;
-        }
-        await new Promise(resolve => setTimeout(resolve, Math.min(delay, 4000)));
+        // Progressive delay: base + 500ms every 5 pages, capped at MAX_DELAY
+        const progressiveDelay = Math.min(
+          BASE_DELAY + Math.floor((page - 1) / 5) * 500,
+          MAX_DELAY
+        );
+        await new Promise(resolve => setTimeout(resolve, progressiveDelay));
       }
     } catch (error) {
       consecutiveFailures++;
-      throw error;
+      console.log(`  ❌ Error on page ${page}: ${error.message}`);
+      
+      // Save checkpoint before potential abort
+      fs.writeFileSync(CHECKPOINT_FILE, JSON.stringify({
+        posts: allPosts,
+        nextPage: page,
+        timestamp: Date.now()
+      }));
+      
+      // Wait before retry: 10s, then 20s
+      const retryWait = consecutiveFailures === 1 ? 10000 : 20000;
+      console.log(`  ⏳ Waiting ${retryWait / 1000}s before retry...`);
+      await new Promise(resolve => setTimeout(resolve, retryWait));
     }
   }
 
   // Clean up checkpoint on successful completion
-  if (fs.existsSync(CHECKPOINT_FILE)) {
+  if (consecutiveFailures < MAX_CONSECUTIVE_FAILURES && fs.existsSync(CHECKPOINT_FILE)) {
     fs.unlinkSync(CHECKPOINT_FILE);
   }
 
