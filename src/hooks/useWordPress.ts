@@ -1,11 +1,9 @@
-'use client';
-
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { WPPost, WPCategory, WPTag, WPAuthor } from '@/lib/wordpress';
+import { WPPost, WPCategory } from '@/lib/wordpress';
 
-const API_BASE = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2';
+const API_BASE = import.meta.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2';
 
-// Client-side fetch functions (for React Query)
+// Client-side fetch functions
 async function clientFetchPosts(params: {
   page?: number;
   perPage?: number;
@@ -51,7 +49,7 @@ async function clientFetchCategories(): Promise<WPCategory[]> {
   return response.json();
 }
 
-// Fetch posts with pagination
+// React Query hooks
 export function usePosts(
   params: {
     page?: number;
@@ -71,7 +69,6 @@ export function usePosts(
   });
 }
 
-// Fetch all categories
 export function useCategories() {
   return useQuery({
     queryKey: ['categories'],
