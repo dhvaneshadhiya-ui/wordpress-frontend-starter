@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { SEO } from '@/components/SEO';
@@ -7,11 +6,11 @@ import { getFeaturedImageUrl, getAuthor, getCategories, getTags, getReadingTime,
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PostGrid } from '@/components/PostGrid';
-import { getInitialPostData, clearInitialData } from '@/utils/hydration';
+import { getInitialPostData } from '@/utils/hydration';
 
 export default function SinglePost() {
   const { slug } = useParams<{ slug: string }>();
-  const { data: post, isLoading, error } = usePost(slug);
+  const { data: post, isLoading, isFetching, error, isError } = usePost(slug);
   
   // Check if we have SSG data (instant render, no loading)
   const hasInitialData = !!getInitialPostData(slug || '');
@@ -26,35 +25,54 @@ export default function SinglePost() {
     perPage: 4 
   });
 
-  // Clear initial data after hydration to prevent stale data on navigation
-  useEffect(() => {
-    if (hasInitialData && post) {
-      // Small delay to ensure hydration is complete
-      const timer = setTimeout(() => clearInitialData(), 100);
-      return () => clearTimeout(timer);
-    }
-  }, [hasInitialData, post]);
-
-  // Skip loading state if we have SSG data
-  if (isLoading && !hasInitialData) {
+  // Show loading only if we're actually loading AND have no data yet
+  const showLoading = (isLoading || isFetching) && !post && !hasInitialData;
+  
+  if (showLoading) {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8">
           <Skeleton className="mb-4 h-8 w-3/4" />
           <Skeleton className="mb-8 h-4 w-1/2" />
           <Skeleton className="aspect-video w-full rounded-lg" />
+          <div className="mt-8 space-y-4">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
         </div>
       </Layout>
     );
   }
 
-  if (error || !post) {
+  // Only show "not found" if the query has completed with an error or null result
+  // AND we've actually finished trying to load (not still loading)
+  if ((isError || (!post && !isLoading && !isFetching)) && !hasInitialData) {
     return (
       <Layout>
         <SEO title="Post Not Found" />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-foreground">Post not found</h1>
           <p className="mt-2 text-muted-foreground">The article you're looking for doesn't exist.</p>
+          <Link 
+            to="/" 
+            className="mt-6 inline-block rounded-lg bg-primary px-6 py-3 text-primary-foreground hover:opacity-90 transition-opacity"
+          >
+            Go to Homepage
+          </Link>
+        </div>
+      </Layout>
+    );
+  }
+
+  // If still no post data available, show minimal loading
+  if (!post) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-center py-16">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          </div>
         </div>
       </Layout>
     );
