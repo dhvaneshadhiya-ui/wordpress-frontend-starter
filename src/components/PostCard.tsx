@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { WPPost, getFeaturedImageUrl, getAuthor, getCategories, getReadingTime, formatDate, stripHtml } from '@/lib/wordpress';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -19,6 +20,7 @@ function getCategoryColor(slug: string): string {
 }
 
 export function PostCard({ post, variant = 'default' }: PostCardProps) {
+  const [imageError, setImageError] = useState(false);
   const imageUrl = getFeaturedImageUrl(post, 'large');
   const author = getAuthor(post);
   const categories = getCategories(post);
@@ -28,17 +30,27 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
   return (
     <Link
       to={`/${post.slug}`}
-      className="group relative block overflow-hidden rounded-lg bg-card aspect-[4/3]"
+      className="group relative block overflow-hidden rounded-lg bg-muted aspect-[4/3]"
     >
-      {/* Background Image with lazy loading */}
-      <img
-        src={imageUrl}
-        alt={stripHtml(post.title.rendered)}
-        loading="lazy"
-        decoding="async"
-        fetchPriority="auto"
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-      />
+      {/* Background Image with error handling */}
+      {!imageError && imageUrl && (
+        <img
+          src={imageUrl}
+          alt={stripHtml(post.title.rendered)}
+          loading="lazy"
+          decoding="async"
+          fetchPriority="auto"
+          onError={() => setImageError(true)}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      )}
+      
+      {/* Fallback when image fails or missing */}
+      {(imageError || !imageUrl) && (
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center">
+          <span className="text-4xl opacity-50">📰</span>
+        </div>
+      )}
       
       {/* Gradient Overlay */}
       <div className="absolute inset-0 post-card-gradient" />
