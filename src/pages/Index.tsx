@@ -7,18 +7,19 @@ import { SEO } from '@/components/SEO';
 import { usePosts, useCategories } from '@/hooks/useWordPress';
 import { Link } from 'react-router-dom';
 import { getInitialHomeData } from '@/utils/hydration';
+import { hasLocalData } from '@/lib/local-data';
 
 const Index = () => {
   const [page, setPage] = useState(1);
   const { data: latestData, isLoading } = usePosts({ page, perPage: 9 });
   const { data: categories } = useCategories();
 
-  // Check if we have SSG data (instant render, no loading)
-  const hasInitialData = !!getInitialHomeData();
+  // Check if we have SSG data or local data (instant render, no loading)
+  const hasInitialData = !!getInitialHomeData() || hasLocalData();
 
   const topCategories = categories?.slice(0, 8) || [];
 
-  // Skip loading state if we have SSG data or already have posts data
+  // Skip loading state if we have SSG/local data or already have posts data
   const showLoading = isLoading && !hasInitialData && !latestData?.posts?.length;
 
   return (

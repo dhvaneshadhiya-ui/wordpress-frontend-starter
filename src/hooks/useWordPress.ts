@@ -22,17 +22,45 @@ import {
   transformToWPAuthor,
   transformPostsArray,
 } from '@/utils/hydration';
+import {
+  getLocalPosts,
+  getLocalPostBySlug,
+  getLocalCategories,
+  getLocalCategoryBySlug,
+  getLocalTags,
+  getLocalTagBySlug,
+  getLocalAuthors,
+  getLocalAuthorBySlug,
+  hasLocalData,
+} from '@/lib/local-data';
 
 // Shared query config for better caching and retry behavior
 const DEFAULT_STALE_TIME = 5 * 60 * 1000; // 5 minutes
 const LONG_STALE_TIME = 30 * 60 * 1000; // 30 minutes
 const GC_TIME = 60 * 60 * 1000; // 1 hour - keep in cache
 
-// Retry config - be patient with slow API
+// Retry config - reduced retries for faster fallback to local data
 const RETRY_CONFIG = {
-  retry: 3,
-  retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 10000),
+  retry: 1,
+  retryDelay: () => 1000,
 };
+
+// Helper to get local posts placeholder
+function getLocalPostsPlaceholder(params: { page?: number; perPage?: number; categories?: number[]; tags?: number[]; author?: number }) {
+  if (!hasLocalData()) return undefined;
+  const result = getLocalPosts({
+    page: params.page,
+    perPage: params.perPage,
+    categoryId: params.categories?.[0],
+    tagId: params.tags?.[0],
+    authorId: params.author,
+  });
+  return {
+    posts: result.posts,
+    totalPages: result.totalPages,
+    total: result.total,
+  };
+}
 
 // Fetch posts with pagination
 export function usePosts(params: {
@@ -55,12 +83,14 @@ export function usePosts(params: {
   return useQuery({
     queryKey: ['posts', params],
     queryFn: () => fetchPosts(params),
-    // Use SSG data as initial data, but still allow refetch
+    // Use SSG data as initial data, or local data as placeholder
     initialData: homeData ? {
       posts: transformPostsArray(homeData.posts),
       totalPages: 1,
       total: homeData.posts.length,
     } : undefined,
+    // Local data as placeholder for instant rendering
+    placeholderData: () => getLocalPostsPlaceholder(params),
     staleTime: DEFAULT_STALE_TIME,
     gcTime: GC_TIME,
     ...RETRY_CONFIG,
@@ -77,6 +107,11 @@ export function usePost(slug: string | undefined) {
     enabled: !!slug,
     // Use SSG data as initial data
     initialData: initialData ? transformToWPPost(initialData) : undefined,
+    // Local data as placeholder for instant rendering
+    placeholderData: () => {
+      if (!slug || !hasLocalData()) return undefined;
+      return getLocalPostBySlug(slug);
+    },
     staleTime: DEFAULT_STALE_TIME,
     gcTime: GC_TIME,
     ...RETRY_CONFIG,

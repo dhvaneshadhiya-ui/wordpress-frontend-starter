@@ -7,13 +7,14 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PostGrid } from '@/components/PostGrid';
 import { getInitialPostData } from '@/utils/hydration';
+import { getLocalPostBySlug, hasLocalData } from '@/lib/local-data';
 
 export default function SinglePost() {
   const { slug } = useParams<{ slug: string }>();
   const { data: post, isLoading, isFetching, error, isError } = usePost(slug);
   
-  // Check if we have SSG data (instant render, no loading)
-  const hasInitialData = !!getInitialPostData(slug || '');
+  // Check if we have SSG data or local data (instant render, no loading)
+  const hasInitialData = !!getInitialPostData(slug || '') || (hasLocalData() && !!getLocalPostBySlug(slug || ''));
   
   // Get primary category for related posts
   const categories = post ? getCategories(post) : [];
