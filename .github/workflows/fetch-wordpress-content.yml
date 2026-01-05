@@ -1,0 +1,85 @@
+name: Fetch WordPress Content
+
+on:
+  # Run daily at 6:00 AM UTC
+  schedule:
+    - cron: '0 6 * * *'
+  
+  # Allow manual trigger from GitHub UI
+  workflow_dispatch:
+    inputs:
+      force_full_fetch:
+        description: 'Force full content fetch (ignore cache)'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  fetch-content:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Restore build cache
+        uses: actions/cache@v4
+        with:
+          path: .build-cache
+          key: wp-content-cache-${{ github.run_id }}
+          restore-keys: |
+            wp-content-cache-
+      
+      - name: Fetch WordPress content
+        env:
+          VITE_WORDPRESS_API_URL: ${{ secrets.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2' }}
+          INCREMENTAL_BUILD: ${{ github.event.inputs.force_full_fetch == 'true' && 'false' || 'true' }}
+        run: node scripts/fetch-wp-content.js
+      
+      - name: Check for changes
+        id: changes
+        run: |
+          git add src/data/
+          if git diff --staged --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "📭 No content changes detected"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "📬 Content changes detected!"
+          fi
+      
+      - name: Commit and push changes
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: update WordPress content [skip ci]"
+          git push
+      
+      - name: Summary
+        run: |
+          echo "## WordPress Content Fetch Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.changes.outputs.changed }}" == "true" ]; then
+            echo "✅ Content updated and pushed to repository" >> $GITHUB_STEP_SUMMARY
+            echo "🚀 Vercel deployment will be triggered automatically" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "📭 No changes detected - repository unchanged" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Files in src/data/" >> $GITHUB_STEP_SUMMARY
+          ls -la src/data/ >> $GITHUB_STEP_SUMMARY
