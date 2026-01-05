@@ -32,6 +32,7 @@ import {
   getLocalAuthors,
   getLocalAuthorBySlug,
   hasLocalData,
+  isLocalDataLoaded,
 } from '@/lib/local-data';
 
 // Shared query config for better caching and retry behavior

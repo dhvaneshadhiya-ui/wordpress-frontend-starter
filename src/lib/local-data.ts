@@ -1,19 +1,17 @@
 /**
  * Local data service - provides fallback data from pre-fetched JSON files
+ * Data is imported synchronously but chunked separately by Vite
  */
 import postsData from '@/data/posts.json';
 import categoriesData from '@/data/categories.json';
 import tagsData from '@/data/tags.json';
 import authorsData from '@/data/authors.json';
 
-// Use 'any' to handle the JSON structure differences, we'll transform as needed
+// Cast to any[] to handle JSON structure differences
 const posts = postsData as any[];
 const categories = categoriesData as any[];
 const tags = tagsData as any[];
 const authors = authorsData as any[];
-
-// Import types
-import type { WPPost, WPCategory, WPTag, WPAuthor } from './wordpress';
 
 export interface LocalPostsParams {
   page?: number;
@@ -29,6 +27,14 @@ export interface LocalPostsResult {
   posts: any[];
   total: number;
   totalPages: number;
+}
+
+/**
+ * Initialize local data (no-op for sync imports, kept for API compatibility)
+ */
+export async function initLocalData(): Promise<void> {
+  // Data is already loaded synchronously
+  return Promise.resolve();
 }
 
 /**
@@ -87,8 +93,8 @@ export function getLocalPosts(params: LocalPostsParams = {}): LocalPostsResult {
   if (search) {
     const searchLower = search.toLowerCase();
     filtered = filtered.filter(post =>
-      post.title.rendered.toLowerCase().includes(searchLower) ||
-      post.excerpt.rendered.toLowerCase().includes(searchLower)
+      post.title?.rendered?.toLowerCase().includes(searchLower) ||
+      post.excerpt?.rendered?.toLowerCase().includes(searchLower)
     );
   }
 
@@ -188,6 +194,13 @@ export function getLocalAuthorById(id: number): any | null {
  */
 export function hasLocalData(): boolean {
   return posts.length > 0;
+}
+
+/**
+ * Check if local data has been loaded
+ */
+export function isLocalDataLoaded(): boolean {
+  return true; // Always loaded with sync imports
 }
 
 /**
