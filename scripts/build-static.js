@@ -14,7 +14,13 @@ const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com';
 const DATA_DIR = './src/data';
 const DIST_DIR = './dist';
 const CACHE_DIR = './.build-cache';
-const PARALLEL_WRITES = 50; // Number of files to write in parallel
+const PARALLEL_WRITES = 50;
+
+// Environment-based indexing control
+const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true';
+const ROBOTS_META = ENABLE_INDEXING ? 'index, follow' : 'noindex, nofollow';
+
+console.log(`🔍 SEO Indexing: ${ENABLE_INDEXING ? 'ENABLED (Production)' : 'DISABLED (Staging)'}`);
 
 // ============= Caching Utilities =============
 
@@ -86,7 +92,6 @@ async function writeFilesInParallel(files, cache) {
     await Promise.all(batch.map(async ({ filePath, content, cacheKey }) => {
       const hash = getContentHash(content);
       
-      // Skip if content hasn't changed
       if (cache.hashes[cacheKey] === hash && fs.existsSync(filePath)) {
         results.skipped++;
         return;
@@ -133,6 +138,46 @@ function generateAssetTags(viteAssets) {
   return { cssTags, jsTag };
 }
 
+// Calculate word count from HTML content
+function getWordCount(html) {
+  const text = stripHtml(html);
+  return text.split(/\s+/).filter(w => w.length > 0).length;
+}
+
+// Generate Organization schema (shared across all pages)
+function generateOrganizationSchema() {
+  return {
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    "name": "iGeeksBlog",
+    "url": SITE_URL,
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${SITE_URL}/favicon.ico`,
+      "width": 512,
+      "height": 512
+    },
+    "sameAs": [
+      "https://twitter.com/igeaborahimali",
+      "https://facebook.com/igeeksblog",
+      "https://www.youtube.com/igeeksblog"
+    ]
+  };
+}
+
+// Generate BreadcrumbList schema
+function generateBreadcrumbSchema(items) {
+  return {
+    "@type": "BreadcrumbList",
+    "itemListElement": items.map((item, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": item.name,
+      "item": item.url
+    }))
+  };
+}
+
 function generatePostHTML(post, viteAssets) {
   const title = escapeHtml(stripHtml(post.seo?.title || post.title?.rendered || ''));
   const description = escapeHtml(post.seo?.description || '');
@@ -142,23 +187,46 @@ function generatePostHTML(post, viteAssets) {
   const canonical = `${SITE_URL}/${post.slug}`;
   const authorName = escapeHtml(post.author?.name || 'iGeeksBlog');
   const { cssTags, jsTag } = generateAssetTags(viteAssets);
+  
+  // Calculate word count for enhanced schema
+  const wordCount = getWordCount(post.content?.rendered || '');
+  const keywords = post.tags?.map(t => t.name).join(', ') || '';
 
-  const jsonLd = {
+  // Enhanced Article schema with wordCount, keywords, speakable
+  const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": stripHtml(post.title?.rendered || ''),
     "description": stripHtml(post.excerpt?.rendered || ''),
     "image": image,
-    "author": { "@type": "Person", "name": post.author?.name || 'iGeeksBlog' },
-    "publisher": {
-      "@type": "Organization",
-      "name": "iGeeksBlog",
-      "logo": { "@type": "ImageObject", "url": `${SITE_URL}/favicon.ico` }
+    "wordCount": wordCount,
+    "keywords": keywords,
+    "author": {
+      "@type": "Person",
+      "name": post.author?.name || 'iGeeksBlog',
+      "url": post.author?.slug ? `${SITE_URL}/author/${post.author.slug}` : SITE_URL
     },
+    "publisher": generateOrganizationSchema(),
     "datePublished": post.date,
     "dateModified": post.modified,
-    "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": canonical
+    },
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": ["article h1", "article .content p:first-of-type"]
+    }
   };
+
+  // BreadcrumbList for post
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: SITE_URL },
+    ...(post.categories?.[0] ? [{ name: post.categories[0].name, url: `${SITE_URL}/category/${post.categories[0].slug}` }] : []),
+    { name: stripHtml(post.title?.rendered || ''), url: canonical }
+  ]);
+
+  const schemas = [articleSchema, breadcrumbSchema];
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -167,7 +235,7 @@ function generatePostHTML(post, viteAssets) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
     <meta name="description" content="${description}">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="${ROBOTS_META}">
     <meta property="og:type" content="article">
     <meta property="og:title" content="${ogTitle}">
     <meta property="og:description" content="${ogDescription}">
@@ -185,7 +253,7 @@ function generatePostHTML(post, viteAssets) {
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     ${cssTags}
-    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+    <script type="application/ld+json">${JSON.stringify(schemas)}</script>
 </head>
 <body>
     <div id="root">
@@ -200,7 +268,7 @@ function generatePostHTML(post, viteAssets) {
                         ${new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </time>
                 </div>
-                ${image ? `<img itemprop="image" src="${image}" alt="${title}" loading="lazy">` : ''}
+                ${image ? `<img itemprop="image" src="${image}" alt="${title}" loading="lazy" decoding="async" width="1200" height="630">` : ''}
             </header>
             <div itemprop="articleBody" class="content">${post.content?.rendered || ''}</div>
         </article>
@@ -217,7 +285,7 @@ function generateCategoryHTML(category, posts, viteAssets) {
   const canonical = `${SITE_URL}/category/${category.slug}`;
   const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
-  const jsonLd = {
+  const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": category.name,
@@ -234,6 +302,13 @@ function generateCategoryHTML(category, posts, viteAssets) {
     }
   };
 
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: SITE_URL },
+    { name: category.name, url: canonical }
+  ]);
+
+  const schemas = [collectionSchema, breadcrumbSchema, { "@context": "https://schema.org", ...generateOrganizationSchema() }];
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -241,7 +316,7 @@ function generateCategoryHTML(category, posts, viteAssets) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
     <meta name="description" content="${description}">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="${ROBOTS_META}">
     <meta property="og:type" content="website">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
@@ -253,7 +328,7 @@ function generateCategoryHTML(category, posts, viteAssets) {
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     ${cssTags}
-    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+    <script type="application/ld+json">${JSON.stringify(schemas)}</script>
 </head>
 <body>
     <div id="root">
@@ -263,6 +338,7 @@ function generateCategoryHTML(category, posts, viteAssets) {
             <div class="posts-grid">
                 ${posts.slice(0, 10).map(post => `
                     <article>
+                        ${post.featuredImage ? `<img src="${post.featuredImage}" alt="${escapeHtml(stripHtml(post.title?.rendered || ''))}" loading="lazy" decoding="async">` : ''}
                         <h2><a href="/${post.slug}">${post.title?.rendered || ''}</a></h2>
                         <p>${stripHtml(post.excerpt?.rendered || '').substring(0, 160)}...</p>
                     </article>
@@ -282,6 +358,11 @@ function generateTagHTML(tag, posts, viteAssets) {
   const canonical = `${SITE_URL}/tag/${tag.slug}`;
   const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: SITE_URL },
+    { name: `Tag: ${tag.name}`, url: canonical }
+  ]);
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -289,7 +370,7 @@ function generateTagHTML(tag, posts, viteAssets) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
     <meta name="description" content="${description}">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="${ROBOTS_META}">
     <meta property="og:type" content="website">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
@@ -298,6 +379,7 @@ function generateTagHTML(tag, posts, viteAssets) {
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     ${cssTags}
+    <script type="application/ld+json">${JSON.stringify(breadcrumbSchema)}</script>
 </head>
 <body>
     <div id="root">
@@ -306,6 +388,7 @@ function generateTagHTML(tag, posts, viteAssets) {
             <div class="posts-grid">
                 ${posts.slice(0, 10).map(post => `
                     <article>
+                        ${post.featuredImage ? `<img src="${post.featuredImage}" alt="${escapeHtml(stripHtml(post.title?.rendered || ''))}" loading="lazy" decoding="async">` : ''}
                         <h2><a href="/${post.slug}">${post.title?.rendered || ''}</a></h2>
                         <p>${stripHtml(post.excerpt?.rendered || '').substring(0, 160)}...</p>
                     </article>
@@ -325,7 +408,7 @@ function generateAuthorHTML(author, posts, viteAssets) {
   const canonical = `${SITE_URL}/author/${author.slug}`;
   const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
-  const jsonLd = {
+  const personSchema = {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
     "mainEntity": {
@@ -337,6 +420,13 @@ function generateAuthorHTML(author, posts, viteAssets) {
     }
   };
 
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: SITE_URL },
+    { name: author.name, url: canonical }
+  ]);
+
+  const schemas = [personSchema, breadcrumbSchema];
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -344,7 +434,7 @@ function generateAuthorHTML(author, posts, viteAssets) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
     <meta name="description" content="${description}">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="${ROBOTS_META}">
     <meta property="og:type" content="profile">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
@@ -354,19 +444,20 @@ function generateAuthorHTML(author, posts, viteAssets) {
     <link rel="canonical" href="${canonical}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     ${cssTags}
-    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+    <script type="application/ld+json">${JSON.stringify(schemas)}</script>
 </head>
 <body>
     <div id="root">
         <main>
             <header class="author-header">
-                ${author.avatar ? `<img src="${author.avatar}" alt="${escapeHtml(author.name)}">` : ''}
+                ${author.avatar ? `<img src="${author.avatar}" alt="${escapeHtml(author.name)}" loading="lazy" decoding="async">` : ''}
                 <h1>${escapeHtml(author.name)}</h1>
                 ${author.description ? `<p>${author.description}</p>` : ''}
             </header>
             <div class="posts-grid">
                 ${posts.slice(0, 10).map(post => `
                     <article>
+                        ${post.featuredImage ? `<img src="${post.featuredImage}" alt="${escapeHtml(stripHtml(post.title?.rendered || ''))}" loading="lazy" decoding="async">` : ''}
                         <h2><a href="/${post.slug}">${post.title?.rendered || ''}</a></h2>
                         <p>${stripHtml(post.excerpt?.rendered || '').substring(0, 160)}...</p>
                     </article>
@@ -385,23 +476,30 @@ function generateIndexHTML(posts, viteAssets) {
   const description = 'Your source for the latest Apple news, iPhone tips, Mac tutorials, and comprehensive tech reviews.';
   const { cssTags, jsTag } = generateAssetTags(viteAssets);
 
-  const jsonLd = {
+  const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
     "name": "iGeeksBlog",
     "url": SITE_URL,
     "description": description,
-    "publisher": {
-      "@type": "Organization",
-      "name": "iGeeksBlog",
-      "logo": { "@type": "ImageObject", "url": `${SITE_URL}/favicon.ico` }
-    },
+    "publisher": generateOrganizationSchema(),
     "potentialAction": {
       "@type": "SearchAction",
-      "target": `${SITE_URL}/?s={search_term_string}`,
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `${SITE_URL}/?s={search_term_string}`
+      },
       "query-input": "required name=search_term_string"
     }
   };
+
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    ...generateOrganizationSchema()
+  };
+
+  const schemas = [websiteSchema, organizationSchema];
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -410,7 +508,7 @@ function generateIndexHTML(posts, viteAssets) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
     <meta name="description" content="${description}">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="${ROBOTS_META}">
     <meta property="og:type" content="website">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
@@ -423,7 +521,7 @@ function generateIndexHTML(posts, viteAssets) {
     <link rel="canonical" href="${SITE_URL}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     ${cssTags}
-    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+    <script type="application/ld+json">${JSON.stringify(schemas)}</script>
 </head>
 <body>
     <div id="root">
@@ -433,7 +531,7 @@ function generateIndexHTML(posts, viteAssets) {
             <div class="posts-grid">
                 ${posts.slice(0, 9).map(post => `
                     <article>
-                        ${post.featuredImage ? `<img src="${post.featuredImage}" alt="${escapeHtml(stripHtml(post.title?.rendered || ''))}" loading="lazy">` : ''}
+                        ${post.featuredImage ? `<img src="${post.featuredImage}" alt="${escapeHtml(stripHtml(post.title?.rendered || ''))}" loading="lazy" decoding="async">` : ''}
                         <h2><a href="/${post.slug}">${post.title?.rendered || ''}</a></h2>
                         <p>${stripHtml(post.excerpt?.rendered || '').substring(0, 160)}...</p>
                     </article>

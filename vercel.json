@@ -3,6 +3,12 @@
   "outputDirectory": "dist",
   "framework": null,
   "installCommand": "npm install",
+  "images": {
+    "domains": ["dev.igeeksblog.com", "igeeksblog.com", "secure.gravatar.com"],
+    "formats": ["image/avif", "image/webp"],
+    "minimumCacheTTL": 86400,
+    "sizes": [320, 480, 640, 768, 1024, 1280, 1536, 1920]
+  },
   "functions": {
     "api/wp/[...path].js": {
       "memory": 128,
