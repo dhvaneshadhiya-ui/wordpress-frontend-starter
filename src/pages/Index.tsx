@@ -1,86 +1,87 @@
-import { useState } from 'react';
-import { Layout } from '@/components/Layout';
-import { PostGrid } from '@/components/PostGrid';
-
-import { PaginationNav } from '@/components/PaginationNav';
-import { NewsletterSignup } from '@/components/NewsletterSignup';
-import { SEO } from '@/components/SEO';
-import { usePosts, useCategories } from '@/hooks/useWordPress';
-import { Link } from 'react-router-dom';
+const staticPosts = [
+  { title: "iPhone 16 Pro Max: Top 10 Features You Need to Know", category: "iPhone", date: "Jan 5, 2024" },
+  { title: "15 Best Productivity Apps for iPhone and iPad in 2024", category: "Apps", date: "Jan 4, 2024" },
+  { title: "macOS Sonoma: Hidden Tips and Tricks You Didn't Know", category: "How To", date: "Jan 3, 2024" },
+  { title: "Apple Watch Series 10 Review: Is It Worth the Upgrade?", category: "News", date: "Jan 2, 2024" },
+  { title: "iPad Pro M4: The Ultimate Creative Tool for Professionals", category: "News", date: "Jan 1, 2024" },
+  { title: "AirPods Pro 3 Rumors: What to Expect from Apple's Next Earbuds", category: "News", date: "Dec 31, 2023" },
+];
 
 const Index = () => {
-  const [page, setPage] = useState(1);
-  const { data: latestData, isLoading, error } = usePosts({ page, perPage: 9 });
-  const { data: categories } = useCategories();
-
-  const topCategories = categories?.slice(0, 8) || [];
-
   return (
-    <Layout>
-      <SEO />
-      <div className="container mx-auto px-4">
-        {/* Category Quick Links */}
-        {topCategories.length > 0 && (
-          <section className="py-6 border-b border-border">
-            <div className="flex flex-wrap gap-2">
-              {topCategories.map((category) => (
-                <Link
-                  key={category.id}
-                  to={`/category/${category.slug}`}
-                  className="px-4 py-2 text-sm font-medium rounded-full bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
-                >
-                  {category.name}
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
+    <div style={{ padding: '20px', background: '#0f172a', minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
+      <header style={{ marginBottom: '32px', borderBottom: '1px solid #334155', paddingBottom: '20px' }}>
+        <h1 style={{ color: '#ffffff', fontSize: '28px', fontWeight: 'bold', margin: 0 }}>
+          iGeeksBlog
+        </h1>
+        <p style={{ color: '#94a3b8', fontSize: '14px', marginTop: '8px' }}>
+          Your source for Apple news, tips, and reviews
+        </p>
+      </header>
 
-        {/* Error State */}
-        {error && (
-          <div className="bg-destructive/10 border border-destructive/20 text-destructive rounded-lg p-4 my-6">
-            <p className="font-medium">Unable to load posts</p>
-            <p className="text-sm opacity-75 mt-1">
-              {error.message || 'API request failed. This may be due to CORS restrictions in the preview environment.'}
-            </p>
-            <p className="text-xs opacity-50 mt-2">
-              Posts will load correctly when deployed to production (dev.igeeksblog.com).
-            </p>
-          </div>
-        )}
+      <main>
+        <h2 style={{ color: '#ffffff', fontSize: '20px', fontWeight: '600', marginBottom: '20px' }}>
+          Latest Articles
+        </h2>
+        
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
+          gap: '20px' 
+        }}>
+          {staticPosts.map((post, i) => (
+            <article 
+              key={i} 
+              style={{ 
+                background: '#1e293b', 
+                color: '#ffffff', 
+                padding: '24px', 
+                borderRadius: '12px',
+                border: '1px solid #334155'
+              }}
+            >
+              <span style={{ 
+                background: '#3b82f6', 
+                color: '#ffffff',
+                padding: '4px 12px', 
+                borderRadius: '9999px', 
+                fontSize: '12px',
+                fontWeight: '500'
+              }}>
+                {post.category}
+              </span>
+              <h3 style={{ 
+                marginTop: '16px', 
+                fontSize: '18px', 
+                fontWeight: '600',
+                lineHeight: '1.4',
+                color: '#ffffff'
+              }}>
+                {post.title}
+              </h3>
+              <p style={{ 
+                color: '#94a3b8', 
+                fontSize: '14px',
+                marginTop: '12px'
+              }}>
+                {post.date}
+              </p>
+            </article>
+          ))}
+        </div>
+      </main>
 
-        {/* No posts state (after loading, no error, but empty) */}
-        {!isLoading && !error && (!latestData?.posts || latestData.posts.length === 0) && (
-          <div className="bg-muted border border-border rounded-lg p-6 my-6 text-center">
-            <p className="text-muted-foreground">No posts available.</p>
-            <p className="text-sm text-muted-foreground/75 mt-1">
-              API may be blocked by CORS in preview. Deploy to production for full functionality.
-            </p>
-          </div>
-        )}
-
-        {/* Latest News Section */}
-        <PostGrid
-          posts={latestData?.posts || []}
-          isLoading={isLoading}
-          title="Latest Articles"
-        />
-
-        {/* Pagination */}
-        {latestData && (
-          <PaginationNav
-            currentPage={page}
-            totalPages={latestData.totalPages}
-            onPageChange={setPage}
-          />
-        )}
-
-        {/* Newsletter Section */}
-        <section className="py-12">
-          <NewsletterSignup />
-        </section>
-      </div>
-    </Layout>
+      <footer style={{ 
+        marginTop: '48px', 
+        paddingTop: '24px', 
+        borderTop: '1px solid #334155',
+        color: '#64748b',
+        fontSize: '14px',
+        textAlign: 'center'
+      }}>
+        © 2024 iGeeksBlog. All rights reserved.
+      </footer>
+    </div>
   );
 };
 
