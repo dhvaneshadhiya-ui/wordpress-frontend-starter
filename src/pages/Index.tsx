@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 
 const Index = () => {
   const [page, setPage] = useState(1);
-  const { data: latestData, isLoading } = usePosts({ page, perPage: 9 });
+  const { data: latestData, isLoading, error } = usePosts({ page, perPage: 9 });
   const { data: categories } = useCategories();
 
   const topCategories = categories?.slice(0, 8) || [];
@@ -34,6 +34,29 @@ const Index = () => {
               ))}
             </div>
           </section>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="bg-destructive/10 border border-destructive/20 text-destructive rounded-lg p-4 my-6">
+            <p className="font-medium">Unable to load posts</p>
+            <p className="text-sm opacity-75 mt-1">
+              {error.message || 'API request failed. This may be due to CORS restrictions in the preview environment.'}
+            </p>
+            <p className="text-xs opacity-50 mt-2">
+              Posts will load correctly when deployed to production (dev.igeeksblog.com).
+            </p>
+          </div>
+        )}
+
+        {/* No posts state (after loading, no error, but empty) */}
+        {!isLoading && !error && (!latestData?.posts || latestData.posts.length === 0) && (
+          <div className="bg-muted border border-border rounded-lg p-6 my-6 text-center">
+            <p className="text-muted-foreground">No posts available.</p>
+            <p className="text-sm text-muted-foreground/75 mt-1">
+              API may be blocked by CORS in preview. Deploy to production for full functionality.
+            </p>
+          </div>
         )}
 
         {/* Latest News Section */}

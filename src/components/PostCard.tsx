@@ -21,10 +21,19 @@ function getCategoryColor(slug: string): string {
 
 export function PostCard({ post, variant = 'default' }: PostCardProps) {
   const [imageError, setImageError] = useState(false);
+  
+  // Defensive checks for missing data
+  if (!post || !post.id) {
+    console.warn('[PostCard] Invalid post data received:', post);
+    return null;
+  }
+  
+  const title = post?.title?.rendered ? stripHtml(post.title.rendered) : 'Untitled Post';
+  const content = post?.content?.rendered || '';
   const imageUrl = getFeaturedImageUrl(post, 'large');
   const author = getAuthor(post);
   const categories = getCategories(post);
-  const readingTime = getReadingTime(post.content.rendered);
+  const readingTime = getReadingTime(content);
   const primaryCategory = categories[0];
 
   return (
@@ -36,7 +45,7 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
       {!imageError && imageUrl && (
         <img
           src={imageUrl}
-          alt={stripHtml(post.title.rendered)}
+          alt={title}
           loading="lazy"
           decoding="async"
           fetchPriority="auto"
@@ -68,7 +77,7 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
 
         {/* Title */}
         <h3 className="mb-2 text-lg font-bold leading-tight text-white line-clamp-2 sm:text-xl">
-          {stripHtml(post.title.rendered)}
+          {title}
         </h3>
 
         {/* Meta */}

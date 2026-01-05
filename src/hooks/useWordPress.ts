@@ -38,7 +38,8 @@ export function usePosts(params: {
     queryFn: () => fetchPosts(params),
     staleTime: DEFAULT_STALE_TIME,
     gcTime: GC_TIME,
-    retry: 2,
+    retry: 1, // Reduced retries for faster failure on CORS issues
+    retryDelay: 1000,
   });
 }
 
