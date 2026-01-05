@@ -1,17 +1,15 @@
 /**
  * Local data service - provides fallback data from pre-fetched JSON files
- * Data is imported synchronously but chunked separately by Vite
+ * Data is loaded asynchronously to prevent blocking the main thread
  */
-import postsData from '@/data/posts.json';
-import categoriesData from '@/data/categories.json';
-import tagsData from '@/data/tags.json';
-import authorsData from '@/data/authors.json';
 
-// Cast to any[] to handle JSON structure differences
-const posts = postsData as any[];
-const categories = categoriesData as any[];
-const tags = tagsData as any[];
-const authors = authorsData as any[];
+// Data storage - starts empty, populated by async load
+let posts: any[] = [];
+let categories: any[] = [];
+let tags: any[] = [];
+let authors: any[] = [];
+let dataLoaded = false;
+let loadingPromise: Promise<void> | null = null;
 
 export interface LocalPostsParams {
   page?: number;
@@ -30,12 +28,42 @@ export interface LocalPostsResult {
 }
 
 /**
- * Initialize local data (no-op for sync imports, kept for API compatibility)
+ * Initialize local data asynchronously
+ * Returns immediately if already loaded, otherwise loads data
  */
 export async function initLocalData(): Promise<void> {
-  // Data is already loaded synchronously
-  return Promise.resolve();
+  if (dataLoaded) return;
+  
+  // If already loading, wait for that promise
+  if (loadingPromise) return loadingPromise;
+  
+  loadingPromise = (async () => {
+    try {
+      // Dynamic imports - Vite will chunk these separately
+      const [postsModule, categoriesModule, tagsModule, authorsModule] = await Promise.all([
+        import('@/data/posts.json'),
+        import('@/data/categories.json'),
+        import('@/data/tags.json'),
+        import('@/data/authors.json'),
+      ]);
+      
+      posts = postsModule.default as any[];
+      categories = categoriesModule.default as any[];
+      tags = tagsModule.default as any[];
+      authors = authorsModule.default as any[];
+      dataLoaded = true;
+    } catch (error) {
+      console.warn('Failed to load local data:', error);
+      // Keep empty arrays as fallback
+      dataLoaded = true;
+    }
+  })();
+  
+  return loadingPromise;
 }
+
+// Start loading immediately on module load (non-blocking)
+initLocalData();
 
 /**
  * Get posts from local data with filtering and pagination
@@ -50,6 +78,11 @@ export function getLocalPosts(params: LocalPostsParams = {}): LocalPostsResult {
     search,
     exclude = [],
   } = params;
+
+  // Return empty if not loaded yet
+  if (!dataLoaded) {
+    return { posts: [], total: 0, totalPages: 0 };
+  }
 
   let filtered = [...posts];
 
@@ -123,6 +156,7 @@ export function getLocalPosts(params: LocalPostsParams = {}): LocalPostsResult {
  * Get a single post by slug from local data
  */
 export function getLocalPostBySlug(slug: string): any | null {
+  if (!dataLoaded) return null;
   return posts.find(post => post.slug === slug) || null;
 }
 
@@ -190,17 +224,17 @@ export function getLocalAuthorById(id: number): any | null {
 }
 
 /**
- * Check if local data is available
+ * Check if local data is available (has posts)
  */
 export function hasLocalData(): boolean {
-  return posts.length > 0;
+  return dataLoaded && posts.length > 0;
 }
 
 /**
  * Check if local data has been loaded
  */
 export function isLocalDataLoaded(): boolean {
-  return true; // Always loaded with sync imports
+  return dataLoaded;
 }
 
 /**
