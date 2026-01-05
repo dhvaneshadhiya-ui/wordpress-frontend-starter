@@ -16,11 +16,19 @@ export function isLovablePreview(): boolean {
 }
 
 /**
- * Check if we should prefer local data (preview env or offline)
+ * Always prefer local data first for instant content, then refresh from API
  */
 export function shouldUseLocalDataFirst(): boolean {
-  if (typeof window === 'undefined') return true;
-  return isLovablePreview() || !navigator.onLine;
+  return true; // Always use local data first for instant rendering
+}
+
+/**
+ * Check if we should attempt API refresh in background
+ */
+export function shouldAttemptApiRefresh(): boolean {
+  if (typeof window === 'undefined') return false;
+  // Don't attempt API in Lovable preview (CORS issues) or offline
+  return !isLovablePreview() && navigator.onLine;
 }
 
 export class ApiError extends Error {

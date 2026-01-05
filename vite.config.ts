@@ -18,13 +18,26 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    chunkSizeWarningLimit: 1000, // Increase to 1MB to suppress warnings
+    chunkSizeWarningLimit: 2000, // Increase to 2MB to suppress warnings for large data files
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs'],
-          query: ['@tanstack/react-query'],
+        manualChunks(id) {
+          // Data files in their own chunk
+          if (id.includes('/src/data/')) {
+            return 'data';
+          }
+          // Vendor chunk
+          if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/react-router')) {
+            return 'vendor';
+          }
+          // UI components
+          if (id.includes('node_modules/@radix-ui')) {
+            return 'ui';
+          }
+          // React Query
+          if (id.includes('node_modules/@tanstack')) {
+            return 'query';
+          }
         },
       },
     },
