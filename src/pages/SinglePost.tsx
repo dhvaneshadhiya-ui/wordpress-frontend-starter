@@ -6,30 +6,22 @@ import { getFeaturedImageUrl, getAuthor, getCategories, getTags, getReadingTime,
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PostGrid } from '@/components/PostGrid';
-import { getInitialPostData } from '@/utils/hydration';
-import { getLocalPostBySlug, hasLocalData } from '@/lib/local-data';
 
 export default function SinglePost() {
   const { slug } = useParams<{ slug: string }>();
-  const { data: post, isLoading, isFetching, error, isError } = usePost(slug);
-  
-  // Check if we have SSG data or local data (instant render, no loading)
-  const hasInitialData = !!getInitialPostData(slug || '') || (hasLocalData() && !!getLocalPostBySlug(slug || ''));
+  const { data: post, isLoading, error, isError } = usePost(slug);
   
   // Get primary category for related posts
   const categories = post ? getCategories(post) : [];
   const primaryCategory = categories[0];
   
-  // Fetch related posts by same category (improved logic)
+  // Fetch related posts by same category
   const { data: relatedData } = usePosts({ 
     categories: primaryCategory ? [primaryCategory.id] : undefined,
     perPage: 4 
   });
 
-  // Show loading only if we're actually loading AND have no data yet
-  const showLoading = (isLoading || isFetching) && !post && !hasInitialData;
-  
-  if (showLoading) {
+  if (isLoading) {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8">
@@ -46,9 +38,7 @@ export default function SinglePost() {
     );
   }
 
-  // Only show "not found" if the query has completed with an error or null result
-  // AND we've actually finished trying to load (not still loading)
-  if ((isError || (!post && !isLoading && !isFetching)) && !hasInitialData) {
+  if (isError || !post) {
     return (
       <Layout>
         <SEO title="Post Not Found" />
@@ -61,19 +51,6 @@ export default function SinglePost() {
           >
             Go to Homepage
           </Link>
-        </div>
-      </Layout>
-    );
-  }
-
-  // If still no post data available, show minimal loading
-  if (!post) {
-    return (
-      <Layout>
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center py-16">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-          </div>
         </div>
       </Layout>
     );
@@ -129,7 +106,7 @@ export default function SinglePost() {
           </div>
         </header>
 
-        {/* Featured Image with lazy loading */}
+        {/* Featured Image */}
         <div className="mb-8 overflow-hidden rounded-lg">
           <img
             src={imageUrl}
@@ -183,7 +160,7 @@ export default function SinglePost() {
           </div>
         </div>
 
-        {/* Related Posts - filtered by same category */}
+        {/* Related Posts */}
         {relatedPosts.length > 0 && (
           <PostGrid
             posts={relatedPosts}

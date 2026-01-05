@@ -1,19 +1,7 @@
 // WordPress REST API service layer for dev.igeeksblog.com
-// CORS is configured on WordPress side via WPCode plugin
-// Uses local data fallback when API is unavailable
+// Always fetches from API - no local data fallback for posts
 
-import { fetchWithRetry, ApiError, shouldUseLocalDataFirst } from './api-utils';
-import {
-  getLocalPosts,
-  getLocalPostBySlug,
-  getLocalCategories,
-  getLocalCategoryBySlug,
-  getLocalTags,
-  getLocalTagBySlug,
-  getLocalAuthors,
-  getLocalAuthorBySlug,
-  hasLocalData,
-} from './local-data';
+import { fetchWithRetry, ApiError } from './api-utils';
 
 const API_BASE = import.meta.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2';
 
@@ -57,7 +45,7 @@ export interface WPPost {
     }>>;
   };
   // AIOSEO fields (All in One SEO plugin)
-  aioseo_head?: string; // Raw HTML meta tags
+  aioseo_head?: string;
   aioseo_head_json?: {
     title?: string;
     description?: string;
@@ -69,7 +57,7 @@ export interface WPPost {
     'twitter:image'?: string;
     canonical_url?: string;
   };
-  // Yoast fallback for backwards compatibility
+  // Yoast fallback
   yoast_head_json?: {
     title?: string;
     description?: string;
@@ -81,7 +69,7 @@ export interface WPCategory {
   id: number;
   name: string;
   slug: string;
-  count: number;
+  count?: number;
   description?: string;
 }
 
@@ -89,7 +77,7 @@ export interface WPTag {
   id: number;
   name: string;
   slug: string;
-  count: number;
+  count?: number;
 }
 
 export interface WPAuthor {
@@ -100,7 +88,7 @@ export interface WPAuthor {
   avatar_urls?: { [key: string]: string };
 }
 
-// Fetch posts with embedded data (with retry and timeout)
+// Fetch posts with embedded data
 export async function fetchPosts(params: {
   page?: number;
   perPage?: number;
@@ -110,20 +98,6 @@ export async function fetchPosts(params: {
   search?: string;
   slug?: string;
 } = {}): Promise<{ posts: WPPost[]; totalPages: number; total: number }> {
-  // Use local data in preview environments or if API is unreachable
-  if (shouldUseLocalDataFirst() && hasLocalData()) {
-    console.log('Using local data for posts');
-    const result = getLocalPosts({
-      page: params.page,
-      perPage: params.perPage,
-      categoryId: params.categories?.[0],
-      tagId: params.tags?.[0],
-      authorId: params.author,
-      search: params.search,
-    });
-    return { posts: result.posts as WPPost[], totalPages: result.totalPages, total: result.total };
-  }
-
   const searchParams = new URLSearchParams();
   searchParams.set('_embed', 'true');
   searchParams.set('per_page', String(params.perPage || 12));
@@ -145,240 +119,119 @@ export async function fetchPosts(params: {
     searchParams.set('slug', params.slug);
   }
 
-  try {
-    const response = await fetchWithRetry(`${API_BASE}/posts?${searchParams}`);
-    
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch posts: ${response.status}`, response.status);
-    }
-
-    const posts = await response.json();
-    const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1', 10);
-    const total = parseInt(response.headers.get('X-WP-Total') || '0', 10);
-
-    return { posts, totalPages, total };
-  } catch (error) {
-    console.warn('API failed, falling back to local data:', error);
-    // Fallback to local data
-    if (hasLocalData()) {
-      const result = getLocalPosts({
-        page: params.page,
-        perPage: params.perPage,
-        categoryId: params.categories?.[0],
-        tagId: params.tags?.[0],
-        authorId: params.author,
-        search: params.search,
-      });
-      return { posts: result.posts as WPPost[], totalPages: result.totalPages, total: result.total };
-    }
-    throw error;
+  const response = await fetchWithRetry(`${API_BASE}/posts?${searchParams}`);
+  
+  if (!response.ok) {
+    throw new ApiError(`Failed to fetch posts: ${response.status}`, response.status);
   }
+
+  const posts = await response.json();
+  const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1', 10);
+  const total = parseInt(response.headers.get('X-WP-Total') || '0', 10);
+
+  return { posts, totalPages, total };
 }
 
 // Fetch single post by slug
 export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
-  // Use local data in preview environments
-  if (shouldUseLocalDataFirst() && hasLocalData()) {
-    console.log('Using local data for post:', slug);
-    return getLocalPostBySlug(slug) as WPPost | null;
-  }
-
-  try {
-    const { posts } = await fetchPosts({ slug, perPage: 1 });
-    return posts[0] || null;
-  } catch (error) {
-    console.warn('API failed, falling back to local data:', error);
-    if (hasLocalData()) {
-      return getLocalPostBySlug(slug) as WPPost | null;
-    }
-    throw error;
-  }
+  const { posts } = await fetchPosts({ slug, perPage: 1 });
+  return posts[0] || null;
 }
 
-// Fetch categories (with retry and timeout)
+// Fetch categories
 export async function fetchCategories(params: {
   perPage?: number;
   hideEmpty?: boolean;
 } = {}): Promise<WPCategory[]> {
-  // Use local data in preview environments
-  if (shouldUseLocalDataFirst() && hasLocalData()) {
-    console.log('Using local data for categories');
-    return getLocalCategories() as WPCategory[];
-  }
-
   const searchParams = new URLSearchParams();
   searchParams.set('per_page', String(params.perPage || 100));
   if (params.hideEmpty !== false) {
     searchParams.set('hide_empty', 'true');
   }
 
-  try {
-    const response = await fetchWithRetry(`${API_BASE}/categories?${searchParams}`);
-    
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch categories: ${response.status}`, response.status);
-    }
-
-    return response.json();
-  } catch (error) {
-    console.warn('API failed, falling back to local data:', error);
-    if (hasLocalData()) {
-      return getLocalCategories() as WPCategory[];
-    }
-    throw error;
+  const response = await fetchWithRetry(`${API_BASE}/categories?${searchParams}`);
+  
+  if (!response.ok) {
+    throw new ApiError(`Failed to fetch categories: ${response.status}`, response.status);
   }
+
+  return response.json();
 }
 
 // Fetch single category by slug
 export async function fetchCategoryBySlug(slug: string): Promise<WPCategory | null> {
-  // Use local data in preview environments
-  if (shouldUseLocalDataFirst() && hasLocalData()) {
-    console.log('Using local data for category:', slug);
-    return getLocalCategoryBySlug(slug) as WPCategory | null;
+  const response = await fetchWithRetry(`${API_BASE}/categories?slug=${slug}`);
+  
+  if (!response.ok) {
+    throw new ApiError(`Failed to fetch category: ${response.status}`, response.status);
   }
 
-  try {
-    const response = await fetchWithRetry(`${API_BASE}/categories?slug=${slug}`);
-    
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch category: ${response.status}`, response.status);
-    }
-
-    const categories = await response.json();
-    return categories[0] || null;
-  } catch (error) {
-    console.warn('API failed, falling back to local data:', error);
-    if (hasLocalData()) {
-      return getLocalCategoryBySlug(slug) as WPCategory | null;
-    }
-    throw error;
-  }
+  const categories = await response.json();
+  return categories[0] || null;
 }
 
-// Fetch tags (with retry and timeout)
+// Fetch tags
 export async function fetchTags(params: {
   perPage?: number;
   hideEmpty?: boolean;
 } = {}): Promise<WPTag[]> {
-  // Use local data in preview environments
-  if (shouldUseLocalDataFirst() && hasLocalData()) {
-    console.log('Using local data for tags');
-    return getLocalTags() as WPTag[];
-  }
-
   const searchParams = new URLSearchParams();
   searchParams.set('per_page', String(params.perPage || 100));
   if (params.hideEmpty !== false) {
     searchParams.set('hide_empty', 'true');
   }
 
-  try {
-    const response = await fetchWithRetry(`${API_BASE}/tags?${searchParams}`);
-    
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch tags: ${response.status}`, response.status);
-    }
-
-    return response.json();
-  } catch (error) {
-    console.warn('API failed, falling back to local data:', error);
-    if (hasLocalData()) {
-      return getLocalTags() as WPTag[];
-    }
-    throw error;
+  const response = await fetchWithRetry(`${API_BASE}/tags?${searchParams}`);
+  
+  if (!response.ok) {
+    throw new ApiError(`Failed to fetch tags: ${response.status}`, response.status);
   }
+
+  return response.json();
 }
 
 // Fetch single tag by slug
 export async function fetchTagBySlug(slug: string): Promise<WPTag | null> {
-  // Use local data in preview environments
-  if (shouldUseLocalDataFirst() && hasLocalData()) {
-    console.log('Using local data for tag:', slug);
-    return getLocalTagBySlug(slug) as WPTag | null;
+  const response = await fetchWithRetry(`${API_BASE}/tags?slug=${slug}`);
+  
+  if (!response.ok) {
+    throw new ApiError(`Failed to fetch tag: ${response.status}`, response.status);
   }
 
-  try {
-    const response = await fetchWithRetry(`${API_BASE}/tags?slug=${slug}`);
-    
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch tag: ${response.status}`, response.status);
-    }
-
-    const tags = await response.json();
-    return tags[0] || null;
-  } catch (error) {
-    console.warn('API failed, falling back to local data:', error);
-    if (hasLocalData()) {
-      return getLocalTagBySlug(slug) as WPTag | null;
-    }
-    throw error;
-  }
+  const tags = await response.json();
+  return tags[0] || null;
 }
 
-// Fetch authors/users (with retry and timeout)
+// Fetch authors/users
 export async function fetchAuthors(params: {
   perPage?: number;
 } = {}): Promise<WPAuthor[]> {
-  // Use local data in preview environments
-  if (shouldUseLocalDataFirst() && hasLocalData()) {
-    console.log('Using local data for authors');
-    return getLocalAuthors() as WPAuthor[];
-  }
-
   const searchParams = new URLSearchParams();
   searchParams.set('per_page', String(params.perPage || 100));
 
-  try {
-    const response = await fetchWithRetry(`${API_BASE}/users?${searchParams}`);
-    
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch authors: ${response.status}`, response.status);
-    }
-
-    return response.json();
-  } catch (error) {
-    console.warn('API failed, falling back to local data:', error);
-    if (hasLocalData()) {
-      return getLocalAuthors() as WPAuthor[];
-    }
-    throw error;
+  const response = await fetchWithRetry(`${API_BASE}/users?${searchParams}`);
+  
+  if (!response.ok) {
+    throw new ApiError(`Failed to fetch authors: ${response.status}`, response.status);
   }
+
+  return response.json();
 }
 
 // Fetch single author by slug
 export async function fetchAuthorBySlug(slug: string): Promise<WPAuthor | null> {
-  // Use local data in preview environments
-  if (shouldUseLocalDataFirst() && hasLocalData()) {
-    console.log('Using local data for author:', slug);
-    return getLocalAuthorBySlug(slug) as WPAuthor | null;
+  const response = await fetchWithRetry(`${API_BASE}/users?slug=${slug}`);
+  
+  if (!response.ok) {
+    throw new ApiError(`Failed to fetch author: ${response.status}`, response.status);
   }
 
-  try {
-    const response = await fetchWithRetry(`${API_BASE}/users?slug=${slug}`);
-    
-    if (!response.ok) {
-      throw new ApiError(`Failed to fetch author: ${response.status}`, response.status);
-    }
-
-    const authors = await response.json();
-    return authors[0] || null;
-  } catch (error) {
-    console.warn('API failed, falling back to local data:', error);
-    if (hasLocalData()) {
-      return getLocalAuthorBySlug(slug) as WPAuthor | null;
-    }
-    throw error;
-  }
+  const authors = await response.json();
+  return authors[0] || null;
 }
 
-// Helper functions - handle both API format and local JSON format
-export function getFeaturedImageUrl(post: WPPost | any, size: 'full' | 'large' | 'medium' = 'large'): string {
-  // Local data format: featuredImage is a direct URL string
-  if (post.featuredImage && typeof post.featuredImage === 'string') {
-    return post.featuredImage;
-  }
-  
-  // API format: _embedded['wp:featuredmedia']
+// Helper functions
+export function getFeaturedImageUrl(post: WPPost, size: 'full' | 'large' | 'medium' = 'large'): string {
   const media = post._embedded?.['wp:featuredmedia']?.[0];
   if (!media) return '/placeholder.svg';
   
@@ -386,17 +239,7 @@ export function getFeaturedImageUrl(post: WPPost | any, size: 'full' | 'large' |
   return sizes?.[size]?.source_url || sizes?.full?.source_url || media.source_url || '/placeholder.svg';
 }
 
-export function getAuthor(post: WPPost | any): { name: string; avatar: string; slug: string } {
-  // Local data format: author is an object with name, slug, avatar
-  if (post.author && typeof post.author === 'object' && post.author.name) {
-    return {
-      name: post.author.name || 'Unknown',
-      avatar: post.author.avatar || '/placeholder.svg',
-      slug: post.author.slug || '',
-    };
-  }
-  
-  // API format: _embedded.author
+export function getAuthor(post: WPPost): { name: string; avatar: string; slug: string } {
   const author = post._embedded?.author?.[0];
   return {
     name: author?.name || 'Unknown',
@@ -405,38 +248,18 @@ export function getAuthor(post: WPPost | any): { name: string; avatar: string; s
   };
 }
 
-export function getCategories(post: WPPost | any): Array<{ id: number; name: string; slug: string }> {
-  // Local data format: categories is an array of objects
-  if (Array.isArray(post.categories) && post.categories.length > 0 && typeof post.categories[0] === 'object') {
-    return post.categories.map((cat: any) => ({
-      id: cat.id,
-      name: cat.name,
-      slug: cat.slug,
-    }));
-  }
-  
-  // API format: _embedded['wp:term'][0]
+export function getCategories(post: WPPost): Array<{ id: number; name: string; slug: string }> {
   const terms = post._embedded?.['wp:term']?.[0] || [];
-  return terms.filter((term: any) => term.taxonomy === 'category').map((cat: any) => ({
+  return terms.filter((term) => term.taxonomy === 'category').map((cat) => ({
     id: cat.id,
     name: cat.name,
     slug: cat.slug,
   }));
 }
 
-export function getTags(post: WPPost | any): Array<{ id: number; name: string; slug: string }> {
-  // Local data format: tags is an array of objects
-  if (Array.isArray(post.tags) && post.tags.length > 0 && typeof post.tags[0] === 'object') {
-    return post.tags.map((tag: any) => ({
-      id: tag.id,
-      name: tag.name,
-      slug: tag.slug,
-    }));
-  }
-  
-  // API format: _embedded['wp:term'][1]
+export function getTags(post: WPPost): Array<{ id: number; name: string; slug: string }> {
   const terms = post._embedded?.['wp:term']?.[1] || [];
-  return terms.filter((term: any) => term.taxonomy === 'post_tag').map((tag: any) => ({
+  return terms.filter((term) => term.taxonomy === 'post_tag').map((tag) => ({
     id: tag.id,
     name: tag.name,
     slug: tag.slug,

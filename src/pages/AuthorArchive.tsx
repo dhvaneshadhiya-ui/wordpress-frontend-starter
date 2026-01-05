@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
@@ -7,7 +7,6 @@ import { SEO } from '@/components/SEO';
 import { useAuthor, useAuthorPosts } from '@/hooks/useWordPress';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getInitialAuthorData, clearInitialData } from '@/utils/hydration';
 
 export default function AuthorArchive() {
   const { slug } = useParams<{ slug: string }>();
@@ -15,19 +14,7 @@ export default function AuthorArchive() {
   const { data: author, isLoading: authorLoading } = useAuthor(slug);
   const { data: postsData, isLoading: postsLoading } = useAuthorPosts(slug, page);
 
-  // Check if we have SSG data (instant render, no loading)
-  const hasInitialData = !!getInitialAuthorData(slug || '');
-
-  // Clear initial data after hydration
-  useEffect(() => {
-    if (hasInitialData && author && postsData) {
-      const timer = setTimeout(() => clearInitialData(), 100);
-      return () => clearTimeout(timer);
-    }
-  }, [hasInitialData, author, postsData]);
-
-  // Skip loading state if we have SSG data
-  if (authorLoading && !hasInitialData) {
+  if (authorLoading) {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8">
@@ -54,8 +41,6 @@ export default function AuthorArchive() {
       </Layout>
     );
   }
-
-  const showPostsLoading = postsLoading && !hasInitialData;
 
   return (
     <Layout>
@@ -95,7 +80,7 @@ export default function AuthorArchive() {
         {/* Posts Grid */}
         <PostGrid
           posts={postsData?.posts || []}
-          isLoading={showPostsLoading}
+          isLoading={postsLoading}
           title="Articles"
         />
 
