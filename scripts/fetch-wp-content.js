@@ -599,6 +599,27 @@ async function fetchWordPressContent() {
       console.log(`  ✅ Saved ${file}`);
     }
 
+    // Create slim-posts.json for fast frontend loading
+    console.log('📦 Creating slim-posts.json...');
+    const slimPosts = postsWithMeta.map(post => ({
+      id: post.id,
+      slug: post.slug,
+      title: post.title,
+      excerpt: post.excerpt,
+      date: post.date,
+      modified: post.modified,
+      featuredImage: post.featuredImage,
+      author: typeof post.author === 'object' ? post.author?.id : post.author,
+      categories: Array.isArray(post.categories) 
+        ? post.categories.map(c => typeof c === 'object' ? c.id : c)
+        : post.categories,
+      tags: Array.isArray(post.tags)
+        ? post.tags.map(t => typeof t === 'object' ? t.id : t)
+        : post.tags,
+    }));
+    fs.writeFileSync(path.join(OUTPUT_DIR, 'slim-posts.json'), JSON.stringify(slimPosts));
+    console.log(`  ✅ Saved slim-posts.json (${slimPosts.length} posts)`);
+
     // Update cache
     const newCache = {
       posts: Object.fromEntries(allPosts.map(p => [p.id, p])),

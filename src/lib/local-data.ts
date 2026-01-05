@@ -1,15 +1,18 @@
 /**
  * Local data service - provides fallback data from pre-fetched JSON files
- * Data is loaded asynchronously to prevent blocking the main thread
+ * Uses slim-posts.json for fast loading, full posts.json for single post content
  */
 
 // Data storage - starts empty, populated by async load
-let posts: any[] = [];
+let slimPosts: any[] = [];
 let categories: any[] = [];
 let tags: any[] = [];
 let authors: any[] = [];
 let dataLoaded = false;
 let loadingPromise: Promise<void> | null = null;
+
+// Timeout for data loading (5 seconds)
+const LOAD_TIMEOUT = 5000;
 
 export interface LocalPostsParams {
   page?: number;
@@ -28,7 +31,7 @@ export interface LocalPostsResult {
 }
 
 /**
- * Initialize local data asynchronously
+ * Initialize local data asynchronously with timeout
  * Returns immediately if already loaded, otherwise loads data
  */
 export async function initLocalData(): Promise<void> {
@@ -38,25 +41,34 @@ export async function initLocalData(): Promise<void> {
   if (loadingPromise) return loadingPromise;
   
   loadingPromise = (async () => {
+    const timeoutPromise = new Promise<never>((_, reject) => 
+      setTimeout(() => reject(new Error('Data load timeout')), LOAD_TIMEOUT)
+    );
+
     try {
-      // Dynamic imports - Vite will chunk these separately
-      const [postsModule, categoriesModule, tagsModule, authorsModule] = await Promise.all([
-        import('@/data/posts.json'),
-        import('@/data/categories.json'),
-        import('@/data/tags.json'),
-        import('@/data/authors.json'),
+      // Race between loading and timeout
+      await Promise.race([
+        (async () => {
+          // Load slim posts (small file ~1-2MB) and taxonomies
+          const [slimPostsModule, categoriesModule, tagsModule, authorsModule] = await Promise.all([
+            import('@/data/slim-posts.json').catch(() => ({ default: [] })),
+            import('@/data/categories.json').catch(() => ({ default: [] })),
+            import('@/data/tags.json').catch(() => ({ default: [] })),
+            import('@/data/authors.json').catch(() => ({ default: [] })),
+          ]);
+          
+          slimPosts = slimPostsModule.default as any[];
+          categories = categoriesModule.default as any[];
+          tags = tagsModule.default as any[];
+          authors = authorsModule.default as any[];
+        })(),
+        timeoutPromise,
       ]);
-      
-      posts = postsModule.default as any[];
-      categories = categoriesModule.default as any[];
-      tags = tagsModule.default as any[];
-      authors = authorsModule.default as any[];
-      dataLoaded = true;
     } catch (error) {
-      console.warn('Failed to load local data:', error);
-      // Keep empty arrays as fallback
-      dataLoaded = true;
+      console.warn('Local data load failed or timed out:', error);
+      // Continue without local data - app will rely on API
     }
+    dataLoaded = true;
   })();
   
   return loadingPromise;
@@ -84,42 +96,31 @@ export function getLocalPosts(params: LocalPostsParams = {}): LocalPostsResult {
     return { posts: [], total: 0, totalPages: 0 };
   }
 
-  let filtered = [...posts];
+  let filtered = [...slimPosts];
 
-  // Filter by category (handle both formats: array of IDs or array of objects)
+  // Filter by category
   if (categoryId) {
     filtered = filtered.filter(post => {
       if (Array.isArray(post.categories)) {
-        return post.categories.some((cat: any) => 
-          typeof cat === 'number' ? cat === categoryId : cat.id === categoryId
-        );
+        return post.categories.includes(categoryId);
       }
       return false;
     });
   }
 
-  // Filter by tag (handle both formats)
+  // Filter by tag
   if (tagId) {
     filtered = filtered.filter(post => {
       if (Array.isArray(post.tags)) {
-        return post.tags.some((tag: any) => 
-          typeof tag === 'number' ? tag === tagId : tag.id === tagId
-        );
+        return post.tags.includes(tagId);
       }
       return false;
     });
   }
 
-  // Filter by author (handle both formats)
+  // Filter by author
   if (authorId) {
-    filtered = filtered.filter(post => {
-      if (typeof post.author === 'number') {
-        return post.author === authorId;
-      } else if (post.author && typeof post.author === 'object') {
-        return post.author.id === authorId;
-      }
-      return false;
-    });
+    filtered = filtered.filter(post => post.author === authorId);
   }
 
   // Filter by search term
@@ -153,11 +154,23 @@ export function getLocalPosts(params: LocalPostsParams = {}): LocalPostsResult {
 }
 
 /**
- * Get a single post by slug from local data
+ * Get a single post by slug from slim local data (no content)
  */
 export function getLocalPostBySlug(slug: string): any | null {
   if (!dataLoaded) return null;
-  return posts.find(post => post.slug === slug) || null;
+  return slimPosts.find(post => post.slug === slug) || null;
+}
+
+/**
+ * Get full post content by slug (lazy loads full posts.json)
+ */
+export async function getFullPostBySlug(slug: string): Promise<any | null> {
+  try {
+    const fullPosts = await import('@/data/posts.json');
+    return fullPosts.default.find((p: any) => p.slug === slug) || null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -227,7 +240,7 @@ export function getLocalAuthorById(id: number): any | null {
  * Check if local data is available (has posts)
  */
 export function hasLocalData(): boolean {
-  return dataLoaded && posts.length > 0;
+  return dataLoaded && slimPosts.length > 0;
 }
 
 /**
@@ -241,5 +254,5 @@ export function isLocalDataLoaded(): boolean {
  * Get posts count
  */
 export function getLocalPostsCount(): number {
-  return posts.length;
+  return slimPosts.length;
 }
