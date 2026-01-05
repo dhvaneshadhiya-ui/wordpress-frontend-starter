@@ -2,34 +2,9 @@
  * API utility functions for resilient fetching
  */
 
-const DEFAULT_TIMEOUT = 10000; // 10 seconds (reduced for faster fallback)
-const MAX_RETRIES = 1; // Reduced retries for faster fallback to local data
-const RETRY_DELAYS = [1000]; // Single retry delay
-
-/**
- * Check if running in Lovable preview environment
- */
-export function isLovablePreview(): boolean {
-  if (typeof window === 'undefined') return false;
-  const hostname = window.location.hostname;
-  return hostname.includes('lovableproject.com') || hostname.includes('lovable.app');
-}
-
-/**
- * Always prefer local data first for instant content, then refresh from API
- */
-export function shouldUseLocalDataFirst(): boolean {
-  return true; // Always use local data first for instant rendering
-}
-
-/**
- * Check if we should attempt API refresh in background
- */
-export function shouldAttemptApiRefresh(): boolean {
-  if (typeof window === 'undefined') return false;
-  // Don't attempt API in Lovable preview (CORS issues) or offline
-  return !isLovablePreview() && navigator.onLine;
-}
+const DEFAULT_TIMEOUT = 15000; // 15 seconds
+const MAX_RETRIES = 2;
+const RETRY_DELAYS = [1000, 2000];
 
 export class ApiError extends Error {
   status?: number;
