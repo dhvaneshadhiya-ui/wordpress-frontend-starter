@@ -1,6 +1,8 @@
 // WordPress REST API service layer for dev.igeeksblog.com
 // CORS is configured on WordPress side via WPCode plugin
 
+import { fetchWithRetry, ApiError } from './api-utils';
+
 const API_BASE = import.meta.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2';
 
 export interface WPPost {
@@ -86,7 +88,7 @@ export interface WPAuthor {
   avatar_urls?: { [key: string]: string };
 }
 
-// Fetch posts with embedded data
+// Fetch posts with embedded data (with retry and timeout)
 export async function fetchPosts(params: {
   page?: number;
   perPage?: number;
@@ -117,17 +119,22 @@ export async function fetchPosts(params: {
     searchParams.set('slug', params.slug);
   }
 
-  const response = await fetch(`${API_BASE}/posts?${searchParams}`);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch posts: ${response.status}`);
+  try {
+    const response = await fetchWithRetry(`${API_BASE}/posts?${searchParams}`);
+    
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch posts: ${response.status}`, response.status);
+    }
+
+    const posts = await response.json();
+    const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1', 10);
+    const total = parseInt(response.headers.get('X-WP-Total') || '0', 10);
+
+    return { posts, totalPages, total };
+  } catch (error) {
+    console.error('Failed to fetch posts:', error);
+    throw error;
   }
-
-  const posts = await response.json();
-  const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1', 10);
-  const total = parseInt(response.headers.get('X-WP-Total') || '0', 10);
-
-  return { posts, totalPages, total };
 }
 
 // Fetch single post by slug
@@ -136,7 +143,7 @@ export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
   return posts[0] || null;
 }
 
-// Fetch categories
+// Fetch categories (with retry and timeout)
 export async function fetchCategories(params: {
   perPage?: number;
   hideEmpty?: boolean;
@@ -147,28 +154,38 @@ export async function fetchCategories(params: {
     searchParams.set('hide_empty', 'true');
   }
 
-  const response = await fetch(`${API_BASE}/categories?${searchParams}`);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch categories: ${response.status}`);
-  }
+  try {
+    const response = await fetchWithRetry(`${API_BASE}/categories?${searchParams}`);
+    
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch categories: ${response.status}`, response.status);
+    }
 
-  return response.json();
+    return response.json();
+  } catch (error) {
+    console.error('Failed to fetch categories:', error);
+    throw error;
+  }
 }
 
 // Fetch single category by slug
 export async function fetchCategoryBySlug(slug: string): Promise<WPCategory | null> {
-  const response = await fetch(`${API_BASE}/categories?slug=${slug}`);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch category: ${response.status}`);
-  }
+  try {
+    const response = await fetchWithRetry(`${API_BASE}/categories?slug=${slug}`);
+    
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch category: ${response.status}`, response.status);
+    }
 
-  const categories = await response.json();
-  return categories[0] || null;
+    const categories = await response.json();
+    return categories[0] || null;
+  } catch (error) {
+    console.error('Failed to fetch category:', error);
+    throw error;
+  }
 }
 
-// Fetch tags
+// Fetch tags (with retry and timeout)
 export async function fetchTags(params: {
   perPage?: number;
   hideEmpty?: boolean;
@@ -179,53 +196,73 @@ export async function fetchTags(params: {
     searchParams.set('hide_empty', 'true');
   }
 
-  const response = await fetch(`${API_BASE}/tags?${searchParams}`);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch tags: ${response.status}`);
-  }
+  try {
+    const response = await fetchWithRetry(`${API_BASE}/tags?${searchParams}`);
+    
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch tags: ${response.status}`, response.status);
+    }
 
-  return response.json();
+    return response.json();
+  } catch (error) {
+    console.error('Failed to fetch tags:', error);
+    throw error;
+  }
 }
 
 // Fetch single tag by slug
 export async function fetchTagBySlug(slug: string): Promise<WPTag | null> {
-  const response = await fetch(`${API_BASE}/tags?slug=${slug}`);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch tag: ${response.status}`);
-  }
+  try {
+    const response = await fetchWithRetry(`${API_BASE}/tags?slug=${slug}`);
+    
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch tag: ${response.status}`, response.status);
+    }
 
-  const tags = await response.json();
-  return tags[0] || null;
+    const tags = await response.json();
+    return tags[0] || null;
+  } catch (error) {
+    console.error('Failed to fetch tag:', error);
+    throw error;
+  }
 }
 
-// Fetch authors/users
+// Fetch authors/users (with retry and timeout)
 export async function fetchAuthors(params: {
   perPage?: number;
 } = {}): Promise<WPAuthor[]> {
   const searchParams = new URLSearchParams();
   searchParams.set('per_page', String(params.perPage || 100));
 
-  const response = await fetch(`${API_BASE}/users?${searchParams}`);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch authors: ${response.status}`);
-  }
+  try {
+    const response = await fetchWithRetry(`${API_BASE}/users?${searchParams}`);
+    
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch authors: ${response.status}`, response.status);
+    }
 
-  return response.json();
+    return response.json();
+  } catch (error) {
+    console.error('Failed to fetch authors:', error);
+    throw error;
+  }
 }
 
 // Fetch single author by slug
 export async function fetchAuthorBySlug(slug: string): Promise<WPAuthor | null> {
-  const response = await fetch(`${API_BASE}/users?slug=${slug}`);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch author: ${response.status}`);
-  }
+  try {
+    const response = await fetchWithRetry(`${API_BASE}/users?slug=${slug}`);
+    
+    if (!response.ok) {
+      throw new ApiError(`Failed to fetch author: ${response.status}`, response.status);
+    }
 
-  const authors = await response.json();
-  return authors[0] || null;
+    const authors = await response.json();
+    return authors[0] || null;
+  } catch (error) {
+    console.error('Failed to fetch author:', error);
+    throw error;
+  }
 }
 
 // Helper functions
@@ -287,7 +324,7 @@ export function stripHtml(html: string): string {
 const PREVIEW_API_BASE = import.meta.env.VITE_WORDPRESS_API_URL?.replace('/wp/v2', '') || 'https://dev.igeeksblog.com/wp-json';
 
 export async function fetchPreviewPost(postId: number, token: string): Promise<WPPost> {
-  const response = await fetch(
+  const response = await fetchWithRetry(
     `${PREVIEW_API_BASE}/igeeksblog/v1/preview?id=${postId}&token=${encodeURIComponent(token)}`
   );
 

@@ -177,12 +177,18 @@ export function getInitialHomeData(): InitialHomeData['data'] | null {
 
 /**
  * Clear initial data after hydration is complete.
- * Call this after React has mounted to prevent stale data issues.
+ * This is now a no-op - we keep SSG data for the session to prevent
+ * re-fetching on navigation back to pre-rendered pages.
+ * React Query's cache will handle updates appropriately.
+ * 
+ * @deprecated No longer needed - SSG data is kept for the session
  */
 export function clearInitialData(): void {
-  if (typeof window !== 'undefined') {
-    delete window.__INITIAL_DATA__;
-  }
+  // No-op: Keep SSG data available for the session
+  // This prevents issues with:
+  // 1. Data disappearing on navigation
+  // 2. Unnecessary re-fetches when returning to SSG pages
+  // 3. Loading flickers on back/forward navigation
 }
 
 /**

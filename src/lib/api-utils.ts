@@ -1,0 +1,93 @@
+/**
+ * API utility functions for resilient fetching
+ */
+
+const DEFAULT_TIMEOUT = 15000; // 15 seconds
+const MAX_RETRIES = 3;
+const RETRY_DELAYS = [1000, 2000, 4000]; // Exponential backoff
+
+export class ApiError extends Error {
+  status?: number;
+  isTimeout: boolean;
+  
+  constructor(message: string, status?: number, isTimeout = false) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.isTimeout = isTimeout;
+  }
+}
+
+/**
+ * Fetch with timeout support
+ */
+export async function fetchWithTimeout(
+  url: string,
+  options: RequestInit = {},
+  timeout = DEFAULT_TIMEOUT
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    return response;
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new ApiError(`Request timed out after ${timeout}ms`, undefined, true);
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+/**
+ * Fetch with retry logic and exponential backoff
+ */
+export async function fetchWithRetry(
+  url: string,
+  options: RequestInit = {},
+  timeout = DEFAULT_TIMEOUT,
+  maxRetries = MAX_RETRIES
+): Promise<Response> {
+  let lastError: Error | null = null;
+  
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetchWithTimeout(url, options, timeout);
+      
+      // Retry on server errors (5xx)
+      if (response.status >= 500 && attempt < maxRetries) {
+        const delay = RETRY_DELAYS[attempt] || RETRY_DELAYS[RETRY_DELAYS.length - 1];
+        console.warn(`Server error ${response.status}, retrying in ${delay}ms...`);
+        await sleep(delay);
+        continue;
+      }
+      
+      return response;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      
+      // Don't retry on non-timeout client errors
+      if (error instanceof ApiError && !error.isTimeout) {
+        throw error;
+      }
+      
+      if (attempt < maxRetries) {
+        const delay = RETRY_DELAYS[attempt] || RETRY_DELAYS[RETRY_DELAYS.length - 1];
+        console.warn(`Request failed, retrying in ${delay}ms... (attempt ${attempt + 1}/${maxRetries})`);
+        await sleep(delay);
+      }
+    }
+  }
+  
+  throw lastError || new ApiError('Request failed after retries');
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
