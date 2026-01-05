@@ -35,14 +35,17 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
   const categories = getCategories(post);
   const readingTime = getReadingTime(content);
   const primaryCategory = categories[0];
+  
+  // Detect if we need to show fallback (no image or image failed)
+  const showFallback = imageError || !imageUrl;
 
   return (
     <Link
       to={`/${post.slug}`}
-      className="group relative block overflow-hidden rounded-lg bg-muted aspect-[4/3]"
+      className="group relative block overflow-hidden rounded-lg bg-slate-900 aspect-[4/3]"
     >
       {/* Background Image with error handling */}
-      {!imageError && imageUrl && (
+      {!showFallback && (
         <img
           src={imageUrl}
           alt={title}
@@ -54,15 +57,17 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
         />
       )}
       
-      {/* Fallback when image fails or missing */}
-      {(imageError || !imageUrl) && (
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center">
-          <span className="text-4xl opacity-50">📰</span>
+      {/* Dark fallback when image fails - ensures white text is visible */}
+      {showFallback && (
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-6xl opacity-20">📰</span>
+          </div>
         </div>
       )}
       
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 post-card-gradient" />
+      {/* Gradient Overlay - only needed when image loads */}
+      {!showFallback && <div className="absolute inset-0 post-card-gradient" />}
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-5">
