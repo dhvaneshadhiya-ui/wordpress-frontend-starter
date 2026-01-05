@@ -13,6 +13,10 @@ on:
         required: false
         default: 'false'
         type: boolean
+  
+  # Webhook trigger via GitHub API (from WordPress)
+  repository_dispatch:
+    types: [wordpress_content_update]
 
 jobs:
   fetch-content:
