@@ -8,21 +8,17 @@ interface PostCardProps {
   variant?: 'default' | 'featured';
 }
 
-// Map category slugs to color classes
-function getCategoryColor(slug: string): string {
-  const colorMap: Record<string, string> = {
-    'how-to': 'bg-[hsl(var(--category-howto))]',
-    'news': 'bg-[hsl(var(--category-news))]',
-    'apps': 'bg-[hsl(var(--category-apps))]',
-    'iphone': 'bg-[hsl(var(--category-iphone))]',
-  };
-  return colorMap[slug] || 'bg-[hsl(var(--category-default))]';
-}
+// Category colors with inline fallbacks
+const CATEGORY_COLORS: Record<string, string> = {
+  'how-to': '#22c55e',
+  'news': '#ef4444',
+  'apps': '#8b5cf6',
+  'iphone': '#3b82f6',
+};
 
 export function PostCard({ post, variant = 'default' }: PostCardProps) {
   const [imageError, setImageError] = useState(false);
   
-  // Defensive checks for missing data
   if (!post || !post.id) {
     console.warn('[PostCard] Invalid post data received:', post);
     return null;
@@ -36,60 +32,76 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
   const readingTime = getReadingTime(content);
   const primaryCategory = categories[0];
   
-  // Detect if we need to show fallback (no image or image failed)
   const showFallback = imageError || !imageUrl;
+  const categoryColor = primaryCategory ? (CATEGORY_COLORS[primaryCategory.slug] || '#6b7280') : '#6b7280';
 
   return (
     <Link
       to={`/${post.slug}`}
-      className="group relative block overflow-hidden rounded-lg bg-slate-900 aspect-[4/3]"
+      className="group relative block overflow-hidden rounded-lg aspect-[4/3]"
+      style={{ backgroundColor: '#1e293b' }}
     >
-      {/* Background Image with error handling */}
+      {/* Background Image */}
       {!showFallback && (
         <img
           src={imageUrl}
           alt={title}
           loading="lazy"
           decoding="async"
-          fetchPriority="auto"
           onError={() => setImageError(true)}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
       )}
       
-      {/* Dark fallback when image fails - ensures white text is visible */}
+      {/* Dark fallback with gradient */}
       {showFallback && (
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-6xl opacity-20">📰</span>
-          </div>
+        <div 
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ background: 'linear-gradient(135deg, #334155 0%, #0f172a 100%)' }}
+        >
+          <span style={{ fontSize: '4rem', opacity: 0.2 }}>📰</span>
         </div>
       )}
       
-      {/* Gradient Overlay - only needed when image loads */}
-      {!showFallback && <div className="absolute inset-0 post-card-gradient" />}
+      {/* Gradient Overlay for image */}
+      {!showFallback && (
+        <div 
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)' }}
+        />
+      )}
 
-      {/* Content */}
+      {/* Content - always visible */}
       <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-5">
         {/* Category Badge */}
         {primaryCategory && (
           <span
-            className={`mb-2 inline-block self-start rounded px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-white ${getCategoryColor(primaryCategory.slug)}`}
+            className="mb-2 inline-block self-start rounded px-2 py-0.5 text-xs font-semibold uppercase tracking-wide"
+            style={{ backgroundColor: categoryColor, color: '#ffffff' }}
           >
             {primaryCategory.name}
           </span>
         )}
 
         {/* Title */}
-        <h3 className="mb-2 text-lg font-bold leading-tight text-white line-clamp-2 sm:text-xl">
+        <h3 
+          className="mb-2 text-lg font-bold leading-tight line-clamp-2 sm:text-xl"
+          style={{ color: '#ffffff' }}
+        >
           {title}
         </h3>
 
         {/* Meta */}
-        <div className="flex items-center gap-3 text-sm text-white/80">
-          <Avatar className="h-6 w-6 border border-white/20">
+        <div 
+          className="flex items-center gap-3 text-sm"
+          style={{ color: 'rgba(255,255,255,0.8)' }}
+        >
+          <Avatar className="h-6 w-6" style={{ border: '1px solid rgba(255,255,255,0.2)' }}>
             <AvatarImage src={author.avatar} alt={author.name} loading="lazy" />
-            <AvatarFallback className="text-xs bg-primary text-primary-foreground">
+            <AvatarFallback 
+              className="text-xs"
+              style={{ backgroundColor: '#3b82f6', color: '#ffffff' }}
+            >
               {author.name.charAt(0)}
             </AvatarFallback>
           </Avatar>

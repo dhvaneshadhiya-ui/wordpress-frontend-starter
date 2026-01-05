@@ -9,6 +9,7 @@ import {
   fetchAuthors,
   fetchAuthorBySlug,
   fetchPreviewPost,
+  WPPost,
 } from '@/lib/wordpress';
 import {
   getLocalCategories,
@@ -18,13 +19,17 @@ import {
   getLocalAuthors,
   getLocalAuthorBySlug,
 } from '@/lib/local-data';
+import demoPosts from '@/data/demo-posts.json';
 
 // Query config
 const DEFAULT_STALE_TIME = 5 * 60 * 1000; // 5 minutes
 const LONG_STALE_TIME = 30 * 60 * 1000; // 30 minutes
 const GC_TIME = 60 * 60 * 1000; // 1 hour
 
-// Fetch posts with pagination - always from API
+// Cast demo posts to WPPost type for placeholder
+const typedDemoPosts = demoPosts as unknown as WPPost[];
+
+// Fetch posts with pagination - with demo fallback for preview
 export function usePosts(params: {
   page?: number;
   perPage?: number;
@@ -36,9 +41,14 @@ export function usePosts(params: {
   return useQuery({
     queryKey: ['posts', params],
     queryFn: () => fetchPosts(params),
+    placeholderData: () => ({
+      posts: typedDemoPosts,
+      totalPages: 1,
+      total: typedDemoPosts.length,
+    }),
     staleTime: DEFAULT_STALE_TIME,
     gcTime: GC_TIME,
-    retry: 1, // Reduced retries for faster failure on CORS issues
+    retry: 1,
     retryDelay: 1000,
   });
 }

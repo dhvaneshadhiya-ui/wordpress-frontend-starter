@@ -18,23 +18,23 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    chunkSizeWarningLimit: 2000, // Increase to 2MB to suppress warnings for large data files
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
+        // Force unique file names on every build for cache busting
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
         manualChunks(id) {
-          // Data files in their own chunk
           if (id.includes('/src/data/')) {
             return 'data';
           }
-          // Vendor chunk
           if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/react-router')) {
             return 'vendor';
           }
-          // UI components
           if (id.includes('node_modules/@radix-ui')) {
             return 'ui';
           }
-          // React Query
           if (id.includes('node_modules/@tanstack')) {
             return 'query';
           }

@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "slug": "demo-iphone-16-features",
+    "date": "2024-01-05T10:00:00",
+    "title": { "rendered": "iPhone 16 Pro Max: Top 10 Features You Need to Know" },
+    "content": { "rendered": "<p>Apple's latest flagship brings groundbreaking features including the new A18 Pro chip, improved camera system, and all-day battery life. Here's everything you need to know about the iPhone 16 Pro Max.</p>" },
+    "excerpt": { "rendered": "<p>Discover the top features of Apple's latest flagship phone.</p>" },
+    "_embedded": {
+      "author": [{ "id": 1, "name": "John Smith", "slug": "john-smith", "avatar_urls": { "96": "" } }],
+      "wp:featuredmedia": [{ "source_url": "https://picsum.photos/seed/iphone16/800/600", "media_details": { "sizes": { "large": { "source_url": "https://picsum.photos/seed/iphone16/800/600" } } } }],
+      "wp:term": [[{ "id": 1, "name": "iPhone", "slug": "iphone" }], []]
+    }
+  },
+  {
+    "id": 2,
+    "slug": "demo-best-productivity-apps",
+    "date": "2024-01-04T14:30:00",
+    "title": { "rendered": "15 Best Productivity Apps for iPhone and iPad in 2024" },
+    "content": { "rendered": "<p>Boost your productivity with these essential apps designed for Apple devices. From task management to note-taking, we've got you covered.</p>" },
+    "excerpt": { "rendered": "<p>Boost your productivity with these essential apps.</p>" },
+    "_embedded": {
+      "author": [{ "id": 2, "name": "Sarah Johnson", "slug": "sarah-johnson", "avatar_urls": { "96": "" } }],
+      "wp:featuredmedia": [{ "source_url": "https://picsum.photos/seed/apps2024/800/600", "media_details": { "sizes": { "large": { "source_url": "https://picsum.photos/seed/apps2024/800/600" } } } }],
+      "wp:term": [[{ "id": 2, "name": "Apps", "slug": "apps" }], []]
+    }
+  },
+  {
+    "id": 3,
+    "slug": "demo-macos-sonoma-tips",
+    "date": "2024-01-03T09:15:00",
+    "title": { "rendered": "macOS Sonoma: Hidden Tips and Tricks You Didn't Know" },
+    "content": { "rendered": "<p>Unlock the full potential of your Mac with these lesser-known features and shortcuts in macOS Sonoma.</p>" },
+    "excerpt": { "rendered": "<p>Unlock hidden features in macOS Sonoma.</p>" },
+    "_embedded": {
+      "author": [{ "id": 1, "name": "John Smith", "slug": "john-smith", "avatar_urls": { "96": "" } }],
+      "wp:featuredmedia": [{ "source_url": "https://picsum.photos/seed/macos/800/600", "media_details": { "sizes": { "large": { "source_url": "https://picsum.photos/seed/macos/800/600" } } } }],
+      "wp:term": [[{ "id": 3, "name": "How To", "slug": "how-to" }], []]
+    }
+  },
+  {
+    "id": 4,
+    "slug": "demo-apple-watch-series-10",
+    "date": "2024-01-02T16:45:00",
+    "title": { "rendered": "Apple Watch Series 10 Review: Is It Worth the Upgrade?" },
+    "content": { "rendered": "<p>We put Apple's latest smartwatch through rigorous testing. Here's our comprehensive review of the Apple Watch Series 10.</p>" },
+    "excerpt": { "rendered": "<p>Our comprehensive review of Apple's latest smartwatch.</p>" },
+    "_embedded": {
+      "author": [{ "id": 3, "name": "Mike Chen", "slug": "mike-chen", "avatar_urls": { "96": "" } }],
+      "wp:featuredmedia": [{ "source_url": "https://picsum.photos/seed/watch10/800/600", "media_details": { "sizes": { "large": { "source_url": "https://picsum.photos/seed/watch10/800/600" } } } }],
+      "wp:term": [[{ "id": 4, "name": "News", "slug": "news" }], []]
+    }
+  },
+  {
+    "id": 5,
+    "slug": "demo-ipad-pro-m4",
+    "date": "2024-01-01T11:00:00",
+    "title": { "rendered": "iPad Pro M4: The Ultimate Creative Tool for Professionals" },
+    "content": { "rendered": "<p>With the M4 chip and stunning OLED display, the new iPad Pro is a powerhouse for creative professionals.</p>" },
+    "excerpt": { "rendered": "<p>The new iPad Pro is a powerhouse for creatives.</p>" },
+    "_embedded": {
+      "author": [{ "id": 2, "name": "Sarah Johnson", "slug": "sarah-johnson", "avatar_urls": { "96": "" } }],
+      "wp:featuredmedia": [{ "source_url": "https://picsum.photos/seed/ipadpro/800/600", "media_details": { "sizes": { "large": { "source_url": "https://picsum.photos/seed/ipadpro/800/600" } } } }],
+      "wp:term": [[{ "id": 4, "name": "News", "slug": "news" }], []]
+    }
+  },
+  {
+    "id": 6,
+    "slug": "demo-airpods-pro-3",
+    "date": "2023-12-31T08:30:00",
+    "title": { "rendered": "AirPods Pro 3 Rumors: What to Expect from Apple's Next Earbuds" },
+    "content": { "rendered": "<p>Leaked reports suggest Apple is working on major upgrades for the next generation AirPods Pro. Here's what we know so far.</p>" },
+    "excerpt": { "rendered": "<p>What we know about the next AirPods Pro.</p>" },
+    "_embedded": {
+      "author": [{ "id": 3, "name": "Mike Chen", "slug": "mike-chen", "avatar_urls": { "96": "" } }],
+      "wp:featuredmedia": [{ "source_url": "https://picsum.photos/seed/airpods3/800/600", "media_details": { "sizes": { "large": { "source_url": "https://picsum.photos/seed/airpods3/800/600" } } } }],
+      "wp:term": [[{ "id": 4, "name": "News", "slug": "news" }], []]
+    }
+  }
+]
