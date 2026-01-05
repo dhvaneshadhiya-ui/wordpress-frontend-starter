@@ -1,9 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 
-const SITE_URL = 'https://dev.igeeksblog.com';
+const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com';
 const DATA_DIR = './src/data';
 const DIST_DIR = './dist';
+
+// Environment-based indexing control
+const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true';
+
+console.log(`🔍 SEO Files - Indexing: ${ENABLE_INDEXING ? 'ENABLED (Production)' : 'DISABLED (Staging)'}`);
 
 function generateSEOFiles() {
   console.log('🔍 Generating SEO files...');
@@ -167,15 +172,35 @@ ${recentPosts.map(post => `  <url>
 }
 
 function generateRobots() {
-  return `# Staging site - Block all crawlers
+  if (ENABLE_INDEXING) {
+    // Production: Allow all crawlers
+    return `# Production site - Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /preview/
+
+# Sitemaps
+Sitemap: ${SITE_URL}/sitemap.xml
+Sitemap: ${SITE_URL}/sitemap-news.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+`;
+  } else {
+    // Staging: Block all crawlers
+    return `# Staging site - Block all crawlers
 User-agent: *
 Disallow: /
 
-# Note: Remove this and restore Allow rules when moving to production
+# Note: Set VITE_ENABLE_INDEXING=true in production to allow indexing
 # Sitemaps (commented out for staging)
 # Sitemap: ${SITE_URL}/sitemap.xml
 # Sitemap: ${SITE_URL}/sitemap-news.xml
 `;
+  }
 }
 
 function escapeXml(str) {

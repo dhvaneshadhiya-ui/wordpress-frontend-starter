@@ -30,10 +30,13 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
       to={`/${post.slug}`}
       className="group relative block overflow-hidden rounded-lg bg-card aspect-[4/3]"
     >
-      {/* Background Image */}
+      {/* Background Image with lazy loading */}
       <img
         src={imageUrl}
         alt={stripHtml(post.title.rendered)}
+        loading="lazy"
+        decoding="async"
+        fetchPriority="auto"
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
       />
       
@@ -59,7 +62,7 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
         {/* Meta */}
         <div className="flex items-center gap-3 text-sm text-white/80">
           <Avatar className="h-6 w-6 border border-white/20">
-            <AvatarImage src={author.avatar} alt={author.name} />
+            <AvatarImage src={author.avatar} alt={author.name} loading="lazy" />
             <AvatarFallback className="text-xs bg-primary text-primary-foreground">
               {author.name.charAt(0)}
             </AvatarFallback>

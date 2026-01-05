@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
 import { PaginationNav } from '@/components/PaginationNav';
@@ -6,13 +6,28 @@ import { NewsletterSignup } from '@/components/NewsletterSignup';
 import { SEO } from '@/components/SEO';
 import { usePosts, useCategories } from '@/hooks/useWordPress';
 import { Link } from 'react-router-dom';
+import { getInitialHomeData, clearInitialData } from '@/utils/hydration';
 
 const Index = () => {
   const [page, setPage] = useState(1);
   const { data: latestData, isLoading: latestLoading } = usePosts({ page, perPage: 9 });
   const { data: categories } = useCategories();
 
+  // Check if we have SSG data (instant render, no loading)
+  const hasInitialData = !!getInitialHomeData();
+
+  // Clear initial data after hydration to prevent stale data on navigation
+  useEffect(() => {
+    if (hasInitialData && latestData) {
+      const timer = setTimeout(() => clearInitialData(), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [hasInitialData, latestData]);
+
   const topCategories = categories?.slice(0, 8) || [];
+
+  // Skip loading state if we have SSG data
+  const showLoading = latestLoading && !hasInitialData;
 
   return (
     <Layout>
@@ -38,7 +53,7 @@ const Index = () => {
         {/* Latest News Section */}
         <PostGrid
           posts={latestData?.posts || []}
-          isLoading={latestLoading}
+          isLoading={showLoading}
           title="Latest Articles"
         />
 

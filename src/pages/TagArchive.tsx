@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
@@ -6,6 +6,7 @@ import { PaginationNav } from '@/components/PaginationNav';
 import { SEO } from '@/components/SEO';
 import { useTag, useTagPosts } from '@/hooks/useWordPress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getInitialTagData, clearInitialData } from '@/utils/hydration';
 
 export default function TagArchive() {
   const { slug } = useParams<{ slug: string }>();
@@ -13,7 +14,19 @@ export default function TagArchive() {
   const { data: tag, isLoading: tagLoading } = useTag(slug);
   const { data: postsData, isLoading: postsLoading } = useTagPosts(slug, page);
 
-  if (tagLoading) {
+  // Check if we have SSG data (instant render, no loading)
+  const hasInitialData = !!getInitialTagData(slug || '');
+
+  // Clear initial data after hydration
+  useEffect(() => {
+    if (hasInitialData && tag && postsData) {
+      const timer = setTimeout(() => clearInitialData(), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [hasInitialData, tag, postsData]);
+
+  // Skip loading state if we have SSG data
+  if (tagLoading && !hasInitialData) {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8">
@@ -35,6 +48,8 @@ export default function TagArchive() {
       </Layout>
     );
   }
+
+  const showPostsLoading = postsLoading && !hasInitialData;
 
   return (
     <Layout>
@@ -58,7 +73,7 @@ export default function TagArchive() {
         {/* Posts Grid */}
         <PostGrid
           posts={postsData?.posts || []}
-          isLoading={postsLoading}
+          isLoading={showPostsLoading}
         />
 
         {/* Pagination */}

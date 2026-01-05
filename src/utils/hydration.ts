@@ -5,6 +5,8 @@
  * using data that was embedded in the page at build time.
  */
 
+import type { WPPost, WPCategory, WPTag, WPAuthor } from '@/lib/wordpress';
+
 export interface InitialPostData {
   type: 'post';
   data: {
@@ -50,6 +52,7 @@ export interface InitialCategoryData {
       name: string;
       slug: string;
       description?: string;
+      count?: number;
       seo?: {
         title: string;
         description: string;
@@ -66,6 +69,7 @@ export interface InitialTagData {
       id: number;
       name: string;
       slug: string;
+      count?: number;
     };
     posts: InitialPostData['data'][];
   };
@@ -186,4 +190,93 @@ export function clearInitialData(): void {
  */
 export function isPreRendered(): boolean {
   return getInitialData() !== null;
+}
+
+// ============= Data Transformers =============
+
+/**
+ * Transform SSG post data to WPPost format for React Query
+ */
+export function transformToWPPost(data: InitialPostData['data']): WPPost {
+  return {
+    id: data.id,
+    slug: data.slug,
+    title: data.title,
+    excerpt: data.excerpt,
+    content: data.content,
+    date: data.date,
+    modified: data.modified,
+    featured_media: 0,
+    categories: data.categories.map(c => c.id),
+    tags: data.tags.map(t => t.id),
+    author: data.author?.id || 0,
+    _embedded: {
+      'wp:featuredmedia': data.featuredImage ? [{
+        source_url: data.featuredImage,
+        alt_text: data.title.rendered.replace(/<[^>]*>/g, ''),
+        media_details: {
+          sizes: {
+            full: { source_url: data.featuredImage },
+            large: { source_url: data.featuredImage },
+            medium: { source_url: data.featuredImage },
+          }
+        }
+      }] : undefined,
+      author: data.author ? [{
+        id: data.author.id,
+        name: data.author.name,
+        slug: data.author.slug,
+        avatar_urls: data.author.avatar ? { '48': data.author.avatar, '96': data.author.avatar } : undefined,
+      }] : undefined,
+      'wp:term': [
+        data.categories.map(c => ({ id: c.id, name: c.name, slug: c.slug, taxonomy: 'category' })),
+        data.tags.map(t => ({ id: t.id, name: t.name, slug: t.slug, taxonomy: 'post_tag' })),
+      ],
+    },
+  };
+}
+
+/**
+ * Transform SSG category data to WPCategory format
+ */
+export function transformToWPCategory(data: InitialCategoryData['data']['category']): WPCategory {
+  return {
+    id: data.id,
+    name: data.name,
+    slug: data.slug,
+    count: data.count || 0,
+    description: data.description,
+  };
+}
+
+/**
+ * Transform SSG tag data to WPTag format
+ */
+export function transformToWPTag(data: InitialTagData['data']['tag']): WPTag {
+  return {
+    id: data.id,
+    name: data.name,
+    slug: data.slug,
+    count: data.count || 0,
+  };
+}
+
+/**
+ * Transform SSG author data to WPAuthor format
+ */
+export function transformToWPAuthor(data: InitialAuthorData['data']['author']): WPAuthor {
+  return {
+    id: data.id,
+    name: data.name,
+    slug: data.slug,
+    description: data.description,
+    avatar_urls: data.avatar ? { '48': data.avatar, '96': data.avatar } : undefined,
+  };
+}
+
+/**
+ * Transform array of SSG posts to WPPost array
+ */
+export function transformPostsArray(posts: InitialPostData['data'][]): WPPost[] {
+  return posts.map(transformToWPPost);
 }

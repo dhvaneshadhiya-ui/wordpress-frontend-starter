@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { SEO } from '@/components/SEO';
@@ -6,13 +7,36 @@ import { getFeaturedImageUrl, getAuthor, getCategories, getTags, getReadingTime,
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PostGrid } from '@/components/PostGrid';
+import { getInitialPostData, clearInitialData } from '@/utils/hydration';
 
 export default function SinglePost() {
   const { slug } = useParams<{ slug: string }>();
   const { data: post, isLoading, error } = usePost(slug);
-  const { data: relatedData } = usePosts({ perPage: 3 });
+  
+  // Check if we have SSG data (instant render, no loading)
+  const hasInitialData = !!getInitialPostData(slug || '');
+  
+  // Get primary category for related posts
+  const categories = post ? getCategories(post) : [];
+  const primaryCategory = categories[0];
+  
+  // Fetch related posts by same category (improved logic)
+  const { data: relatedData } = usePosts({ 
+    categories: primaryCategory ? [primaryCategory.id] : undefined,
+    perPage: 4 
+  });
 
-  if (isLoading) {
+  // Clear initial data after hydration to prevent stale data on navigation
+  useEffect(() => {
+    if (hasInitialData && post) {
+      // Small delay to ensure hydration is complete
+      const timer = setTimeout(() => clearInitialData(), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [hasInitialData, post]);
+
+  // Skip loading state if we have SSG data
+  if (isLoading && !hasInitialData) {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8">
@@ -38,10 +62,13 @@ export default function SinglePost() {
 
   const imageUrl = getFeaturedImageUrl(post, 'full');
   const author = getAuthor(post);
-  const categories = getCategories(post);
   const tags = getTags(post);
   const readingTime = getReadingTime(post.content.rendered);
-  const primaryCategory = categories[0];
+
+  // Filter related posts: same category, exclude current post
+  const relatedPosts = relatedData?.posts
+    .filter((p) => p.id !== post.id)
+    .slice(0, 3) || [];
 
   return (
     <Layout>
@@ -70,7 +97,7 @@ export default function SinglePost() {
           <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
             <Link to={author.slug ? `/author/${author.slug}` : '#'} className="flex items-center gap-2 hover:text-primary transition-colors">
               <Avatar className="h-10 w-10 border border-border">
-                <AvatarImage src={author.avatar} alt={author.name} />
+                <AvatarImage src={author.avatar} alt={author.name} loading="lazy" />
                 <AvatarFallback className="bg-primary text-primary-foreground">
                   {author.name.charAt(0)}
                 </AvatarFallback>
@@ -83,11 +110,13 @@ export default function SinglePost() {
           </div>
         </header>
 
-        {/* Featured Image */}
+        {/* Featured Image with lazy loading */}
         <div className="mb-8 overflow-hidden rounded-lg">
           <img
             src={imageUrl}
             alt={stripHtml(post.title.rendered)}
+            loading="lazy"
+            decoding="async"
             className="w-full object-cover"
           />
         </div>
@@ -118,7 +147,7 @@ export default function SinglePost() {
           <div className="flex items-start gap-4">
             <Link to={author.slug ? `/author/${author.slug}` : '#'}>
               <Avatar className="h-16 w-16 border border-border">
-                <AvatarImage src={author.avatar} alt={author.name} />
+                <AvatarImage src={author.avatar} alt={author.name} loading="lazy" />
                 <AvatarFallback className="text-xl bg-primary text-primary-foreground">
                   {author.name.charAt(0)}
                 </AvatarFallback>
@@ -135,10 +164,10 @@ export default function SinglePost() {
           </div>
         </div>
 
-        {/* Related Posts */}
-        {relatedData?.posts && relatedData.posts.length > 0 && (
+        {/* Related Posts - filtered by same category */}
+        {relatedPosts.length > 0 && (
           <PostGrid
-            posts={relatedData.posts.filter((p) => p.id !== post.id).slice(0, 3)}
+            posts={relatedPosts}
             title="Related Articles"
           />
         )}
