@@ -1,0 +1,277 @@
+[
+  {
+    "id": 1034,
+    "name": "Accessories",
+    "slug": "accessories",
+    "description": "",
+    "count": 515,
+    "seo": {
+      "title": "Accessories – iGeeksBlog",
+      "description": "Explore essential accessories for iPhone, iPad, and Apple Watch, including reviews and recommendations for the latest gadgets to improve your daily life."
+    }
+  },
+  {
+    "id": 1215,
+    "name": "AirPods",
+    "slug": "airpods",
+    "description": "",
+    "count": 43,
+    "seo": {
+      "title": "AirPods – iGeeksBlog",
+      "description": "AirPods"
+    }
+  },
+  {
+    "id": 1,
+    "name": "Apple",
+    "slug": "apple",
+    "description": "",
+    "count": 59,
+    "seo": {
+      "title": "Apple – iGeeksBlog",
+      "description": "Apple"
+    }
+  },
+  {
+    "id": 1185,
+    "name": "Apple Pencil",
+    "slug": "apple-pencil",
+    "description": "",
+    "count": 5,
+    "seo": {
+      "title": "Apple Pencil – iGeeksBlog",
+      "description": "Apple Pencil"
+    }
+  },
+  {
+    "id": 1175,
+    "name": "Apple TV",
+    "slug": "apple-tv",
+    "description": "",
+    "count": 25,
+    "seo": {
+      "title": "Apple TV – iGeeksBlog",
+      "description": "Apple TV"
+    }
+  },
+  {
+    "id": 1475,
+    "name": "Apple Vision Pro",
+    "slug": "apple-vision-pro",
+    "description": "",
+    "count": 12,
+    "seo": {
+      "title": "Apple Vision Pro – iGeeksBlog",
+      "description": "Apple Vision Pro"
+    }
+  },
+  {
+    "id": 1143,
+    "name": "Apple Watch",
+    "slug": "apple-watch",
+    "description": "",
+    "count": 221,
+    "seo": {
+      "title": "Apple Watch – iGeeksBlog",
+      "description": "Apple Watch"
+    }
+  },
+  {
+    "id": 1023,
+    "name": "Apps",
+    "slug": "apps",
+    "description": "",
+    "count": 414,
+    "seo": {
+      "title": "Apps – iGeeksBlog",
+      "description": "Apps"
+    }
+  },
+  {
+    "id": 1368,
+    "name": "Deals",
+    "slug": "deals",
+    "description": "",
+    "count": 1,
+    "seo": {
+      "title": "Deals – iGeeksBlog",
+      "description": "Deals"
+    }
+  },
+  {
+    "id": 1055,
+    "name": "Editorial",
+    "slug": "editorial",
+    "description": "",
+    "count": 158,
+    "seo": {
+      "title": "Editorial – iGeeksBlog",
+      "description": "Editorial"
+    }
+  },
+  {
+    "id": 1040,
+    "name": "Games",
+    "slug": "games",
+    "description": "",
+    "count": 97,
+    "seo": {
+      "title": "Games – iGeeksBlog",
+      "description": "Get to know about the most useful games for iPhone, iPad, and Mac to ensure a delightful gaming experience. Stay updated with the best games available."
+    }
+  },
+  {
+    "id": 1786,
+    "name": "HomePod",
+    "slug": "homepod",
+    "description": "",
+    "count": 2,
+    "seo": {
+      "title": "HomePod – iGeeksBlog",
+      "description": "HomePod"
+    }
+  },
+  {
+    "id": 1026,
+    "name": "How-to",
+    "slug": "how-to",
+    "description": "",
+    "count": 2168,
+    "seo": {
+      "title": "How-to – iGeeksBlog",
+      "description": "Check out our how-tos and troubleshooting guides for your iPhone, iPad, Apple Watch, and Macbook to remain connected and optimized."
+    }
+  },
+  {
+    "id": 1113,
+    "name": "iOS",
+    "slug": "ios",
+    "description": "",
+    "count": 12,
+    "seo": {
+      "title": "iOS – iGeeksBlog",
+      "description": "iOS"
+    }
+  },
+  {
+    "id": 1030,
+    "name": "iPad",
+    "slug": "ipad",
+    "description": "",
+    "count": 542,
+    "seo": {
+      "title": "iPad – iGeeksBlog",
+      "description": "iPad"
+    }
+  },
+  {
+    "id": 1780,
+    "name": "iPad Wallpapers",
+    "slug": "ipad-wallpaper",
+    "description": "",
+    "count": 17,
+    "seo": {
+      "title": "iPad Wallpapers – iGeeksBlog",
+      "description": "iPad Wallpapers"
+    }
+  },
+  {
+    "id": 1028,
+    "name": "iPhone",
+    "slug": "iphone",
+    "description": "",
+    "count": 1544,
+    "seo": {
+      "title": "iPhone – iGeeksBlog",
+      "description": "iPhone"
+    }
+  },
+  {
+    "id": 1764,
+    "name": "iPhone Wallpapers",
+    "slug": "iphone-wallpaper",
+    "description": "",
+    "count": 131,
+    "seo": {
+      "title": "iPhone Wallpapers – iGeeksBlog",
+      "description": "iPhone Wallpapers"
+    }
+  },
+  {
+    "id": 1045,
+    "name": "Mac",
+    "slug": "mac",
+    "description": "",
+    "count": 618,
+    "seo": {
+      "title": "Mac – iGeeksBlog",
+      "description": "Mac"
+    }
+  },
+  {
+    "id": 1779,
+    "name": "Mac Wallpapers",
+    "slug": "mac-wallpaper",
+    "description": "",
+    "count": 19,
+    "seo": {
+      "title": "Mac Wallpapers – iGeeksBlog",
+      "description": "Mac Wallpapers"
+    }
+  },
+  {
+    "id": 1119,
+    "name": "macOS",
+    "slug": "macos",
+    "description": "",
+    "count": 4,
+    "seo": {
+      "title": "macOS – iGeeksBlog",
+      "description": "macOS"
+    }
+  },
+  {
+    "id": 1683,
+    "name": "members-only",
+    "slug": "members-only",
+    "description": "",
+    "count": 9,
+    "seo": {
+      "title": "members-only – iGeeksBlog",
+      "description": "members-only"
+    }
+  },
+  {
+    "id": 1709,
+    "name": "News",
+    "slug": "news",
+    "description": "",
+    "count": 401,
+    "seo": {
+      "title": "News – iGeeksBlog",
+      "description": "News"
+    }
+  },
+  {
+    "id": 1337,
+    "name": "Software",
+    "slug": "software",
+    "description": "",
+    "count": 21,
+    "seo": {
+      "title": "Software – iGeeksBlog",
+      "description": "Software"
+    }
+  },
+  {
+    "id": 1280,
+    "name": "Wallpapers",
+    "slug": "wallpaper",
+    "description": "",
+    "count": 155,
+    "seo": {
+      "title": "Wallpapers – iGeeksBlog",
+      "description": "Wallpapers"
+    }
+  }
+]

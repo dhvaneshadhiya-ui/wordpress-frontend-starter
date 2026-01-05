@@ -1,0 +1,338 @@
+[
+  {
+    "id": 1199,
+    "name": "Abhinav",
+    "slug": "abhinav-anand",
+    "description": "Abhinav Anand is a freelance tech journalist, covering all things Apple at iGeeksBlog. He has reported on smartphones, laptops, and artificial intelligence and tracked tech industry layoffs during this time. His work has been published in prestigious publications such as the Financial Express, Android Headlines, SlashGear, and The Mac Observer.",
+    "avatar": "https://secure.gravatar.com/avatar/3f7d24f47a7bfd43e345f932d14d88398fbe6779003517f23dabaca0d8875c35?s=96&d=mm&r=g"
+  },
+  {
+    "id": 96,
+    "name": "Abhinav",
+    "slug": "abhinav",
+    "description": "I have been a tech enthusiast for as long as I can remember. I enjoy explaining tech to the internet and doing this since I was old enough to understand mathematics. At iGeeksBlog, I will be guiding the internet in solving some common issues with their iPhone, iPad, Mac, AirPods, and Apple Watch. When not writing, you can find me preparing for my debut standup show or roaming around with my camera in the whole city.",
+    "avatar": "https://secure.gravatar.com/avatar/85ce922bdd9d75891a19e4d4573a14bbfebdcd1eb04ce840d077f29825bfb7c9?s=96&d=mm&r=g"
+  },
+  {
+    "id": 101,
+    "name": "Anirban",
+    "slug": "anirban",
+    "description": "Anirban is a literature post-grad who delves in philosophy and postmodern novels when not writing on tech and gaming. His love for research is only trumped by his love for chai and heavy metal.",
+    "avatar": "https://secure.gravatar.com/avatar/3d98c6fe5a47be83cba4b656cb2cc60655073c8fc844409dddeff2dd346ee1d6?s=96&d=mm&r=g"
+  },
+  {
+    "id": 121,
+    "name": "Ankur",
+    "slug": "ankur",
+    "description": "I have been an Apple user for over seven years now. At iGeeksBlog, I love creating how-tos and troubleshooting guides that help people do more with their iPhone, iPad, Mac, AirPods, and Apple Watch. In my free time, I like to watch stand up comedy videos, tech documentaries, news debates, and political speeches.",
+    "avatar": "https://secure.gravatar.com/avatar/1cfa2c566940ca10a7f4075dcf89008b588e60d178f129c714b3b56541d8aea5?s=96&d=mm&r=g"
+  },
+  {
+    "id": 107,
+    "name": "Anoop",
+    "slug": "anoop",
+    "description": "Anoop loves to find solutions for all your doubts on Tech. When he's not on his quest, you can find him on Twitter talking about what's in his mind.",
+    "avatar": "https://secure.gravatar.com/avatar/4975d8bf5871aacf8028a01ca8fe370f77ec5e99c4bbf54e43bb8dc2e3c5a7ba?s=96&d=mm&r=g"
+  },
+  {
+    "id": 76,
+    "name": "Arshmeet",
+    "slug": "arshmeet",
+    "description": "A self-professed Geek who loves to explore all things Apple. I thoroughly enjoy discovering new hacks, troubleshooting issues, and finding and reviewing the best products and apps currently available. My expertise also includes curating opinionated and honest editorials. If not this, you might find me surfing the web or listening to audiobooks.",
+    "avatar": "https://secure.gravatar.com/avatar/602fbedf202bf8c97e36f131da2fbb2493d57deadd0c33537031d19dc118eba3?s=96&d=mm&r=g"
+  },
+  {
+    "id": 109,
+    "name": "Ava Biswas",
+    "slug": "ava",
+    "description": "Ava is a die-hard Apple aficionado and seasoned writer with a knack for breaking down complex tech concepts into easily digestible content. Having honed her writing and editing skills over 4 years at renowned media houses like TechBurner, Ava crafts informative and engaging articles including troubleshooting guides, product reviews, editorials at iGeeksBlog. When not typing, you can find her exploring the latest Apple releases or pondering the future of tech innovation.",
+    "avatar": "https://secure.gravatar.com/avatar/1b1581299d5221c8618b844da3317125aed76712e9b0b2995b3de7c90224affe?s=96&d=mm&r=g"
+  },
+  {
+    "id": 118,
+    "name": "Ayush",
+    "slug": "ayush_patel",
+    "description": "Ayush is a writer with a keen interest in consumer technology and the Apple ecosystem. He has over three years of working experience at several big-name publications, including Guiding Tech, TechPP, and MobiGyaan. Here at iGeeksBlog, he specializes in crafting how-to guides, buying guides, and editorials related to all things Apple.",
+    "avatar": "https://secure.gravatar.com/avatar/f3992abc846f1aff1bd3d49b1970bbaf752c071d1fb71f7ab73cec2b996ab6aa?s=96&d=mm&r=g"
+  },
+  {
+    "id": 114,
+    "name": "Bhaskar",
+    "slug": "bhaskar",
+    "description": "Bhaskar is a tech guru who turned wordsmith. Hiding his B.Tech degree in a closet, he ditched the corporate path to simplify tech for everyone. For the past 5 years, he's been dishing out how-tos, reviews, and sharp insights. But there's more! He's a witty interview champ and has been sharing his wisdom for 3 years. Furthermore, he has honed his editing skills for 1.5 years and is now delving into marketing to assist newcomers. When not jamming his fingers on those mechanical keyboards, you may find him on strings or engaging in sports. And by evening, his quotes will be appearing on your Instagram feeds.",
+    "avatar": "https://secure.gravatar.com/avatar/a4171cbff744d6af80f628f40f7542b6cd684d1d079715214c819f92bae937cc?s=96&d=mm&r=g"
+  },
+  {
+    "id": 2216,
+    "name": "Chris Hufnagel",
+    "slug": "chrish",
+    "description": "",
+    "avatar": "https://secure.gravatar.com/avatar/70306e9e9c449e2b4d39aa5931b76ee2f6aecb7514f3798ebd94d208fc9cea7b?s=96&d=mm&r=g"
+  },
+  {
+    "id": 105,
+    "name": "Darryl",
+    "slug": "darryl",
+    "description": "Consumer Technology and Motorcycles are the two things that excite Darryl the most. Why? Because Tech helps better people's lives, and solving people's problems related to tech is something he enjoys. And what about bikes, you ask? Well, drop a gear and disappear.",
+    "avatar": "https://secure.gravatar.com/avatar/114b99140a6a255eb668d6ccafcb96a6c9f4dfa46a976f6877555579b329feae?s=96&d=mm&r=g"
+  },
+  {
+    "id": 49,
+    "name": "Dhvanesh",
+    "slug": "dhvanesh",
+    "description": "The founder of iGeeksBlog, Dhvanesh, is an Apple aficionado, who cannot stand even a slight innuendo about Apple products. He dons the cap of editor-in-chief to make sure that articles match the quality standard before they are published.",
+    "avatar": "https://secure.gravatar.com/avatar/4baf1f787fc8f6eaa3f63d798c57f9c5047df1d95dc6be1a9bca914228338e20?s=96&d=mm&r=g"
+  },
+  {
+    "id": 100,
+    "name": "Gargi Ghosal",
+    "slug": "gargighosal",
+    "description": "Gargi is a writer, storyteller, and researcher. Being a literature post-grad who had her heart set on academia, she started writing on all things tech by chance 5 years ago. Since then, she has been writing for clients across countries and industries. Outside of work, she hosts TEDx shows and Literature festivals. In an ideal world, she's always a minute away from heading off to the mountains.",
+    "avatar": "https://secure.gravatar.com/avatar/7cc67be28b2deecb7c3ba7622b761d282d7d636e883f86d1bf88818e0b33f092?s=96&d=mm&r=g"
+  },
+  {
+    "id": 91,
+    "name": "Harshanki",
+    "slug": "harshanki-thakker",
+    "description": "An entrepreneur by heart, I am obsessed with the world of Apple. I survive on Apple products and their updates. Over the last five years, I have been writing all kinds of content that are remotely connected to Apple and sharing across digital platforms. When not writing, you will find me on the court playing basketball or in my room playing the sitar.",
+    "avatar": "https://secure.gravatar.com/avatar/87b5e0838127c5182f8f19f54cec7bf9bf7232cea91422daa70b20a2c4742e5a?s=96&d=mm&r=g"
+  },
+  {
+    "id": 103,
+    "name": "Idowu",
+    "slug": "idowu_omisola",
+    "description": "Idowu is an avid tech writer and a software surfer who loves covering knowledge gaps in consumer software, including anything related to iPhones. Well, when he's not reading and learning new things, you'll find Idowu losing gallantly on a solid chessboard or virtually on Lichess.",
+    "avatar": "https://secure.gravatar.com/avatar/79157d742690f584e1679d34c3fa110cccf07097b5b778a658de7a94d0717c0a?s=96&d=mm&r=g"
+  },
+  {
+    "id": 113,
+    "name": "Jibin",
+    "slug": "jibin_joseph",
+    "description": "Jibin Joseph is an editor at iGeeksBlog and has excellent attention to detail. He is a voracious reader, with interests ranging from philosophy and history to geopolitics and tech. When not reading or correcting grammar, you’d find him engaging in discussions about football. You can follow him on Twitter and Instagram at @4ibin.",
+    "avatar": "https://secure.gravatar.com/avatar/1a01971cc75ad8459a2cea46e40467d4dbf4d123d91bb1a287285170012b1149?s=96&d=mm&r=g"
+  },
+  {
+    "id": 48,
+    "name": "Jignesh",
+    "slug": "iosblogger",
+    "description": "Jignesh Padhiyar is the co-founder of iGeeksBlog.com, who has a keen eye for news, rumors, and all the unusual stuff around Apple products. During his tight schedule, Jignesh finds some moments of respite to share side-splitting content on social media.",
+    "avatar": "https://secure.gravatar.com/avatar/b6136e529cd23b84e1d106481b8e5a6f829fda1c85d4be36c87e87c3fb72093b?s=96&d=mm&r=g"
+  },
+  {
+    "id": 111,
+    "name": "Keval",
+    "slug": "keval",
+    "description": "My profile will tell you I am a content writer, and my Zodiac will tell you I am Tauras. But the truth is I am a Techofile who dived down the bed of tech sea discovering useful How-Tos and some gorgeous wallpapers. While you are here reading this, I am probably tweeting about tech. Go check that as well.",
+    "avatar": "https://secure.gravatar.com/avatar/b05dba3db99f158a2f04ac7b7ea78b0803ae77866b2dec21c8516af241f00714?s=96&d=mm&r=g"
+  },
+  {
+    "id": 1040,
+    "name": "Luqman",
+    "slug": "luqman",
+    "description": "Luqman has a strong passion for technology and provides troubleshooting support and how-to guides for iOS and macOS. Additionally, he keeps up with the latest Apple updates to provide useful content.",
+    "avatar": "https://secure.gravatar.com/avatar/5382c495919656b637cb3eabb38231d14d3f38321a46bc5dc9a8cfa74a208895?s=96&d=mm&r=g"
+  },
+  {
+    "id": 77,
+    "name": "Mahit",
+    "slug": "mahit",
+    "description": "Mahit is an engineer by Education with a corporate stint to his name. He ditched the corporate boardroom wars in favor of the technology battleground. For the better part of a decade, he has worked for popular publishing outlets, including Dennis Publishing, BGR India, AppStorm, MakeUseOf, and iPhonehacks.",
+    "avatar": "https://secure.gravatar.com/avatar/11d04de2c87efbd22fe120630dfcb03663893563f518bc48d9179cfa7ab4e966?s=96&d=mm&r=g"
+  },
+  {
+    "id": 92,
+    "name": "Marcus",
+    "slug": "mearsmarcus",
+    "description": "Marcus Mears III is a lifelong technology enthusiast with half a decade of experience developing prose that keeps readers in the know. With hundreds of reviews, buying guides, and how-to explainers across a number of tech and lifestyle publications like How-To Geek, MakeUseOf, and iGeeksBlog, Mears’ work helps readers around the globe learn to make the most of their devices and software. He uses a 2016 MacBook Pro as his daily driver laptop and a self-built Windows PC for gaming and productivity.",
+    "avatar": "https://secure.gravatar.com/avatar/2451c4c5fe410d6dc8d2afad0bbed11f0a46b60823b962eb81d4ee67f2611645?s=96&d=mm&r=g"
+  },
+  {
+    "id": 85,
+    "name": "Mayank",
+    "slug": "mayank",
+    "description": "Mayank is a published author and a tech-blogger with over ten years of writing experience for various domains and industries. At iGeeks, he mostly writes about blogs that solve user-problems and guide them on unleashing the full potential of their Apple Device. He can often be found with his headphones on, typing to the rhythm of some country song.",
+    "avatar": "https://secure.gravatar.com/avatar/7c40e8a8f22203c330b89f333e8b17b280fbd1048fe95cda6f9e501659a34f72?s=96&d=mm&r=g"
+  },
+  {
+    "id": 2904,
+    "name": "Meet",
+    "slug": "meet",
+    "description": "",
+    "avatar": "https://secure.gravatar.com/avatar/96fd306a2379246c1aec936e5895ff3d3cb16f849252e5aa6618850ee6fba62a?s=96&d=mm&r=g"
+  },
+  {
+    "id": 81,
+    "name": "Mehak",
+    "slug": "mehak",
+    "description": "Mehak has a master’s degree in communication and over ten years of writing experience. Her passion for technology and Apple products led her to iGeeksBlog, where she specializes in writing product roundups and app recommendations for fellow Apple users. When not typing away on her MacBook Pro, she loves being lost in a book or out exploring the world.",
+    "avatar": "https://secure.gravatar.com/avatar/1bcd542eef4d00bdd2cb0067c8c6a72139ad27472a6a1b73d3ccf4b79ab2b6ad?s=96&d=mm&r=g"
+  },
+  {
+    "id": 99,
+    "name": "Mikhil George",
+    "slug": "mikhilgeorge",
+    "description": "A content creator and tech-enthusiast, there’s nothing that can stop me from delving into the latest tech-innovations. I love exploring the world of tech, and for that matter anything that arouses the ‘Wow’ factor within me.  Apart from all this tech-thingy, I’m a musician, singer, pianist and sport enthusiast. You can find me on YouTube, and Instagram.",
+    "avatar": "https://secure.gravatar.com/avatar/1fe41874c9fce894b92fb29bbac12efb69bdc8fe540b7df744b90040a551e4ce?s=96&d=mm&r=g"
+  },
+  {
+    "id": 90,
+    "name": "Nidhi",
+    "slug": "nidhi-bohra",
+    "description": "A tech-aficionado whose superpower lies in blabbering interminably about new technologies. After 4+ years and 4500+ content pieces that helped diverse companies grow, I followed my passion and made iGeeks Media my home. When not gushing over technology, you will find me immersed in a fictional world, either reading or creating one.",
+    "avatar": "https://secure.gravatar.com/avatar/6d4edc842bb1be974961b3496e1969d808faab8713f184e2bc885271d4fbb9ac?s=96&d=mm&r=g"
+  },
+  {
+    "id": 93,
+    "name": "Parth",
+    "slug": "parthigb",
+    "description": "Parth previously worked at EOTO.tech covering tech news. He is currently freelancing at iGeeksBlog, Guiding Tech, iPhonehacks, and TechWiser writing about apps comparisons, tutorials, software tips and tricks, and diving deep into iOS, Android, macOS, and Windows platforms.",
+    "avatar": "https://secure.gravatar.com/avatar/cb81576d073c92d3c51f73a925756721f83c7c8cb78636eaa76bf33a354bfac0?s=96&d=mm&r=g"
+  },
+  {
+    "id": 2909,
+    "name": "Parvez Mulla",
+    "slug": "parvez",
+    "description": "I am a Computer Science Engineer by education and an avid tech enthusiast and writer by passion, with over 3 years of writing experience. I enjoy exploring the world of technology and am especially fascinated by smartphones. When I step away from the tech realm, I switch to the world of sports, obsessing over football and Formula 1.",
+    "avatar": "https://secure.gravatar.com/avatar/bf95324c776d9dac16e4ff385ada7166c97cfebd0ae739c2a7c1ba4b4fc17cb9?s=96&d=mm&r=g"
+  },
+  {
+    "id": 2908,
+    "name": "Paurush Chaudhary",
+    "slug": "paurushchaudhary",
+    "description": "With a PG Diploma degree in English Journalism, Paurush dabbles around with the Apple ecosystem in his writing endeavors. Before becoming a writer, he produced videos for tech YouTube channels and worked briefly as a copywriter at an agency. On weekends, he is a full-time cinephile trying to reduce his never-ending watchlist, often making it longer.",
+    "avatar": "https://secure.gravatar.com/avatar/f2383afe11994ab6b16018c6c62852ece2ce48024c27888e93ca9a595cbd74ee?s=96&d=mm&r=g"
+  },
+  {
+    "id": 108,
+    "name": "Rachel",
+    "slug": "rachel-ann-tee-melegrito",
+    "description": "Rachel, an experienced Apple technology writer since 2021 and a long-time user since 2003, began her journey with a silver iPod Classic. Currently, she owns an array of modern Apple gadgets. At iGeeksBlog, her expertise shines through in the crafting of comprehensive how-to articles, informative guides, and well-curated roundups.",
+    "avatar": "https://secure.gravatar.com/avatar/0d4e97c11fd667c366edb230e12f0287d5de67865948ec9dc08fedf32dfea62a?s=96&d=mm&r=g"
+  },
+  {
+    "id": 3208,
+    "name": "Ravi Teja KNTS",
+    "slug": "ravi",
+    "description": "I’ve been writing about tech for over 5 years, with 1000+ articles published so far. From iPhones and MacBooks to Android phones and AI tools, I’ve always enjoyed turning complicated features into simple, jargon-free guides. Recently, I switched sides and joined the Apple camp. Whether you want to try out new features, catch up on the latest news, or tweak your Apple devices, I’m here to help you get the most out of your tech.",
+    "avatar": "https://secure.gravatar.com/avatar/24a6c7b1305cb1104cd5b73ddb069bf34250c34e3238d3efd40020165dc3cabc?s=96&d=mm&r=g"
+  },
+  {
+    "id": 86,
+    "name": "Ria Sharma",
+    "slug": "ria-sharma",
+    "description": "I'm a technical writer who is interested in understanding consumer difficulties and find easy solutions. At iGeeksBlog, I enjoy making how-to and troubleshooting guides that help people do more on their iPhone, iPad. In my spare time, I enjoy listening to music and going to my favorite spots.",
+    "avatar": "https://secure.gravatar.com/avatar/707dc3fd3fd8294e671cc1d0e86548961d84a29dc2fa9cdc75ed42e8ef8252ff?s=96&d=mm&r=g"
+  },
+  {
+    "id": 84,
+    "name": "Sagar",
+    "slug": "sagar",
+    "description": "I am an aspiring tech blogger who is always in love with new generation iPhones and iPads. At iGeeksBlog, I am dedicated to rendering the How-To's, Troubleshooting bugs, and reviewing apps that are a great deal of help. When I am not writing, I am daydreaming about the future of all things Apple and watching videos of smartphone battles on YouTube.",
+    "avatar": "https://secure.gravatar.com/avatar/b2bcb50a93a69ea6a51354c20715d22fa466ab565e2bfdda9e22d0d8bd65842b?s=96&d=mm&r=g"
+  },
+  {
+    "id": 112,
+    "name": "Sajid",
+    "slug": "sajid",
+    "description": "Sajid Shaik is a tech enthusiast who explains complex concepts in a clear and concise way. For the past 7 years, he has been a regular contributor to tech blogs and publications, including MakeUseOf and iGeeksBlog. Sajid also has extensive knowledge of the Apple ecosystem, which he shares with his readers through his words. He has created a wide range of content, such as How-Tos, Reviews, Listicles, and much more. Aside from that, Sajid has a degree in Electronics and Communication Engineering, which gives him an advantage in better understanding technology at hardware level. Apart from writing, you can find him fiddling with Apple products or keeping up with all things Apple.",
+    "avatar": "https://secure.gravatar.com/avatar/f5db2aaac07e8944175790aadeec3f2a144d4ee10a33d3c19aeb7e8222d7e92c?s=96&d=mm&r=g"
+  },
+  {
+    "id": 104,
+    "name": "Sanchit",
+    "slug": "sanchit_garg",
+    "description": "Hi! I am a tech enthusiast and content creator who loves to keep up with the latest and greatest tech. I love using the power of tech to assist me and others in their daily lives! You would find me making videos or studying during my free time! You can follow me @sanchitgarg_ everywhere!",
+    "avatar": "https://secure.gravatar.com/avatar/bd18408134844e042ebed922d21410dbc19b8aaf55d8be89c6e5dd17ca9d845d?s=96&d=mm&r=g"
+  },
+  {
+    "id": 120,
+    "name": "Sandy",
+    "slug": "sandy",
+    "description": "Sandy relishes crafting how-tos, listicles, and explainers, empowering others to unlock the full potential of their Apple devices. She joined iGeeksBlog in 2023, and her decade-long experience in tech writing shines through, starting with Apple products in 2015 and further enriched by collaborations with prestigious publications like Lifewire, How-To Geek, Digital Trends, iDownloadBlog, MakeUseOf, groovyPost, and AppleToolbox.",
+    "avatar": "https://secure.gravatar.com/avatar/cc513507a47dac7237ad80c223334ede38df7ec1f0358bce2d23b89f66123247?s=96&d=mm&r=g"
+  },
+  {
+    "id": 95,
+    "name": "Sanuj",
+    "slug": "sanuj-bhatia",
+    "description": "Sanuj is passionate about technology and all things Apple. He is currently freelancing at iGeeksBlog and iPhoneHacks, covering news, and writing about comparisons, DIY tutorials, software tips, and tricks, How-Tos, and diving deep into iOS, Android, macOS, and Windows platforms.",
+    "avatar": "https://secure.gravatar.com/avatar/86d9b0027da43214f529d80e6d57ba995fca0f49492525f7d626533f361b6736?s=96&d=mm&r=g"
+  },
+  {
+    "id": 79,
+    "name": "Siddarth Suvarna",
+    "slug": "siddarth",
+    "description": "Siddharth is a freelance technology writer with over a decade of experience. He has written tutorials, guides, features, how-tos, listicles, and more for sites such as 91mobiles, MySmartPrice, GadgetReview, TheAndroidSoul, and more. In his free time, he loves to travel, ride motorcycles, watch movies/TV shows, and pet dogs.",
+    "avatar": "https://secure.gravatar.com/avatar/9135223f4032fe654b52cabc733bcdfd5660ef2e9852c3bdd9ea786ef22abbff?s=96&d=mm&r=g"
+  },
+  {
+    "id": 2906,
+    "name": "sponsored post",
+    "slug": "sponsoredpost",
+    "description": "A sponsored post is a paid advertisement that promotes a brand or product.",
+    "avatar": "https://secure.gravatar.com/avatar/875692fb1bc5c4b579026ef28f99f8ade0a3f209325c8ae86681bf935fc9d8e0?s=96&d=mm&r=g"
+  },
+  {
+    "id": 117,
+    "name": "Srishti",
+    "slug": "srishti-pandey",
+    "description": "Srishti is a writing enthusiast who has been creating user-friendly content for more than 5 years in the tech space. At iGeeksBlog, she helps readers explore the Apple ecosystem, understand the jargon, and improve their experience. With expertise in buying guides, she helps you find the best accessories amid the pool of choices for Apple products. Her talent for making complicated tech understandable shines through in her writing. When away from her MacBook, you can find her doing a hands-on experience with new products.",
+    "avatar": "https://secure.gravatar.com/avatar/24544cf9e779a7049e462c049b715291a78a2827a7986613da09e9a122b85213?s=96&d=mm&r=g"
+  },
+  {
+    "id": 3222,
+    "name": "Sumit Sarkar",
+    "slug": "sumit-sarkar",
+    "description": "",
+    "avatar": "https://secure.gravatar.com/avatar/583f444fd23fadae43ba457d74f81eaccc658430a6c0d22b1397fd0a30582bc4?s=96&d=mm&r=g"
+  },
+  {
+    "id": 2905,
+    "name": "Supreeth Koundinya",
+    "slug": "supreeth",
+    "description": "Supreeth has been an Apple fanboy ever since he got his hands on an iPod Touch 5 in 2012. After finishing his education in engineering in 2021, he started writing about technology. Ever since then, he's written hundreds of blogs on iPhone, iPad and the Apple Watch. Previously, he worked at Guiding Tech and GadgetsToUse Media.",
+    "avatar": "https://secure.gravatar.com/avatar/3b01bfdae23b5343de084a4eb706d324bcfafa8aa99cc80c743d148a13a62040?s=96&d=mm&r=g"
+  },
+  {
+    "id": 69,
+    "name": "Suraj Padmasali",
+    "slug": "padmasuraj",
+    "description": "Suraj is an operations head on the iGB team. He contributes to the social media section along with tips and tricks for iPhone, Apple Watch. Apart from blogging, he likes to work out as much as he can in his gym and love to listening to retro music.",
+    "avatar": "https://secure.gravatar.com/avatar/9a00b9b61fb6ad88e12146beede620503beb512bc17ec234e946d4f106263fff?s=96&d=mm&r=g"
+  },
+  {
+    "id": 132,
+    "name": "Varun",
+    "slug": "varun",
+    "description": "Varun is a passionate technology journalist with over 7 years of experience and a knack for diving deep into everything Apple, PC hardware, and gaming. With an engineering degree in hand, he brings a solid technical foundation to his work, ensuring accuracy and insight in every piece he writes. Varun also contributes to GameRant, Guiding Tech, and The Mac Observer.",
+    "avatar": "https://secure.gravatar.com/avatar/9098a93b390460ab85de5e732f182db66c46284dd37e98a2562646d04c3e0259?s=96&d=mm&r=g"
+  },
+  {
+    "id": 110,
+    "name": "Venus",
+    "slug": "venus",
+    "description": "Tech Junkie and Computer Science Undergrad, who loves experimenting things and everything Apple.",
+    "avatar": "https://secure.gravatar.com/avatar/6d728d9788901475a98815d1831f6468e99331f415961e45a2961df5ae6ce1e3?s=96&d=mm&r=g"
+  },
+  {
+    "id": 125,
+    "name": "Vikhyat",
+    "slug": "vikhyat",
+    "description": "Vikhyat has a bachelor's degree in Electronic and Communication Engineering and over five years of writing experience. His passion for technology and Apple products led him to the tech writing space, where he specializes in writing App features, How-to guides, and troubleshooting guides for fellow Apple users. When not typing away on his MacBook Pro, he loves exploring the real world.",
+    "avatar": "https://secure.gravatar.com/avatar/259399271fbf52d78e9e218ab0266c06fd9695f3737433288bca0bcd5d9d5b22?s=96&d=mm&r=g"
+  },
+  {
+    "id": 98,
+    "name": "Yash Anand",
+    "slug": "yashanand",
+    "description": "I'm a die-hard Apple Fanboy who's keen and enthusiastic to learn and explore new things in the world of technology. Besides that, I’m currently an engineering student in the field of Electronics and telecommunications, thus love playing with electronic hardware. When not exploring the world of technology, I love learning about the universe/cosmos, time travel, different paradoxes, and so on.",
+    "avatar": "https://secure.gravatar.com/avatar/0e5007137419ac198f8493c9d0257b7af4cca5e20be57eb33397b5558aa193a1?s=96&d=mm&r=g"
+  },
+  {
+    "id": 130,
+    "name": "Yash Wate",
+    "slug": "yashwate",
+    "description": "Yash is a tech journalist and writer based in India. He has five years of experience writing features, how-tos, and reviews for various online publications. As an editor at iGeeksBlog, Yash's job is to ensure the articles are polished and suitable for publication. You can also read his work on How-To Geek, MakeUseOf, and TechPP.",
+    "avatar": "https://secure.gravatar.com/avatar/72af9c75cabef18b24198969a51dbdf1ea87c02e9b29ed966c4f6dfe5f227f12?s=96&d=mm&r=g"
+  }
+]
