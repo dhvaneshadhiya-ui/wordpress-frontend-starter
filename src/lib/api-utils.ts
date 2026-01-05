@@ -56,35 +56,38 @@ export async function fetchWithRetry(
 ): Promise<Response> {
   let lastError: Error | null = null;
   
+  console.log(`[API] Fetching: ${url}`);
+  
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const response = await fetchWithTimeout(url, options, timeout);
       
-      // Retry on server errors (5xx)
       if (response.status >= 500 && attempt < maxRetries) {
         const delay = RETRY_DELAYS[attempt] || RETRY_DELAYS[RETRY_DELAYS.length - 1];
-        console.warn(`Server error ${response.status}, retrying in ${delay}ms...`);
+        console.warn(`[API] Server error ${response.status}, retrying in ${delay}ms...`);
         await sleep(delay);
         continue;
       }
       
+      console.log(`[API] Success: ${url} (status: ${response.status})`);
       return response;
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
       
-      // Don't retry on non-timeout client errors
       if (error instanceof ApiError && !error.isTimeout) {
+        console.error(`[API] Error: ${url}`, error);
         throw error;
       }
       
       if (attempt < maxRetries) {
         const delay = RETRY_DELAYS[attempt] || RETRY_DELAYS[RETRY_DELAYS.length - 1];
-        console.warn(`Request failed, retrying in ${delay}ms... (attempt ${attempt + 1}/${maxRetries})`);
+        console.warn(`[API] Request failed, retrying in ${delay}ms... (attempt ${attempt + 1}/${maxRetries})`);
         await sleep(delay);
       }
     }
   }
   
+  console.error(`[API] Failed after retries: ${url}`, lastError);
   throw lastError || new ApiError('Request failed after retries');
 }
 
