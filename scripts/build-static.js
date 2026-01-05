@@ -545,6 +545,44 @@ function generateIndexHTML(posts, viteAssets) {
 </html>`;
 }
 
+// ============= Shell App Generator =============
+
+function generateShellApp(viteAssets) {
+  console.log('📦 Generating shell application (no pre-rendered content)...');
+  
+  const { cssTags, jsTag } = generateAssetTags(viteAssets);
+  const title = 'iGeeksBlog - Apple News, iPhone Tips & Tech Reviews';
+  const description = 'Your source for the latest Apple news, iPhone tips, Mac tutorials, and comprehensive tech reviews.';
+
+  const shellHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <meta name="description" content="${description}">
+    <meta name="robots" content="${ROBOTS_META}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="${title}">
+    <meta property="og:description" content="${description}">
+    <meta property="og:url" content="${SITE_URL}">
+    <meta property="og:site_name" content="iGeeksBlog">
+    <link rel="canonical" href="${SITE_URL}">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    ${cssTags}
+</head>
+<body>
+    <div id="root"></div>
+    <script>window.__SHELL_MODE__ = true;</script>
+    ${jsTag}
+</body>
+</html>`;
+
+  fs.writeFileSync(path.join(DIST_DIR, 'index.html'), shellHtml);
+  console.log('✅ Shell application generated successfully');
+  console.log('ℹ️  The React app will fetch content dynamically from the WordPress API');
+}
+
 // ============= Main Build Function =============
 
 async function generateStaticHTML() {
@@ -553,13 +591,15 @@ async function generateStaticHTML() {
   try {
     console.log('🏗️ Generating static HTML files with caching...');
 
+    const viteAssets = getViteAssets();
+    
     const postsPath = path.join(DATA_DIR, 'posts.json');
     if (!fs.existsSync(postsPath)) {
-      console.error('❌ No posts.json found. Run fetch-content first.');
-      process.exit(1);
+      console.warn('⚠️ No posts.json found. Generating shell application...');
+      generateShellApp(viteAssets);
+      console.log('\n🎉 Shell build complete! Deploy will work, content fetched dynamically.');
+      return;
     }
-
-    const viteAssets = getViteAssets();
     const cache = getStaticCache();
 
     // Load all data
