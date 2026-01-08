@@ -1,9 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Direct imports - no lazy loading for reliability
@@ -16,37 +14,22 @@ import PreviewPost from './pages/PreviewPost';
 import NotFound from './pages/NotFound';
 import { ScrollToTop } from '@/components/ScrollToTop';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000,
-      gcTime: 30 * 60 * 1000,
-      retry: 2,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
 const App = () => (
   <ErrorBoundary>
-    <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/preview" element={<PreviewPost />} />
-            <Route path="/category/:slug" element={<CategoryArchive />} />
-            <Route path="/tag/:slug" element={<TagArchive />} />
-            <Route path="/author/:slug" element={<AuthorArchive />} />
-            <Route path="/:slug" element={<SinglePost />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </HelmetProvider>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/preview" element={<PreviewPost />} />
+        <Route path="/category/:slug" element={<CategoryArchive />} />
+        <Route path="/tag/:slug" element={<TagArchive />} />
+        <Route path="/author/:slug" element={<AuthorArchive />} />
+        <Route path="/:slug" element={<SinglePost />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </TooltipProvider>
   </ErrorBoundary>
 );
 
