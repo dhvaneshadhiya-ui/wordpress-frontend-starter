@@ -1,31 +1,4 @@
 # Staging site - Block all crawlers
-# When VITE_ENABLE_INDEXING=true is set, replace with production version below
+# Production version is auto-generated during build based on VITE_ENABLE_INDEXING
 User-agent: *
 Disallow: /
-
-# =====================================================
-# PRODUCTION VERSION (uncomment when going live)
-# =====================================================
-# User-agent: *
-# Allow: /
-# Sitemap: https://igeeksblog.com/sitemap.xml
-#
-# # AI Search Engines - Allow for GEO citations
-# User-agent: GPTBot
-# Allow: /
-#
-# User-agent: PerplexityBot
-# Allow: /
-#
-# User-agent: Claude-Web
-# Allow: /
-#
-# User-agent: Amazonbot
-# Allow: /
-#
-# # Block AI Training Crawlers (optional - preserves content for training)
-# User-agent: Google-Extended
-# Disallow: /
-#
-# User-agent: CCBot
-# Disallow: /
