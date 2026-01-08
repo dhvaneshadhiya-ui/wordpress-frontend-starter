@@ -10,7 +10,7 @@ const API_BASE = process.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.c
 const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com'
 
 // Fetch with timeout to prevent hanging
-async function fetchWithTimeout(url, timeout = 6000) {
+async function fetchWithTimeout(url, timeout = 4000) {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), timeout)
   
@@ -24,17 +24,17 @@ async function fetchWithTimeout(url, timeout = 6000) {
   }
 }
 
-// Fetch all items from a paginated WordPress endpoint
-async function fetchAllFromWP(endpoint, perPage = 100) {
+// Fetch all items from a paginated WordPress endpoint (limited for faster builds)
+async function fetchAllFromWP(endpoint, perPage = 50, maxItems = 50) {
   const items = []
   let page = 1
   let hasMore = true
   
-  while (hasMore) {
+  while (hasMore && items.length < maxItems) {
     try {
       const response = await fetchWithTimeout(
         `${API_BASE}/${endpoint}?per_page=${perPage}&page=${page}`,
-        6000
+        4000
       )
       if (!response.ok) {
         if (response.status === 400) break
@@ -54,7 +54,7 @@ async function fetchAllFromWP(endpoint, perPage = 100) {
     }
   }
   
-  return items
+  return items.slice(0, maxItems)
 }
 
 // Generate all routes to prerender
@@ -66,10 +66,10 @@ async function getRoutesToPrerender() {
   
   try {
     const results = await Promise.all([
-      fetchAllFromWP('posts'),
-      fetchAllFromWP('categories'),
-      fetchAllFromWP('tags'),
-      fetchAllFromWP('users'),
+      fetchAllFromWP('posts', 50, 50),
+      fetchAllFromWP('categories', 50, 50),
+      fetchAllFromWP('tags', 50, 50),
+      fetchAllFromWP('users', 20, 20),
     ])
     posts = results[0]
     categories = results[1]
