@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import {
   fetchPosts,
   fetchPostBySlug,
@@ -21,7 +21,7 @@ import {
 } from '@/lib/local-data';
 import demoPosts from '@/data/demo-posts.json';
 
-// Query config
+// Query config - stale-while-revalidate strategy
 const DEFAULT_STALE_TIME = 5 * 60 * 1000; // 5 minutes
 const LONG_STALE_TIME = 30 * 60 * 1000; // 30 minutes
 const GC_TIME = 60 * 60 * 1000; // 1 hour
@@ -29,7 +29,7 @@ const GC_TIME = 60 * 60 * 1000; // 1 hour
 // Cast demo posts to WPPost type for placeholder
 const typedDemoPosts = demoPosts as unknown as WPPost[];
 
-// Fetch posts with pagination - with demo fallback for preview
+// Fetch posts with pagination - stale-while-revalidate for fast perceived loading
 export function usePosts(params: {
   page?: number;
   perPage?: number;
@@ -45,6 +45,8 @@ export function usePosts(params: {
     gcTime: GC_TIME,
     retry: 1,
     retryDelay: 1000,
+    refetchOnMount: 'always', // Always check for fresh data
+    refetchOnWindowFocus: false, // Don't refetch on tab switch
   });
 }
 
@@ -85,7 +87,7 @@ export function useCategory(slug: string | undefined) {
   });
 }
 
-// Fetch posts by category slug
+// Fetch posts by category slug - with keepPreviousData for smooth pagination
 export function useCategoryPosts(categorySlug: string | undefined, page: number = 1) {
   const { data: category } = useCategory(categorySlug);
   
@@ -96,6 +98,7 @@ export function useCategoryPosts(categorySlug: string | undefined, page: number 
     staleTime: DEFAULT_STALE_TIME,
     gcTime: GC_TIME,
     retry: 2,
+    placeholderData: keepPreviousData, // Show previous page while loading new
   });
 }
 
@@ -124,7 +127,7 @@ export function useTag(slug: string | undefined) {
   });
 }
 
-// Fetch posts by tag slug
+// Fetch posts by tag slug - with keepPreviousData for smooth pagination
 export function useTagPosts(tagSlug: string | undefined, page: number = 1) {
   const { data: tag } = useTag(tagSlug);
   
@@ -135,6 +138,7 @@ export function useTagPosts(tagSlug: string | undefined, page: number = 1) {
     staleTime: DEFAULT_STALE_TIME,
     gcTime: GC_TIME,
     retry: 2,
+    placeholderData: keepPreviousData, // Show previous page while loading new
   });
 }
 
@@ -163,7 +167,7 @@ export function useAuthor(slug: string | undefined) {
   });
 }
 
-// Fetch posts by author slug
+// Fetch posts by author slug - with keepPreviousData for smooth pagination
 export function useAuthorPosts(authorSlug: string | undefined, page: number = 1) {
   const { data: author } = useAuthor(authorSlug);
   
@@ -174,6 +178,7 @@ export function useAuthorPosts(authorSlug: string | undefined, page: number = 1)
     staleTime: DEFAULT_STALE_TIME,
     gcTime: GC_TIME,
     retry: 2,
+    placeholderData: keepPreviousData, // Show previous page while loading new
   });
 }
 
