@@ -9,6 +9,21 @@ const toAbsolute = (p) => path.resolve(__dirname, p)
 const API_BASE = process.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2'
 const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com'
 
+// Fetch with timeout to prevent hanging
+async function fetchWithTimeout(url, timeout = 15000) {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeout)
+  
+  try {
+    const response = await fetch(url, { signal: controller.signal })
+    clearTimeout(timeoutId)
+    return response
+  } catch (error) {
+    clearTimeout(timeoutId)
+    throw error
+  }
+}
+
 // Fetch all items from a paginated WordPress endpoint
 async function fetchAllFromWP(endpoint, perPage = 100) {
   const items = []
@@ -16,18 +31,27 @@ async function fetchAllFromWP(endpoint, perPage = 100) {
   let hasMore = true
   
   while (hasMore) {
-    const response = await fetch(`${API_BASE}/${endpoint}?per_page=${perPage}&page=${page}`)
-    if (!response.ok) {
-      if (response.status === 400) break // No more pages
-      throw new Error(`Failed to fetch ${endpoint}: ${response.status}`)
+    try {
+      const response = await fetchWithTimeout(
+        `${API_BASE}/${endpoint}?per_page=${perPage}&page=${page}`,
+        15000
+      )
+      if (!response.ok) {
+        if (response.status === 400) break
+        console.warn(`Warning: ${endpoint} returned ${response.status}`)
+        break
+      }
+      
+      const data = await response.json()
+      items.push(...data)
+      
+      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1')
+      hasMore = page < totalPages
+      page++
+    } catch (error) {
+      console.warn(`Warning: Could not fetch ${endpoint}: ${error.message}`)
+      break
     }
-    
-    const data = await response.json()
-    items.push(...data)
-    
-    const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1')
-    hasMore = page < totalPages
-    page++
   }
   
   return items
@@ -38,12 +62,23 @@ async function getRoutesToPrerender() {
   console.log('Fetching content from WordPress...')
   console.log('API Base:', API_BASE)
   
-  const [posts, categories, tags, authors] = await Promise.all([
-    fetchAllFromWP('posts'),
-    fetchAllFromWP('categories'),
-    fetchAllFromWP('tags'),
-    fetchAllFromWP('users'),
-  ])
+  let posts = [], categories = [], tags = [], authors = []
+  
+  try {
+    const results = await Promise.all([
+      fetchAllFromWP('posts'),
+      fetchAllFromWP('categories'),
+      fetchAllFromWP('tags'),
+      fetchAllFromWP('users'),
+    ])
+    posts = results[0]
+    categories = results[1]
+    tags = results[2]
+    authors = results[3]
+  } catch (error) {
+    console.warn('Warning: WordPress API unreachable, using minimal routes')
+    console.warn('Error:', error.message)
+  }
   
   console.log(`Found: ${posts.length} posts, ${categories.length} categories, ${tags.length} tags, ${authors.length} authors`)
   
