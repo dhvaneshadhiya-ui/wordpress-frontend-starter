@@ -4,6 +4,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
 import App from "./App.tsx";
 import "./index.css";
+import { clearStaleVersionCaches } from "./lib/local-cache";
+
+// Clean up old version caches on app init
+clearStaleVersionCaches();
 
 // Register service worker for offline support
 if ('serviceWorker' in navigator) {
