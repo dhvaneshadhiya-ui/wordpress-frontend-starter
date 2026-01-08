@@ -7,9 +7,325 @@ const toAbsolute = (p) => path.resolve(__dirname, p)
 
 // Configuration
 const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com'
+const WP_API_URL = 'https://dev.igeeksblog.com/wp-json/wp/v2'
+const API_TIMEOUT = 10000 // 10 seconds
+const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
 
-// Static routes only - no API calls to prevent build timeouts
+// Static routes that don't need API data
 const STATIC_ROUTES = ['/', '/preview']
+
+// Fetch with timeout
+async function fetchWithTimeout(url, timeout = API_TIMEOUT) {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeout)
+  
+  try {
+    const response = await fetch(url, { signal: controller.signal })
+    clearTimeout(timeoutId)
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+    return response.json()
+  } catch (error) {
+    clearTimeout(timeoutId)
+    if (error.name === 'AbortError') {
+      throw new Error(`Request timed out after ${timeout}ms`)
+    }
+    throw error
+  }
+}
+
+// Fetch all items with pagination
+async function fetchAllPaginated(endpoint, perPage = 100) {
+  const items = []
+  let page = 1
+  let hasMore = true
+  
+  while (hasMore) {
+    try {
+      const url = `${WP_API_URL}/${endpoint}?per_page=${perPage}&page=${page}`
+      const data = await fetchWithTimeout(url)
+      items.push(...data)
+      hasMore = data.length === perPage
+      page++
+    } catch (error) {
+      console.warn(`[SSG] Failed to fetch ${endpoint} page ${page}: ${error.message}`)
+      hasMore = false
+    }
+  }
+  
+  return items
+}
+
+// Fetch all dynamic routes from WordPress
+async function fetchAllRoutes() {
+  console.log('[SSG] Fetching routes from WordPress API...')
+  
+  const routes = [...STATIC_ROUTES]
+  const routeData = new Map()
+  
+  try {
+    // Fetch posts, categories, tags, authors in parallel
+    const [posts, categories, tags, authors] = await Promise.all([
+      fetchAllPaginated('posts?_embed=true'),
+      fetchAllPaginated('categories'),
+      fetchAllPaginated('tags'),
+      fetchAllPaginated('users'),
+    ])
+    
+    console.log(`[SSG] Found ${posts.length} posts, ${categories.length} categories, ${tags.length} tags, ${authors.length} authors`)
+    
+    // Add post routes
+    for (const post of posts) {
+      const route = `/${post.slug}`
+      routes.push(route)
+      routeData.set(route, { type: 'post', data: post })
+    }
+    
+    // Add category routes
+    for (const category of categories) {
+      if (category.count > 0) {
+        const route = `/category/${category.slug}`
+        routes.push(route)
+        routeData.set(route, { type: 'category', data: category })
+      }
+    }
+    
+    // Add tag routes
+    for (const tag of tags) {
+      if (tag.count > 0) {
+        const route = `/tag/${tag.slug}`
+        routes.push(route)
+        routeData.set(route, { type: 'tag', data: tag })
+      }
+    }
+    
+    // Add author routes
+    for (const author of authors) {
+      const route = `/author/${author.slug}`
+      routes.push(route)
+      routeData.set(route, { type: 'author', data: author })
+    }
+    
+  } catch (error) {
+    console.warn(`[SSG] API unreachable, using static routes only: ${error.message}`)
+  }
+  
+  return { routes, routeData }
+}
+
+// Strip HTML tags
+function stripHtml(html) {
+  return html?.replace(/<[^>]*>/g, '').trim() || ''
+}
+
+// Escape HTML for safe attribute values
+function escapeHtml(str) {
+  return (str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+
+// Get featured image URL from embedded post data
+function getFeaturedImage(post) {
+  try {
+    const media = post._embedded?.['wp:featuredmedia']?.[0]
+    return media?.source_url || media?.media_details?.sizes?.large?.source_url || ''
+  } catch {
+    return ''
+  }
+}
+
+// Get author name from embedded post data
+function getAuthorName(post) {
+  try {
+    return post._embedded?.author?.[0]?.name || 'iGeeksBlog'
+  } catch {
+    return 'iGeeksBlog'
+  }
+}
+
+// Get categories from embedded post data
+function getCategories(post) {
+  try {
+    return post._embedded?.['wp:term']?.[0]?.map(c => c.name) || []
+  } catch {
+    return []
+  }
+}
+
+// Format date for schema
+function formatDate(dateString) {
+  return new Date(dateString).toISOString()
+}
+
+// Generate SEO head tags for a route
+function generateSEOHead(route, routeInfo) {
+  const robotsContent = ENABLE_INDEXING ? 'index, follow' : 'noindex, nofollow'
+  
+  // Default/homepage SEO
+  if (route === '/' || !routeInfo) {
+    return `
+    <meta name="robots" content="${robotsContent}" />
+    <link rel="canonical" href="${SITE_URL}/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="${SITE_URL}/" />
+    <meta property="og:site_name" content="iGeeksBlog" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json">
+    ${JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "iGeeksBlog",
+      "url": SITE_URL,
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": `${SITE_URL}/?s={search_term_string}`,
+        "query-input": "required name=search_term_string"
+      }
+    })}
+    </script>`.trim()
+  }
+  
+  const { type, data } = routeInfo
+  
+  if (type === 'post') {
+    const title = escapeHtml(stripHtml(data.title?.rendered || data.slug))
+    const description = escapeHtml(stripHtml(data.excerpt?.rendered || '').slice(0, 160))
+    const image = getFeaturedImage(data)
+    const author = getAuthorName(data)
+    const categories = getCategories(data)
+    const canonicalUrl = `${SITE_URL}/${data.slug}`
+    const publishDate = formatDate(data.date)
+    const modifiedDate = formatDate(data.modified)
+    
+    const articleSchema = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": stripHtml(data.title?.rendered || ''),
+      "description": stripHtml(data.excerpt?.rendered || ''),
+      "image": image || undefined,
+      "author": {
+        "@type": "Person",
+        "name": author
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "iGeeksBlog",
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${SITE_URL}/favicon.ico`
+        }
+      },
+      "datePublished": publishDate,
+      "dateModified": modifiedDate,
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": canonicalUrl
+      },
+      "keywords": categories.join(', ')
+    }
+    
+    return `
+    <title>${title} - iGeeksBlog</title>
+    <meta name="description" content="${description}" />
+    <meta name="robots" content="${robotsContent}" />
+    <link rel="canonical" href="${canonicalUrl}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:url" content="${canonicalUrl}" />
+    <meta property="og:site_name" content="iGeeksBlog" />
+    ${image ? `<meta property="og:image" content="${image}" />` : ''}
+    <meta property="article:published_time" content="${publishDate}" />
+    <meta property="article:modified_time" content="${modifiedDate}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${title}" />
+    <meta name="twitter:description" content="${description}" />
+    ${image ? `<meta name="twitter:image" content="${image}" />` : ''}
+    <script type="application/ld+json">
+    ${JSON.stringify(articleSchema)}
+    </script>`.trim()
+  }
+  
+  if (type === 'category') {
+    const title = escapeHtml(data.name)
+    const description = escapeHtml(stripHtml(data.description || `Browse ${data.name} articles`).slice(0, 160))
+    const canonicalUrl = `${SITE_URL}/category/${data.slug}`
+    
+    return `
+    <title>${title} Archives - iGeeksBlog</title>
+    <meta name="description" content="${description}" />
+    <meta name="robots" content="${robotsContent}" />
+    <link rel="canonical" href="${canonicalUrl}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="${title} Archives" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:url" content="${canonicalUrl}" />
+    <meta property="og:site_name" content="iGeeksBlog" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="${title} Archives" />
+    <meta name="twitter:description" content="${description}" />`.trim()
+  }
+  
+  if (type === 'tag') {
+    const title = escapeHtml(data.name)
+    const description = escapeHtml(stripHtml(data.description || `Browse articles tagged ${data.name}`).slice(0, 160))
+    const canonicalUrl = `${SITE_URL}/tag/${data.slug}`
+    
+    return `
+    <title>${title} - iGeeksBlog</title>
+    <meta name="description" content="${description}" />
+    <meta name="robots" content="${robotsContent}" />
+    <link rel="canonical" href="${canonicalUrl}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:url" content="${canonicalUrl}" />
+    <meta property="og:site_name" content="iGeeksBlog" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="${title}" />
+    <meta name="twitter:description" content="${description}" />`.trim()
+  }
+  
+  if (type === 'author') {
+    const title = escapeHtml(data.name)
+    const description = escapeHtml(stripHtml(data.description || `Articles by ${data.name}`).slice(0, 160))
+    const canonicalUrl = `${SITE_URL}/author/${data.slug}`
+    const avatar = data.avatar_urls?.['96'] || ''
+    
+    const personSchema = {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": data.name,
+      "url": canonicalUrl,
+      "image": avatar || undefined,
+      "description": data.description || undefined
+    }
+    
+    return `
+    <title>${title} - iGeeksBlog</title>
+    <meta name="description" content="${description}" />
+    <meta name="robots" content="${robotsContent}" />
+    <link rel="canonical" href="${canonicalUrl}" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:url" content="${canonicalUrl}" />
+    <meta property="og:site_name" content="iGeeksBlog" />
+    ${avatar ? `<meta property="og:image" content="${avatar}" />` : ''}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="${title}" />
+    <meta name="twitter:description" content="${description}" />
+    <script type="application/ld+json">
+    ${JSON.stringify(personSchema)}
+    </script>`.trim()
+  }
+  
+  return ''
+}
 
 // Ensure directory exists
 function ensureDir(filePath) {
@@ -19,17 +335,31 @@ function ensureDir(filePath) {
   }
 }
 
-// Generate minimal sitemap
-function generateSitemap(routes) {
+// Generate sitemap
+function generateSitemap(routes, routeData) {
   const now = new Date().toISOString()
   
   const urlEntries = routes
     .filter(route => route !== '/preview')
     .map(route => {
-      const priority = route === '/' ? '1.0' : '0.5'
+      const info = routeData.get(route)
+      let priority = '0.5'
+      let lastmod = now
+      
+      if (route === '/') {
+        priority = '1.0'
+      } else if (info?.type === 'post') {
+        priority = '0.8'
+        lastmod = info.data.modified ? formatDate(info.data.modified) : now
+      } else if (info?.type === 'category') {
+        priority = '0.6'
+      }
+      
+      const loc = route === '/' ? SITE_URL : `${SITE_URL}${route}`
+      
       return `  <url>
-    <loc>${SITE_URL}${route === '/' ? '' : route}</loc>
-    <lastmod>${now}</lastmod>
+    <loc>${loc}</loc>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>daily</changefreq>
     <priority>${priority}</priority>
   </url>`
@@ -44,10 +374,12 @@ ${urlEntries.join('\n')}
 // Main prerender function
 ;(async () => {
   const buildStart = Date.now()
-  console.log('Starting pre-render build (static routes only)...')
+  console.log('[SSG] Starting pre-render build...')
   
+  // Read template
   const template = fs.readFileSync(toAbsolute('dist/index.html'), 'utf-8')
   
+  // Load server entry
   const serverAssetsDir = toAbsolute('dist/server/assets')
   const files = fs.readdirSync(serverAssetsDir)
   const entryFile = files.find(f => f.startsWith('entry-server') && f.endsWith('.js'))
@@ -56,26 +388,59 @@ ${urlEntries.join('\n')}
   }
   const { render } = await import(`./dist/server/assets/${entryFile}`)
   
-  console.log(`Pre-rendering ${STATIC_ROUTES.length} static routes...`)
+  // Fetch all routes
+  const { routes, routeData } = await fetchAllRoutes()
+  console.log(`[SSG] Pre-rendering ${routes.length} routes...`)
+  
+  let successCount = 0
+  let errorCount = 0
   
   // Render all routes
-  for (const routeUrl of STATIC_ROUTES) {
+  for (const routeUrl of routes) {
     try {
+      // Get app shell HTML
       const appHtml = render(routeUrl)
-      const html = template.replace('<!--app-html-->', appHtml)
-      const filePath = routeUrl === '/' ? 'dist/index.html' : `dist${routeUrl}.html`
+      
+      // Get SEO head for this route
+      const seoHead = generateSEOHead(routeUrl, routeData.get(routeUrl))
+      
+      // Inject into template
+      let html = template
+        .replace('<!--seo-head-->', seoHead)
+        .replace('<!--app-html-->', appHtml)
+      
+      // Remove default meta tags that we're overriding (for non-homepage routes)
+      if (routeData.has(routeUrl)) {
+        html = html
+          .replace(/<title>iGeeksBlog - Apple News.*?<\/title>/, '')
+          .replace(/<meta name="description" content="Your daily source.*?" \/>/, '')
+          .replace(/<meta name="robots" content="noindex, nofollow" \/>/, '')
+      }
+      
+      // Determine file path
+      const filePath = routeUrl === '/' 
+        ? 'dist/index.html' 
+        : `dist${routeUrl}.html`
+      
       ensureDir(toAbsolute(filePath))
       fs.writeFileSync(toAbsolute(filePath), html)
-      console.log(`✓ ${routeUrl}`)
+      successCount++
+      
+      // Log progress every 50 routes
+      if (successCount % 50 === 0) {
+        console.log(`[SSG] Progress: ${successCount}/${routes.length}`)
+      }
     } catch (error) {
-      console.error(`✗ ${routeUrl}: ${error.message}`)
+      console.error(`[SSG] ✗ ${routeUrl}: ${error.message}`)
+      errorCount++
     }
   }
   
   // Generate sitemap
-  const sitemap = generateSitemap(STATIC_ROUTES)
+  const sitemap = generateSitemap(routes, routeData)
   fs.writeFileSync(toAbsolute('dist/sitemap.xml'), sitemap)
-  console.log('✓ sitemap.xml')
+  console.log('[SSG] ✓ sitemap.xml')
   
-  console.log(`Build complete in ${((Date.now() - buildStart) / 1000).toFixed(1)}s`)
+  const duration = ((Date.now() - buildStart) / 1000).toFixed(1)
+  console.log(`[SSG] Build complete: ${successCount} pages, ${errorCount} errors, ${duration}s`)
 })()
