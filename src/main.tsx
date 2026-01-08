@@ -45,12 +45,8 @@ if (rootElement) {
     </HelmetProvider>
   );
 
-  // Use hydration for pre-rendered HTML in production
-  if (import.meta.env.PROD) {
-    hydrateRoot(rootElement, app);
-  } else {
-    createRoot(rootElement).render(app);
-  }
+  // Always use createRoot - SSG pre-rendering is not available in Lovable deployment
+  createRoot(rootElement).render(app);
 } else {
   document.body.innerHTML = '<div style="padding: 40px; color: red;">Root element not found</div>';
 }
