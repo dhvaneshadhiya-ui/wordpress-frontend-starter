@@ -73,7 +73,13 @@ export default defineConfig(({ mode }) => ({
   },
   ssr: {
     // Bundle CommonJS packages into SSR build to fix ESM import issues
-    noExternal: ['react-helmet-async']
+    noExternal: [
+      'react-helmet-async',
+      'sonner',
+      '@radix-ui/react-toast',
+      '@radix-ui/react-tooltip',
+      '@radix-ui/react-dialog'
+    ]
   },
   build: {
     chunkSizeWarningLimit: 2000,
