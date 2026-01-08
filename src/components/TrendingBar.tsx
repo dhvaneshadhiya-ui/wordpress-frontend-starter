@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
-import { usePosts } from '@/hooks/useWordPress';
-import { stripHtml } from '@/lib/wordpress';
+import { WPPost, stripHtml } from '@/lib/wordpress';
 
-export function TrendingBar() {
-  const { data, isLoading } = usePosts({ perPage: 6 });
+interface TrendingBarProps {
+  posts?: WPPost[];
+}
 
-  if (isLoading || !data?.posts.length) return null;
+export function TrendingBar({ posts }: TrendingBarProps) {
+  if (!posts?.length) return null;
 
   return (
     <div className="bg-secondary/50 border-b border-border py-2 overflow-hidden">
@@ -15,7 +16,7 @@ export function TrendingBar() {
             Trending
           </span>
           <div className="flex gap-4 overflow-x-auto scrollbar-hide">
-            {data.posts.map((post) => (
+            {posts.slice(0, 6).map((post) => (
               <Link
                 key={post.id}
                 to={`/${post.slug}`}
