@@ -501,7 +501,7 @@ export function SEO({
   const robotsContent = ENABLE_INDEXING && !noindex ? "index, follow" : "noindex, nofollow";
 
   return (
-    <Helmet>
+    <Helmet key={finalUrl}>
       {/* Basic Meta */}
       <title>{finalTitle}</title>
       <meta name="description" content={finalDescription} />
