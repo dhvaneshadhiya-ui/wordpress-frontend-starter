@@ -10,7 +10,7 @@ const API_BASE = process.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.c
 const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com'
 
 // Fetch with timeout to prevent hanging
-async function fetchWithTimeout(url, timeout = 15000) {
+async function fetchWithTimeout(url, timeout = 6000) {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), timeout)
   
@@ -34,7 +34,7 @@ async function fetchAllFromWP(endpoint, perPage = 100) {
     try {
       const response = await fetchWithTimeout(
         `${API_BASE}/${endpoint}?per_page=${perPage}&page=${page}`,
-        15000
+        6000
       )
       if (!response.ok) {
         if (response.status === 400) break
