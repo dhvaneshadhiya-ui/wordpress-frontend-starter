@@ -5,8 +5,9 @@ import url from 'node:url'
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 const toAbsolute = (p) => path.resolve(__dirname, p)
 
-// WordPress API configuration
+// Configuration
 const API_BASE = process.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2'
+const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com'
 
 // Fetch all items from a paginated WordPress endpoint
 async function fetchAllFromWP(endpoint, perPage = 100) {
@@ -55,7 +56,7 @@ async function getRoutesToPrerender() {
     ...authors.map(a => `/author/${a.slug}`),
   ]
   
-  return routes
+  return { routes, posts, categories, tags, authors }
 }
 
 // Ensure directory exists
@@ -66,12 +67,54 @@ function ensureDir(filePath) {
   }
 }
 
+// Generate sitemap XML
+function generateSitemap(routes, posts) {
+  const now = new Date().toISOString()
+  
+  const urlEntries = routes
+    .filter(route => route !== '/preview') // Exclude preview from sitemap
+    .map(route => {
+      let priority = '0.5'
+      let changefreq = 'weekly'
+      let lastmod = now
+      
+      if (route === '/') {
+        priority = '1.0'
+        changefreq = 'daily'
+      } else if (!route.startsWith('/category/') && !route.startsWith('/tag/') && !route.startsWith('/author/')) {
+        // Post pages
+        priority = '0.8'
+        changefreq = 'monthly'
+        const post = posts.find(p => `/${p.slug}` === route)
+        if (post?.modified) lastmod = new Date(post.modified).toISOString()
+      } else if (route.startsWith('/category/') || route.startsWith('/tag/')) {
+        priority = '0.6'
+        changefreq = 'weekly'
+      } else if (route.startsWith('/author/')) {
+        priority = '0.4'
+        changefreq = 'monthly'
+      }
+      
+      return `  <url>
+    <loc>${SITE_URL}${route === '/' ? '' : route}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`
+    })
+  
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urlEntries.join('\n')}
+</urlset>`
+}
+
 // Main prerender function
 ;(async () => {
   const template = fs.readFileSync(toAbsolute('dist/index.html'), 'utf-8')
   const { render } = await import('./dist/server/entry-server.js')
   
-  const routes = await getRoutesToPrerender()
+  const { routes, posts } = await getRoutesToPrerender()
   console.log(`Pre-rendering ${routes.length} routes...`)
   
   for (const routeUrl of routes) {
@@ -79,7 +122,6 @@ function ensureDir(filePath) {
       const appHtml = render(routeUrl)
       const html = template.replace('<!--app-html-->', appHtml)
       
-      // Determine output file path
       let filePath
       if (routeUrl === '/') {
         filePath = 'dist/index.html'
@@ -94,6 +136,12 @@ function ensureDir(filePath) {
       console.error(`Failed to prerender ${routeUrl}:`, error.message)
     }
   }
+  
+  // Generate sitemap
+  console.log('Generating sitemap.xml...')
+  const sitemap = generateSitemap(routes, posts)
+  fs.writeFileSync(toAbsolute('dist/sitemap.xml'), sitemap)
+  console.log(`Sitemap generated with ${routes.length - 1} URLs`)
   
   console.log('Pre-rendering complete!')
 })()
