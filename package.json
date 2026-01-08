@@ -4,15 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "npm run build:client && npm run build:server && npm run build:prerender",
-  "build:client": "vite build",
-  "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
-  "build:prerender": "node prerender.js",
-  "build:dev": "vite build --mode development",
-  "lint": "eslint .",
-  "preview": "vite preview"
-},
+    "dev": "vite",
+    "build": "npm run build:client && npm run build:server && npm run build:prerender",
+    "build:client": "vite build",
+    "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
+    "build:prerender": "node prerender.js",
+    "build:dev": "vite build --mode development",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
@@ -50,7 +50,6 @@
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.462.0",
-    "next-themes": "^0.3.0",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
