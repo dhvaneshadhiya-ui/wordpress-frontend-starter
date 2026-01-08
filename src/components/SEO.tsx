@@ -422,7 +422,9 @@ export function SEO({
     image || 
     DEFAULT_IMAGE;
   
+  // For article pages, prefer explicit URL prop over AIOSEO (which may return incorrect canonical)
   const finalUrl = 
+    (type === 'article' && url) ? url :
     aioseoParsed.canonical || 
     aioseoParsed['og:url'] ||
     url || 
