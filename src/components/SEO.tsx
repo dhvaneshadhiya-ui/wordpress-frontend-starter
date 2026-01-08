@@ -422,13 +422,20 @@ export function SEO({
     image || 
     DEFAULT_IMAGE;
   
-  // For article pages, prefer explicit URL prop over AIOSEO (which may return incorrect canonical)
-  const finalUrl = 
-    (type === 'article' && url) ? url :
-    aioseoParsed.canonical || 
-    aioseoParsed['og:url'] ||
-    url || 
-    dynamicUrl;
+  // Canonical URL logic:
+  // For articles: ALWAYS use explicit URL prop or construct from slug (AIOSEO returns incorrect homepage canonical)
+  // For other pages: Try AIOSEO, then prop, then dynamic URL
+  let finalUrl: string;
+  if (type === 'article') {
+    // Articles MUST use the explicit URL - never trust AIOSEO canonical for articles
+    finalUrl = url || `${SITE_URL}/${post?.slug || location.pathname.slice(1)}`;
+  } else {
+    finalUrl = 
+      aioseoParsed.canonical || 
+      aioseoParsed['og:url'] ||
+      url || 
+      dynamicUrl;
+  }
 
   // Article-specific metadata
   const postAuthor = post?._embedded?.author?.[0];
