@@ -1,6 +1,5 @@
 import { WPPost } from '@/lib/wordpress';
 import { PostCard } from './PostCard';
-import { Skeleton } from '@/components/ui/skeleton';
 
 interface PostGridProps {
   posts: WPPost[];
@@ -26,9 +25,30 @@ export function PostGrid({ posts, isLoading, title, headingId }: PostGridProps) 
         {title && <HeadingContent />}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="aspect-[4/3] rounded-lg overflow-hidden">
-              <Skeleton className="h-full w-full" />
-            </div>
+            <article 
+              key={i} 
+              className="bg-card rounded-lg overflow-hidden border border-border"
+              aria-hidden="true"
+            >
+              {/* Image skeleton with shimmer */}
+              <div className="aspect-video bg-muted skeleton-shimmer" />
+              <div className="p-4 space-y-3">
+                {/* Category badge */}
+                <div className="h-5 w-16 rounded bg-muted skeleton-shimmer" />
+                {/* Title (2 lines) */}
+                <div className="space-y-2">
+                  <div className="h-5 w-full rounded bg-muted skeleton-shimmer" />
+                  <div className="h-5 w-3/4 rounded bg-muted skeleton-shimmer" />
+                </div>
+                {/* Excerpt */}
+                <div className="h-4 w-full rounded bg-muted skeleton-shimmer" />
+                {/* Author + date */}
+                <div className="flex items-center gap-2 pt-2">
+                  <div className="h-8 w-8 rounded-full bg-muted skeleton-shimmer" />
+                  <div className="h-4 w-24 rounded bg-muted skeleton-shimmer" />
+                </div>
+              </div>
+            </article>
           ))}
         </div>
       </div>

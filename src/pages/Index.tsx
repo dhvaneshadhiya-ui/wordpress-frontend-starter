@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { getFeaturedImageUrl } from '@/lib/wordpress';
 
 const Index = () => {
-  const { data, isLoading, error, refetch } = usePosts({ perPage: 12 });
+  const { data, isLoading, isFetching, error, refetch } = usePosts({ perPage: 12 });
   const posts = data?.posts ?? [];
   const showLoading = isLoading && posts.length === 0;
 
@@ -32,6 +32,16 @@ const Index = () => {
       <div className="container mx-auto px-4">
         {/* Screen reader only H1 for SEO */}
         <h1 className="sr-only">iGeeksBlog - Apple News, Tips & Reviews</h1>
+        
+        {/* Background refresh indicator */}
+        {isFetching && !isLoading && (
+          <div className="fixed top-20 right-4 z-50">
+            <div className="bg-primary/10 text-primary text-xs px-3 py-1.5 rounded-full flex items-center gap-2 shadow-sm">
+              <span className="h-2 w-2 bg-primary rounded-full animate-pulse" />
+              Updating...
+            </div>
+          </div>
+        )}
         
         {error && posts.length === 0 ? (
           <section className="py-8" aria-labelledby="error-heading">
