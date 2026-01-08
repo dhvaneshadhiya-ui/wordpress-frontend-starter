@@ -24,6 +24,11 @@ export default function SinglePost() {
   if (isLoading) {
     return (
       <Layout>
+        <SEO 
+          title="Loading..."
+          type="article"
+          url={`https://dev.igeeksblog.com/${slug}`}
+        />
         <div className="container mx-auto px-4 py-8">
           <Skeleton className="mb-4 h-8 w-3/4" />
           <Skeleton className="mb-8 h-4 w-1/2" />
@@ -41,7 +46,11 @@ export default function SinglePost() {
   if (isError || !post) {
     return (
       <Layout>
-        <SEO title="Post Not Found" />
+        <SEO 
+          title="Post Not Found" 
+          type="article"
+          url={`https://dev.igeeksblog.com/${slug}`}
+        />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-foreground">Post not found</h1>
           <p className="mt-2 text-muted-foreground">The article you're looking for doesn't exist.</p>
