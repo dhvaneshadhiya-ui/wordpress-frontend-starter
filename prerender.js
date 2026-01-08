@@ -6,7 +6,7 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 const toAbsolute = (p) => path.resolve(__dirname, p)
 
 // Configuration
-const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com'
+const SITE_URL = process.env.SITE_URL || 'https://wp.dev.igeeksblog.com'
 const WP_API_URL = 'https://dev.igeeksblog.com/wp-json/wp/v2'
 const API_TIMEOUT = 10000 // 10 seconds
 const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
