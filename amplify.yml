@@ -10,6 +10,7 @@ frontend:
         - npm run build
         - node scripts/build-static.js
         - node scripts/generate-seo-files.js
+        - node scripts/generate-robots.js
   artifacts:
     baseDirectory: dist
     files:
