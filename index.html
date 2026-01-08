@@ -4,7 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
+    <!-- Default title - React Helmet will override per page -->
     <title>iGeeksBlog</title>
+    
+    <!-- Default description - React Helmet will override -->
+    <meta name="description" content="Your daily source for Apple news, how-to guides, tips, and app reviews." />
+    
+    <!-- Robots - React Helmet will override based on VITE_ENABLE_INDEXING -->
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <!-- Site-wide OG tags -->
+    <meta property="og:site_name" content="iGeeksBlog" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:site" content="@igeeksblog" />
+    
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     
     <!-- PWA Meta Tags -->
@@ -13,6 +26,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="iGeeksBlog" />
     <link rel="apple-touch-icon" href="/favicon.ico" />
+    
+    <!-- For proper SSG with page-specific metadata, deploy to Netlify/Vercel with `npm run build` -->
   </head>
 
   <body>
