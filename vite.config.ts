@@ -72,13 +72,19 @@ export default defineConfig(({ mode }) => ({
     },
   },
   ssr: {
-    // Bundle CommonJS packages into SSR build to fix ESM import issues
+    // Bundle all problematic packages into SSR build
     noExternal: [
       'react-helmet-async',
       'sonner',
-      '@radix-ui/react-toast',
-      '@radix-ui/react-tooltip',
-      '@radix-ui/react-dialog'
+      /^@radix-ui\/.*/, // Match ALL Radix packages
+      'lucide-react',
+      'class-variance-authority',
+      'clsx',
+      'tailwind-merge',
+      'cmdk',
+      'vaul',
+      'embla-carousel-react',
+      'recharts',
     ]
   },
   build: {
