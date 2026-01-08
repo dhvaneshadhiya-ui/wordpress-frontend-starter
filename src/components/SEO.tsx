@@ -2,6 +2,11 @@ import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { WPPost, WPCategory, WPAuthor, stripHtml } from '@/lib/wordpress';
 
+interface FAQ {
+  question: string;
+  answer: string;
+}
+
 interface SEOProps {
   title?: string;
   description?: string;
@@ -13,6 +18,7 @@ interface SEOProps {
   author?: WPAuthor;
   noindex?: boolean;
   isHomePage?: boolean;
+  faqs?: FAQ[];
 }
 
 const SITE_NAME = 'iGeeksBlog';
@@ -133,6 +139,44 @@ function generatePersonSchema(author: WPAuthor) {
   };
 }
 
+// Generate FAQPage JSON-LD schema
+function generateFAQSchema(faqs: FAQ[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+}
+
+// Extract FAQs from WordPress post content
+function extractFAQsFromContent(html: string): FAQ[] {
+  const faqs: FAQ[] = [];
+  
+  // Look for FAQ-like patterns: headings followed by paragraphs
+  // Pattern: <h3>Question?</h3> followed by <p>Answer</p>
+  const questionAnswerRegex = /<h[34][^>]*>([^<]*\?[^<]*)<\/h[34]>\s*<p>([^<]+(?:<[^>]+>[^<]*)*)<\/p>/gi;
+  
+  let match;
+  while ((match = questionAnswerRegex.exec(html)) !== null && faqs.length < 10) {
+    const question = stripHtml(match[1]).trim();
+    const answer = stripHtml(match[2]).trim();
+    
+    // Only include if both question and answer are meaningful
+    if (question.length > 10 && question.length < 200 && answer.length > 20) {
+      faqs.push({ question, answer });
+    }
+  }
+  
+  return faqs;
+}
+
 // Parse meta tags from raw AIOSEO HTML with improved regex
 function parseAioseoHead(html: string): Record<string, string> {
   const meta: Record<string, string> = {};
@@ -186,7 +230,8 @@ export function SEO({
   category,
   author,
   noindex = false,
-  isHomePage = false
+  isHomePage = false,
+  faqs
 }: SEOProps) {
   const location = useLocation();
   
@@ -269,6 +314,15 @@ export function SEO({
   // Generate Person schema for author pages
   const personSchema = author ? generatePersonSchema(author) : null;
 
+  // Generate FAQ schema - use provided FAQs or extract from post content
+  const detectedFaqs = post?.content?.rendered 
+    ? extractFAQsFromContent(post.content.rendered) 
+    : [];
+  const finalFaqs = faqs || (detectedFaqs.length >= 2 ? detectedFaqs : null);
+  const faqSchema = finalFaqs && finalFaqs.length >= 2 
+    ? generateFAQSchema(finalFaqs) 
+    : null;
+
   // Determine robots directive based on environment
   const robotsContent = ENABLE_INDEXING && !noindex ? "index, follow" : "noindex, nofollow";
 
@@ -341,6 +395,13 @@ export function SEO({
       {personSchema && (
         <script type="application/ld+json">
           {JSON.stringify(personSchema)}
+        </script>
+      )}
+      
+      {/* JSON-LD Schema for FAQPage */}
+      {faqSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(faqSchema)}
         </script>
       )}
     </Helmet>
