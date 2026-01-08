@@ -6,18 +6,24 @@ interface PostGridProps {
   posts: WPPost[];
   isLoading?: boolean;
   title?: string;
+  headingId?: string;
 }
 
-export function PostGrid({ posts, isLoading, title }: PostGridProps) {
+export function PostGrid({ posts, isLoading, title, headingId }: PostGridProps) {
+  const HeadingContent = () => (
+    <h2 
+      id={headingId} 
+      className="mb-6 flex items-center gap-2 text-2xl font-bold text-foreground"
+    >
+      <span className="h-6 w-1 rounded bg-primary" />
+      {title}
+    </h2>
+  );
+
   if (isLoading) {
     return (
-      <section className="py-8">
-        {title && (
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-foreground">
-            <span className="h-6 w-1 rounded bg-primary" />
-            {title}
-          </h2>
-        )}
+      <div className="py-8">
+        {title && <HeadingContent />}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="aspect-[4/3] rounded-lg overflow-hidden">
@@ -25,37 +31,27 @@ export function PostGrid({ posts, isLoading, title }: PostGridProps) {
             </div>
           ))}
         </div>
-      </section>
+      </div>
     );
   }
 
   if (!posts.length) {
     return (
-      <section className="py-8">
-        {title && (
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-foreground">
-            <span className="h-6 w-1 rounded bg-primary" />
-            {title}
-          </h2>
-        )}
+      <div className="py-8">
+        {title && <HeadingContent />}
         <p className="text-muted-foreground">No posts found.</p>
-      </section>
+      </div>
     );
   }
 
   return (
-    <section className="py-8">
-      {title && (
-        <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-foreground">
-          <span className="h-6 w-1 rounded bg-primary" />
-          {title}
-        </h2>
-      )}
+    <div className="py-8">
+      {title && <HeadingContent />}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
       </div>
-    </section>
+    </div>
   );
 }

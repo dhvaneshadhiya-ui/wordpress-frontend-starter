@@ -30,11 +30,14 @@ const Index = () => {
         isHomePage={true}
       />
       <div className="container mx-auto px-4">
+        {/* Screen reader only H1 for SEO */}
+        <h1 className="sr-only">iGeeksBlog - Apple News, Tips & Reviews</h1>
+        
         {error && posts.length === 0 ? (
-          <section className="py-8">
+          <section className="py-8" aria-labelledby="error-heading">
             <div className="flex flex-col items-center justify-center text-center py-12">
               <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
-              <h2 className="text-xl font-semibold text-foreground mb-2">Unable to load articles</h2>
+              <h2 id="error-heading" className="text-xl font-semibold text-foreground mb-2">Unable to load articles</h2>
               <p className="text-muted-foreground mb-4">Please check your connection and try again.</p>
               <Button onClick={() => refetch()} variant="outline">
                 Try Again
@@ -42,11 +45,14 @@ const Index = () => {
             </div>
           </section>
         ) : (
-          <PostGrid 
-            posts={posts} 
-            isLoading={showLoading}
-            title="Latest Articles"
-          />
+          <section aria-labelledby="latest-articles">
+            <PostGrid 
+              posts={posts} 
+              isLoading={showLoading}
+              title="Latest Articles"
+              headingId="latest-articles"
+            />
+          </section>
         )}
       </div>
     </Layout>

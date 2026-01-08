@@ -107,15 +107,17 @@ export default function SinglePost() {
         </header>
 
         {/* Featured Image */}
-        <div className="mb-8 overflow-hidden rounded-lg">
+        <figure className="mb-8 overflow-hidden rounded-lg">
           <img
             src={imageUrl}
             alt={stripHtml(post.title.rendered)}
+            width={1200}
+            height={675}
             loading="lazy"
             decoding="async"
-            className="w-full object-cover"
+            className="w-full h-auto object-cover"
           />
-        </div>
+        </figure>
 
         {/* Content */}
         <div
@@ -125,17 +127,19 @@ export default function SinglePost() {
 
         {/* Tags */}
         {tags.length > 0 && (
-          <div className="mt-8 flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <Link
-                key={tag.id}
-                to={`/tag/${tag.slug}`}
-                className="px-3 py-1 text-sm rounded-full bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                #{tag.name}
-              </Link>
-            ))}
-          </div>
+          <section aria-label="Article tags" className="mt-8">
+            <nav className="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <Link
+                  key={tag.id}
+                  to={`/tag/${tag.slug}`}
+                  className="px-3 py-1 text-sm rounded-full bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  #{tag.name}
+                </Link>
+              ))}
+            </nav>
+          </section>
         )}
 
         {/* Author Box */}
@@ -162,10 +166,13 @@ export default function SinglePost() {
 
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
-          <PostGrid
-            posts={relatedPosts}
-            title="Related Articles"
-          />
+          <section aria-labelledby="related-articles" className="mt-12">
+            <PostGrid
+              posts={relatedPosts}
+              title="Related Articles"
+              headingId="related-articles"
+            />
+          </section>
         )}
       </article>
     </Layout>
