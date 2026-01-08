@@ -7,6 +7,29 @@ interface FAQ {
   answer: string;
 }
 
+interface HowToStep {
+  name: string;
+  text: string;
+  image?: string;
+}
+
+interface HowToData {
+  name: string;
+  description?: string;
+  totalTime?: string; // ISO 8601 duration (e.g., "PT30M")
+  steps: HowToStep[];
+}
+
+interface VideoData {
+  name: string;
+  description?: string;
+  thumbnailUrl: string;
+  uploadDate: string;
+  duration?: string;
+  embedUrl: string;
+  contentUrl?: string;
+}
+
 interface SEOProps {
   title?: string;
   description?: string;
@@ -19,6 +42,8 @@ interface SEOProps {
   noindex?: boolean;
   isHomePage?: boolean;
   faqs?: FAQ[];
+  howTo?: HowToData;
+  videos?: VideoData[];
 }
 
 const SITE_NAME = 'iGeeksBlog';
@@ -177,6 +202,131 @@ function extractFAQsFromContent(html: string): FAQ[] {
   return faqs;
 }
 
+// Generate HowTo JSON-LD schema
+function generateHowToSchema(howTo: HowToData) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": howTo.name,
+    ...(howTo.description && { "description": howTo.description }),
+    ...(howTo.totalTime && { "totalTime": howTo.totalTime }),
+    "step": howTo.steps.map((step, index) => ({
+      "@type": "HowToStep",
+      "position": index + 1,
+      "name": step.name,
+      "text": step.text,
+      ...(step.image && { "image": step.image })
+    }))
+  };
+}
+
+// Extract HowTo steps from WordPress post content
+function extractHowToFromContent(html: string, postTitle: string): HowToData | null {
+  const steps: HowToStep[] = [];
+  
+  // Pattern 1: Numbered headings like "Step 1:", "1.", "Step 1 -"
+  const numberedStepRegex = /<h[234][^>]*>(?:Step\s*)?(\d+)[.:\-–—]?\s*([^<]+)<\/h[234]>\s*(?:<p>([^<]+(?:<[^>]+>[^<]*)*)<\/p>)?/gi;
+  
+  let match;
+  while ((match = numberedStepRegex.exec(html)) !== null && steps.length < 15) {
+    const name = stripHtml(match[2]).trim();
+    const text = match[3] ? stripHtml(match[3]).trim() : name;
+    
+    if (name.length > 5 && name.length < 200) {
+      steps.push({ name, text });
+    }
+  }
+  
+  // Pattern 2: If no numbered headings, try ordered lists
+  if (steps.length < 3) {
+    steps.length = 0;
+    const orderedListRegex = /<ol[^>]*>([\s\S]*?)<\/ol>/gi;
+    const listItemRegex = /<li[^>]*>([^<]+(?:<[^>]+>[^<]*)*)<\/li>/gi;
+    
+    const olMatch = orderedListRegex.exec(html);
+    if (olMatch) {
+      let liMatch;
+      while ((liMatch = listItemRegex.exec(olMatch[1])) !== null && steps.length < 15) {
+        const text = stripHtml(liMatch[1]).trim();
+        if (text.length > 10) {
+          steps.push({ name: text.substring(0, 80), text });
+        }
+      }
+    }
+  }
+  
+  // Only return if we have at least 3 steps
+  if (steps.length >= 3) {
+    return {
+      name: stripHtml(postTitle),
+      steps
+    };
+  }
+  
+  return null;
+}
+
+// Generate VideoObject JSON-LD schema
+function generateVideoSchema(video: VideoData) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": video.name,
+    "description": video.description || video.name,
+    "thumbnailUrl": video.thumbnailUrl,
+    "uploadDate": video.uploadDate,
+    ...(video.duration && { "duration": video.duration }),
+    ...(video.contentUrl && { "contentUrl": video.contentUrl }),
+    "embedUrl": video.embedUrl
+  };
+}
+
+// Extract videos from WordPress post content (YouTube embeds)
+function extractVideosFromContent(html: string, postTitle: string, postDate: string): VideoData[] {
+  const videos: VideoData[] = [];
+  const videoIds = new Set<string>();
+  
+  // Pattern 1: YouTube iframes
+  const youtubeIframeRegex = /<iframe[^>]*src=["'](?:https?:)?\/\/(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})[^"']*["'][^>]*>/gi;
+  
+  // Pattern 2: YouTube watch URLs
+  const youtubeWatchRegex = /(?:https?:)?\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/gi;
+  
+  // Pattern 3: youtu.be short URLs
+  const youtubeShortRegex = /(?:https?:)?\/\/youtu\.be\/([a-zA-Z0-9_-]{11})/gi;
+  
+  let match;
+  
+  while ((match = youtubeIframeRegex.exec(html)) !== null) {
+    videoIds.add(match[1]);
+  }
+  
+  while ((match = youtubeWatchRegex.exec(html)) !== null) {
+    videoIds.add(match[1]);
+  }
+  
+  while ((match = youtubeShortRegex.exec(html)) !== null) {
+    videoIds.add(match[1]);
+  }
+  
+  // Convert to VideoData objects (limit to 5)
+  let index = 0;
+  for (const videoId of videoIds) {
+    if (index >= 5) break;
+    
+    videos.push({
+      name: index === 0 ? stripHtml(postTitle) : `${stripHtml(postTitle)} - Video ${index + 1}`,
+      thumbnailUrl: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+      uploadDate: postDate,
+      embedUrl: `https://www.youtube.com/embed/${videoId}`,
+      contentUrl: `https://www.youtube.com/watch?v=${videoId}`
+    });
+    index++;
+  }
+  
+  return videos;
+}
+
 // Parse meta tags from raw AIOSEO HTML with improved regex
 function parseAioseoHead(html: string): Record<string, string> {
   const meta: Record<string, string> = {};
@@ -231,7 +381,9 @@ export function SEO({
   author,
   noindex = false,
   isHomePage = false,
-  faqs
+  faqs,
+  howTo,
+  videos
 }: SEOProps) {
   const location = useLocation();
   
@@ -323,6 +475,19 @@ export function SEO({
     ? generateFAQSchema(finalFaqs) 
     : null;
 
+  // Generate HowTo schema - use provided data or extract from post content
+  const detectedHowTo = post?.content?.rendered 
+    ? extractHowToFromContent(post.content.rendered, post.title.rendered) 
+    : null;
+  const finalHowTo = howTo || detectedHowTo;
+  const howToSchema = finalHowTo ? generateHowToSchema(finalHowTo) : null;
+
+  // Generate Video schema - use provided data or extract from post content
+  const detectedVideos = post?.content?.rendered 
+    ? extractVideosFromContent(post.content.rendered, post.title.rendered, post.date) 
+    : [];
+  const finalVideos = videos || (detectedVideos.length > 0 ? detectedVideos : null);
+
   // Determine robots directive based on environment
   const robotsContent = ENABLE_INDEXING && !noindex ? "index, follow" : "noindex, nofollow";
 
@@ -404,6 +569,20 @@ export function SEO({
           {JSON.stringify(faqSchema)}
         </script>
       )}
+      
+      {/* JSON-LD Schema for HowTo */}
+      {howToSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(howToSchema)}
+        </script>
+      )}
+      
+      {/* JSON-LD Schema for VideoObject(s) */}
+      {finalVideos?.map((video, index) => (
+        <script key={`video-${index}`} type="application/ld+json">
+          {JSON.stringify(generateVideoSchema(video))}
+        </script>
+      ))}
     </Helmet>
   );
 }
