@@ -72,6 +72,8 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
         <img
           src={imageUrl}
           alt={title}
+          width={640}
+          height={480}
           decoding="async"
           onError={() => setImageError(true)}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"

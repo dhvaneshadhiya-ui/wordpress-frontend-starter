@@ -12,7 +12,7 @@ const API_TIMEOUT = 10000 // 10 seconds
 const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
 
 // Static routes that don't need API data
-const STATIC_ROUTES = ['/', '/preview']
+const STATIC_ROUTES = ['/', '/preview', '/llm.html']
 
 // Fetch with timeout
 async function fetchWithTimeout(url, timeout = API_TIMEOUT) {
@@ -348,6 +348,8 @@ function generateSitemap(routes, routeData) {
       
       if (route === '/') {
         priority = '1.0'
+      } else if (route === '/llm.html') {
+        priority = '0.7'
       } else if (info?.type === 'post') {
         priority = '0.8'
         lastmod = info.data.modified ? formatDate(info.data.modified) : now
