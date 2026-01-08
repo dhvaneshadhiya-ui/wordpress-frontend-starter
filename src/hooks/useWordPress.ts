@@ -19,6 +19,7 @@ import {
   getLocalAuthors,
   getLocalAuthorBySlug,
 } from '@/lib/local-data';
+import { getCachedData, setCachedData, generateCacheKey } from '@/lib/local-cache';
 import demoPosts from '@/data/demo-posts.json';
 
 // Query config - stale-while-revalidate strategy
@@ -29,7 +30,7 @@ const GC_TIME = 60 * 60 * 1000; // 1 hour
 // Cast demo posts to WPPost type for placeholder
 const typedDemoPosts = demoPosts as unknown as WPPost[];
 
-// Fetch posts with pagination - stale-while-revalidate for fast perceived loading
+// Fetch posts with pagination - stale-while-revalidate with localStorage caching
 export function usePosts(params: {
   page?: number;
   perPage?: number;
@@ -38,9 +39,20 @@ export function usePosts(params: {
   author?: number;
   search?: string;
 } = {}) {
+  const cacheKey = generateCacheKey('posts', params);
+  
+  type PostsResult = { posts: WPPost[]; totalPages: number; total: number };
+  
   return useQuery({
     queryKey: ['posts', params],
-    queryFn: () => fetchPosts(params),
+    queryFn: async () => {
+      const result = await fetchPosts(params);
+      // Cache successful result to localStorage
+      setCachedData(cacheKey, result);
+      return result;
+    },
+    // Show cached data immediately while fetching fresh
+    placeholderData: () => getCachedData<PostsResult>(cacheKey) ?? undefined,
     staleTime: DEFAULT_STALE_TIME,
     gcTime: GC_TIME,
     retry: 1,
