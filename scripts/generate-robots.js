@@ -1,3 +1,4 @@
+// Generate robots.txt for production/staging environments
 import fs from 'node:fs'
 import path from 'node:path'
 import url from 'node:url'
