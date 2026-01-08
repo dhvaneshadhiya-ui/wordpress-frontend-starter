@@ -29,11 +29,14 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('/src/data/')) {
             return 'data';
           }
-          if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/react-router')) {
+          // Combine React and Radix UI in same chunk to fix loading order
+          if (
+            id.includes('node_modules/react-dom') || 
+            id.includes('node_modules/react/') || 
+            id.includes('node_modules/react-router') ||
+            id.includes('node_modules/@radix-ui')
+          ) {
             return 'vendor';
-          }
-          if (id.includes('node_modules/@radix-ui')) {
-            return 'ui';
           }
           if (id.includes('node_modules/@tanstack')) {
             return 'query';
