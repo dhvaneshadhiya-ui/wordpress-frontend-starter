@@ -2,7 +2,7 @@
  * API utility functions for resilient fetching
  */
 
-const DEFAULT_TIMEOUT = 15000; // 15 seconds
+const DEFAULT_TIMEOUT = 10000; // 10 seconds
 const MAX_RETRIES = 2;
 const RETRY_DELAYS = [1000, 2000];
 

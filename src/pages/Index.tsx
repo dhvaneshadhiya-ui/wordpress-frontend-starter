@@ -1,17 +1,29 @@
+import { useEffect } from 'react';
 import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
 import { usePosts } from '@/hooks/useWordPress';
 import { SEO } from '@/components/SEO';
 import { AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { getFeaturedImageUrl } from '@/lib/wordpress';
 
 const Index = () => {
   const { data, isLoading, error, refetch } = usePosts({ perPage: 12 });
   const posts = data?.posts ?? [];
   const showLoading = isLoading && posts.length === 0;
 
+  // Preload first 4 post images for faster perceived loading
+  useEffect(() => {
+    if (posts.length > 0) {
+      posts.slice(0, 4).forEach((post) => {
+        const img = new Image();
+        img.src = getFeaturedImageUrl(post, 'large');
+      });
+    }
+  }, [posts]);
+
   return (
-    <Layout>
+    <Layout posts={posts}>
       <SEO 
         title="iGeeksBlog - Apple News, Tips & Reviews"
         description="Your daily source for Apple news, how-to guides, tips, and app reviews."
