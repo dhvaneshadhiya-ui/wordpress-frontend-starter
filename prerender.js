@@ -9,8 +9,8 @@ const toAbsolute = (p) => path.resolve(__dirname, p)
 const API_BASE = process.env.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2'
 const SITE_URL = process.env.SITE_URL || 'https://dev.igeeksblog.com'
 
-// Fetch with timeout to prevent hanging
-async function fetchWithTimeout(url, timeout = 4000) {
+// Faster timeout to prevent build hangs
+async function fetchWithTimeout(url, timeout = 2000) {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), timeout)
   
@@ -24,75 +24,47 @@ async function fetchWithTimeout(url, timeout = 4000) {
   }
 }
 
-// Fetch all items from a paginated WordPress endpoint (limited for faster builds)
-async function fetchAllFromWP(endpoint, perPage = 50, maxItems = 50) {
-  const items = []
-  let page = 1
-  let hasMore = true
-  
-  while (hasMore && items.length < maxItems) {
-    try {
-      const response = await fetchWithTimeout(
-        `${API_BASE}/${endpoint}?per_page=${perPage}&page=${page}`,
-        4000
-      )
-      if (!response.ok) {
-        if (response.status === 400) break
-        console.warn(`Warning: ${endpoint} returned ${response.status}`)
-        break
-      }
-      
-      const data = await response.json()
-      items.push(...data)
-      
-      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1')
-      hasMore = page < totalPages
-      page++
-    } catch (error) {
-      console.warn(`Warning: Could not fetch ${endpoint}: ${error.message}`)
-      break
-    }
+// Fetch items from WordPress with strict limits for fast builds
+async function fetchAllFromWP(endpoint, maxItems = 20) {
+  try {
+    const response = await fetchWithTimeout(
+      `${API_BASE}/${endpoint}?per_page=${maxItems}`,
+      2000
+    )
+    if (!response.ok) return []
+    return await response.json()
+  } catch (error) {
+    console.warn(`Warning: Could not fetch ${endpoint}: ${error.message}`)
+    return []
   }
-  
-  return items.slice(0, maxItems)
 }
 
-// Generate all routes to prerender
+// Generate routes to prerender (limited for fast builds)
 async function getRoutesToPrerender() {
-  console.log('Fetching content from WordPress...')
-  console.log('API Base:', API_BASE)
+  const startTime = Date.now()
+  console.log('Fetching content from WordPress (2s timeout per request)...')
   
-  let posts = [], categories = [], tags = [], authors = []
+  // Fetch all in parallel with aggressive timeouts
+  const [posts, categories, tags, authors] = await Promise.all([
+    fetchAllFromWP('posts', 20),
+    fetchAllFromWP('categories', 15),
+    fetchAllFromWP('tags', 15),
+    fetchAllFromWP('users', 10),
+  ])
   
-  try {
-    const results = await Promise.all([
-      fetchAllFromWP('posts', 50, 50),
-      fetchAllFromWP('categories', 50, 50),
-      fetchAllFromWP('tags', 50, 50),
-      fetchAllFromWP('users', 20, 20),
-    ])
-    posts = results[0]
-    categories = results[1]
-    tags = results[2]
-    authors = results[3]
-  } catch (error) {
-    console.warn('Warning: WordPress API unreachable, using minimal routes')
-    console.warn('Error:', error.message)
-  }
-  
+  console.log(`API fetch completed in ${Date.now() - startTime}ms`)
   console.log(`Found: ${posts.length} posts, ${categories.length} categories, ${tags.length} tags, ${authors.length} authors`)
   
   const routes = [
     '/',
     '/preview',
-    '/llm.html', // Static LLM-friendly page for AI crawlers
     ...posts.map(p => `/${p.slug}`),
     ...categories.map(c => `/category/${c.slug}`),
     ...tags.map(t => `/tag/${t.slug}`),
     ...authors.map(a => `/author/${a.slug}`),
   ]
   
-  return { routes, posts, categories, tags, authors }
+  return { routes, posts }
 }
 
 // Ensure directory exists
@@ -145,11 +117,32 @@ ${urlEntries.join('\n')}
 </urlset>`
 }
 
+// Render pages in parallel batches for speed
+async function renderInBatches(routes, template, render, batchSize = 10) {
+  for (let i = 0; i < routes.length; i += batchSize) {
+    const batch = routes.slice(i, i + batchSize)
+    await Promise.all(batch.map(routeUrl => {
+      try {
+        const appHtml = render(routeUrl)
+        const html = template.replace('<!--app-html-->', appHtml)
+        const filePath = routeUrl === '/' ? 'dist/index.html' : `dist${routeUrl}.html`
+        ensureDir(toAbsolute(filePath))
+        fs.writeFileSync(toAbsolute(filePath), html)
+      } catch (error) {
+        console.error(`Failed: ${routeUrl}`)
+      }
+    }))
+    console.log(`Rendered ${Math.min(i + batchSize, routes.length)}/${routes.length} pages`)
+  }
+}
+
 // Main prerender function
 ;(async () => {
+  const buildStart = Date.now()
+  console.log('Starting pre-render build...')
+  
   const template = fs.readFileSync(toAbsolute('dist/index.html'), 'utf-8')
   
-  // Find the entry-server file (handles hash in filename from Vite build)
   const serverAssetsDir = toAbsolute('dist/server/assets')
   const files = fs.readdirSync(serverAssetsDir)
   const entryFile = files.find(f => f.startsWith('entry-server') && f.endsWith('.js'))
@@ -159,33 +152,13 @@ ${urlEntries.join('\n')}
   const { render } = await import(`./dist/server/assets/${entryFile}`)
   
   const { routes, posts } = await getRoutesToPrerender()
-  console.log(`Pre-rendering ${routes.length} routes...`)
+  console.log(`Pre-rendering ${routes.length} routes in parallel batches...`)
   
-  for (const routeUrl of routes) {
-    try {
-      const appHtml = render(routeUrl)
-      const html = template.replace('<!--app-html-->', appHtml)
-      
-      let filePath
-      if (routeUrl === '/') {
-        filePath = 'dist/index.html'
-      } else {
-        filePath = `dist${routeUrl}.html`
-      }
-      
-      ensureDir(toAbsolute(filePath))
-      fs.writeFileSync(toAbsolute(filePath), html)
-      console.log('pre-rendered:', filePath)
-    } catch (error) {
-      console.error(`Failed to prerender ${routeUrl}:`, error.message)
-    }
-  }
+  await renderInBatches(routes, template, render, 10)
   
   // Generate sitemap
-  console.log('Generating sitemap.xml...')
   const sitemap = generateSitemap(routes, posts)
   fs.writeFileSync(toAbsolute('dist/sitemap.xml'), sitemap)
-  console.log(`Sitemap generated with ${routes.length - 1} URLs`)
   
-  console.log('Pre-rendering complete!')
+  console.log(`Build complete in ${((Date.now() - buildStart) / 1000).toFixed(1)}s`)
 })()
