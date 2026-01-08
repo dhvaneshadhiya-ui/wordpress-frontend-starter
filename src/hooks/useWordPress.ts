@@ -41,11 +41,6 @@ export function usePosts(params: {
   return useQuery({
     queryKey: ['posts', params],
     queryFn: () => fetchPosts(params),
-    placeholderData: () => ({
-      posts: typedDemoPosts,
-      totalPages: 1,
-      total: typedDemoPosts.length,
-    }),
     staleTime: DEFAULT_STALE_TIME,
     gcTime: GC_TIME,
     retry: 1,
