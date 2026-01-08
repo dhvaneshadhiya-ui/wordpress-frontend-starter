@@ -112,7 +112,15 @@ ${urlEntries.join('\n')}
 // Main prerender function
 ;(async () => {
   const template = fs.readFileSync(toAbsolute('dist/index.html'), 'utf-8')
-  const { render } = await import('./dist/server/entry-server.js')
+  
+  // Find the entry-server file (handles hash in filename from Vite build)
+  const serverAssetsDir = toAbsolute('dist/server/assets')
+  const files = fs.readdirSync(serverAssetsDir)
+  const entryFile = files.find(f => f.startsWith('entry-server') && f.endsWith('.js'))
+  if (!entryFile) {
+    throw new Error('Could not find entry-server.js in dist/server/assets')
+  }
+  const { render } = await import(`./dist/server/assets/${entryFile}`)
   
   const { routes, posts } = await getRoutesToPrerender()
   console.log(`Pre-rendering ${routes.length} routes...`)
