@@ -27,6 +27,7 @@ const Index = () => {
       <SEO 
         title="iGeeksBlog - Apple News, Tips & Reviews"
         description="Your daily source for Apple news, how-to guides, tips, and app reviews."
+        isHomePage={true}
       />
       <div className="container mx-auto px-4">
         {error && posts.length === 0 ? (

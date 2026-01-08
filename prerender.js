@@ -85,6 +85,7 @@ async function getRoutesToPrerender() {
   const routes = [
     '/',
     '/preview',
+    '/llm.html', // Static LLM-friendly page for AI crawlers
     ...posts.map(p => `/${p.slug}`),
     ...categories.map(c => `/category/${c.slug}`),
     ...tags.map(t => `/tag/${t.slug}`),

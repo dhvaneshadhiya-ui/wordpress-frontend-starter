@@ -12,6 +12,7 @@ interface SEOProps {
   category?: WPCategory;
   author?: WPAuthor;
   noindex?: boolean;
+  isHomePage?: boolean;
 }
 
 const SITE_NAME = 'iGeeksBlog';
@@ -20,11 +21,53 @@ const DEFAULT_IMAGE = 'https://dev.igeeksblog.com/wp-content/uploads/2020/12/ige
 const SITE_URL = 'https://dev.igeeksblog.com';
 const TWITTER_HANDLE = '@igeeksblog';
 
-// Generate Article JSON-LD schema for blog posts
+// Environment-based indexing control
+const ENABLE_INDEXING = import.meta.env.VITE_ENABLE_INDEXING === 'true';
+
+// Organization Schema (site-wide)
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "iGeeksBlog",
+  "url": SITE_URL,
+  "logo": DEFAULT_IMAGE,
+  "description": DEFAULT_DESCRIPTION,
+  "foundingDate": "2012",
+  "sameAs": [
+    "https://twitter.com/igeeksblog",
+    "https://www.facebook.com/iGeeksBlog",
+    "https://www.youtube.com/igeeksblog"
+  ]
+};
+
+// WebSite Schema with SearchAction (for homepage)
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "iGeeksBlog",
+  "url": SITE_URL,
+  "description": DEFAULT_DESCRIPTION,
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": `${SITE_URL}/?s={search_term_string}`,
+    "query-input": "required name=search_term_string"
+  }
+};
+
+// Generate Article JSON-LD schema for blog posts with enhanced fields
 function generateArticleSchema(post: WPPost, imageUrl: string, description: string, canonicalUrl: string) {
   const author = post._embedded?.author?.[0];
   const categories = post._embedded?.['wp:term']?.[0] || [];
+  const tags = post._embedded?.['wp:term']?.[1] || [];
   const primaryCategory = categories[0];
+  
+  // Calculate word count from content
+  const wordCount = post.content?.rendered 
+    ? stripHtml(post.content.rendered).split(/\s+/).filter(Boolean).length 
+    : undefined;
+  
+  // Extract keywords from tags
+  const keywords = tags.map((tag: { name: string }) => tag.name);
   
   return {
     "@context": "https://schema.org",
@@ -34,6 +77,8 @@ function generateArticleSchema(post: WPPost, imageUrl: string, description: stri
     "image": imageUrl,
     "datePublished": post.date,
     "dateModified": post.modified,
+    ...(wordCount && { "wordCount": wordCount }),
+    ...(keywords.length > 0 && { "keywords": keywords.join(", ") }),
     "author": {
       "@type": "Person",
       "name": author?.name || "iGeeksBlog",
@@ -53,7 +98,12 @@ function generateArticleSchema(post: WPPost, imageUrl: string, description: stri
     },
     ...(primaryCategory && {
       "articleSection": primaryCategory.name
-    })
+    }),
+    // Speakable specification for voice search optimization
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": ["h1", ".post-content p:first-of-type"]
+    }
   };
 }
 
@@ -135,7 +185,8 @@ export function SEO({
   post, 
   category,
   author,
-  noindex = false 
+  noindex = false,
+  isHomePage = false
 }: SEOProps) {
   const location = useLocation();
   
@@ -218,15 +269,17 @@ export function SEO({
   // Generate Person schema for author pages
   const personSchema = author ? generatePersonSchema(author) : null;
 
+  // Determine robots directive based on environment
+  const robotsContent = ENABLE_INDEXING && !noindex ? "index, follow" : "noindex, nofollow";
+
   return (
     <Helmet>
       {/* Basic Meta */}
       <title>{finalTitle}</title>
       <meta name="description" content={finalDescription} />
       
-      {/* Robots */}
-      {/* Robots - Force noindex for staging */}
-      <meta name="robots" content="noindex, nofollow" />
+      {/* Robots - Environment-based indexing control */}
+      <meta name="robots" content={robotsContent} />
       
       {/* Open Graph - Common */}
       <meta property="og:type" content={type} />
@@ -257,6 +310,18 @@ export function SEO({
       
       {/* Canonical URL */}
       <link rel="canonical" href={finalUrl} />
+      
+      {/* JSON-LD Schema for Organization (site-wide) */}
+      <script type="application/ld+json">
+        {JSON.stringify(organizationSchema)}
+      </script>
+      
+      {/* JSON-LD Schema for WebSite with SearchAction (homepage only) */}
+      {isHomePage && (
+        <script type="application/ld+json">
+          {JSON.stringify(websiteSchema)}
+        </script>
+      )}
       
       {/* JSON-LD Schema for Articles */}
       {articleSchema && (
