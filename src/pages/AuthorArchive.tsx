@@ -5,6 +5,8 @@ import { PostGrid } from '@/components/PostGrid';
 import { PaginationNav } from '@/components/PaginationNav';
 import { SEO } from '@/components/SEO';
 import { useAuthor, useAuthorPosts } from '@/hooks/useWordPress';
+import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
+import { fetchPosts } from '@/lib/wordpress';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -12,7 +14,20 @@ export default function AuthorArchive() {
   const { slug } = useParams<{ slug: string }>();
   const [page, setPage] = useState(1);
   const { data: author, isLoading: authorLoading } = useAuthor(slug);
-  const { data: postsData, isLoading: postsLoading } = useAuthorPosts(slug, page);
+  const { data: postsData, isLoading: postsLoading, isFetching } = useAuthorPosts(slug, page);
+
+  // Prefetch next page when user scrolls near pagination
+  const prefetchRef = usePrefetchNextPage({
+    currentPage: page,
+    totalPages: postsData?.totalPages || 1,
+    queryKey: ['authorPosts', slug, page + 1],
+    queryFn: () => fetchPosts({ 
+      author: author!.id, 
+      page: page + 1, 
+      perPage: 12 
+    }),
+    enabled: !!author && !!postsData,
+  });
 
   if (authorLoading) {
     return (
@@ -51,6 +66,17 @@ export default function AuthorArchive() {
         image={author.avatar_urls?.['96']}
         author={author}
       />
+      
+      {/* Background refresh indicator */}
+      {isFetching && !postsLoading && (
+        <div className="fixed top-20 right-4 z-50">
+          <div className="bg-primary/10 text-primary text-xs px-3 py-1.5 rounded-full flex items-center gap-2 shadow-sm">
+            <span className="h-2 w-2 bg-primary rounded-full animate-pulse" />
+            Updating...
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto px-4 py-8">
         {/* Author Header */}
         <header className="mb-8 flex items-start gap-6">
@@ -83,6 +109,9 @@ export default function AuthorArchive() {
           isLoading={postsLoading}
           title="Articles"
         />
+
+        {/* Prefetch trigger */}
+        <div ref={prefetchRef} className="h-1" aria-hidden="true" />
 
         {/* Pagination */}
         {postsData && (

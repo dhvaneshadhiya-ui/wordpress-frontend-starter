@@ -5,13 +5,28 @@ import { PostGrid } from '@/components/PostGrid';
 import { PaginationNav } from '@/components/PaginationNav';
 import { SEO } from '@/components/SEO';
 import { useCategory, useCategoryPosts } from '@/hooks/useWordPress';
+import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
+import { fetchPosts } from '@/lib/wordpress';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function CategoryArchive() {
   const { slug } = useParams<{ slug: string }>();
   const [page, setPage] = useState(1);
   const { data: category, isLoading: categoryLoading } = useCategory(slug);
-  const { data: postsData, isLoading: postsLoading } = useCategoryPosts(slug, page);
+  const { data: postsData, isLoading: postsLoading, isFetching } = useCategoryPosts(slug, page);
+
+  // Prefetch next page when user scrolls near pagination
+  const prefetchRef = usePrefetchNextPage({
+    currentPage: page,
+    totalPages: postsData?.totalPages || 1,
+    queryKey: ['categoryPosts', slug, page + 1],
+    queryFn: () => fetchPosts({ 
+      categories: [category!.id], 
+      page: page + 1, 
+      perPage: 12 
+    }),
+    enabled: !!category && !!postsData,
+  });
 
   if (categoryLoading) {
     return (
@@ -44,6 +59,17 @@ export default function CategoryArchive() {
         url={`https://dev.igeeksblog.com/category/${category.slug}`}
         category={category}
       />
+      
+      {/* Background refresh indicator */}
+      {isFetching && !postsLoading && (
+        <div className="fixed top-20 right-4 z-50">
+          <div className="bg-primary/10 text-primary text-xs px-3 py-1.5 rounded-full flex items-center gap-2 shadow-sm">
+            <span className="h-2 w-2 bg-primary rounded-full animate-pulse" />
+            Updating...
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto px-4 py-8">
         {/* Category Header */}
         <header className="mb-8">
@@ -63,6 +89,9 @@ export default function CategoryArchive() {
           posts={postsData?.posts || []}
           isLoading={postsLoading}
         />
+
+        {/* Prefetch trigger */}
+        <div ref={prefetchRef} className="h-1" aria-hidden="true" />
 
         {/* Pagination */}
         {postsData && (
