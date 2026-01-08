@@ -71,6 +71,10 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  ssr: {
+    // Bundle CommonJS packages into SSR build to fix ESM import issues
+    noExternal: ['react-helmet-async']
+  },
   build: {
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
