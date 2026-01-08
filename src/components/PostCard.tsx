@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { WPPost, getFeaturedImageUrl, getAuthor, getCategories, getReadingTime, formatDate, stripHtml } from '@/lib/wordpress';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { usePrefetchPost } from '@/hooks/usePrefetch';
 
 interface PostCardProps {
   post: WPPost;
@@ -18,6 +19,28 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export function PostCard({ post, variant = 'default' }: PostCardProps) {
   const [imageError, setImageError] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef<HTMLAnchorElement>(null);
+  const prefetchPost = usePrefetchPost();
+
+  // Intersection Observer for lazy loading images
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' } // Start loading 200px before visible
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
   
   if (!post || !post.id) {
     console.warn('[PostCard] Invalid post data received:', post);
@@ -38,15 +61,17 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
   return (
     <Link
       to={`/${post.slug}`}
+      onMouseEnter={() => prefetchPost(post.slug)}
+      onFocus={() => prefetchPost(post.slug)}
       className="group relative block overflow-hidden rounded-lg aspect-[4/3]"
       style={{ backgroundColor: '#1e293b' }}
+      ref={cardRef}
     >
-      {/* Background Image */}
-      {!showFallback && (
+      {/* Background Image - only load when visible */}
+      {!showFallback && isVisible && (
         <img
           src={imageUrl}
           alt={title}
-          loading="lazy"
           decoding="async"
           onError={() => setImageError(true)}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -54,7 +79,7 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
       )}
       
       {/* Dark fallback with gradient */}
-      {showFallback && (
+      {(showFallback || !isVisible) && (
         <div 
           className="absolute inset-0 flex items-center justify-center"
           style={{ background: 'linear-gradient(135deg, #334155 0%, #0f172a 100%)' }}
