@@ -14,6 +14,7 @@ import TagArchive from './pages/TagArchive';
 import AuthorArchive from './pages/AuthorArchive';
 import PreviewPost from './pages/PreviewPost';
 import NotFound from './pages/NotFound';
+import { ScrollToTop } from '@/components/ScrollToTop';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +35,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/preview" element={<PreviewPost />} />
