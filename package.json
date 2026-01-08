@@ -4,16 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "npm run build:client && npm run build:server && npm run build:prerender && npm run build:robots",
-  "build:client": "vite build",
-  "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
-  "build:prerender": "node prerender.js",
-  "build:robots": "node scripts/generate-robots.js",
-  "build:dev": "vite build --mode development",
-  "lint": "eslint .",
-  "preview": "vite preview"
-},
+    "dev": "vite",
+    "build": "npm run build:client && npm run build:server && npm run build:prerender && npm run build:robots",
+    "build:client": "vite build",
+    "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
+    "build:prerender": "node prerender.js",
+    "build:robots": "node scripts/generate-robots.js",
+    "build:dev": "vite build --mode development",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
