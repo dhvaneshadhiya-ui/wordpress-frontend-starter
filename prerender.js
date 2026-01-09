@@ -504,11 +504,14 @@ ${urlEntries.join('\n')}
   // Render all routes
   for (const routeUrl of routes) {
     try {
-      // Get app shell HTML
-      const appHtml = render(routeUrl)
+      // Get route data for SSR
+      const routeInfo = routeData.get(routeUrl)
+      
+      // Get app shell HTML (pass route data for full content rendering)
+      const appHtml = render(routeUrl, routeInfo)
       
       // Get SEO head for this route
-      const seoHead = generateSEOHead(routeUrl, routeData.get(routeUrl))
+      const seoHead = generateSEOHead(routeUrl, routeInfo)
       
       // Inject into template
       let html = template
