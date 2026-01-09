@@ -50,7 +50,7 @@ interface SEOProps {
 
 const SITE_NAME = 'iGeeksBlog';
 const DEFAULT_DESCRIPTION = 'Your daily source for Apple news, how-to guides, tips, and app reviews.';
-const DEFAULT_IMAGE = 'https://dev.igeeksblog.com/wp-content/uploads/2020/12/igeeksblog-logo.png';
+const DEFAULT_IMAGE = `${FRONTEND_URL}/og-default.png`;
 const TWITTER_HANDLE = '@igeeksblog';
 
 // Environment-based indexing control
