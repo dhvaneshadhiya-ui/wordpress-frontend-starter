@@ -11,6 +11,21 @@ const WP_API_URL = 'https://dev.igeeksblog.com/wp-json/wp/v2'
 const API_TIMEOUT = 10000 // 10 seconds
 const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
 
+// Category slugs that trigger NewsArticle schema for Google News eligibility
+const NEWS_CATEGORY_SLUGS = ['news', 'breaking-news', 'breaking', 'updates', 'announcements', 'latest']
+
+// Check if post belongs to a news category
+function isNewsArticle(post) {
+  try {
+    const categories = post._embedded?.['wp:term']?.[0] || []
+    return categories.some(cat => 
+      NEWS_CATEGORY_SLUGS.includes(cat.slug?.toLowerCase())
+    )
+  } catch {
+    return false
+  }
+}
+
 // Static routes that don't need API data
 const STATIC_ROUTES = ['/', '/preview', '/llm.html']
 
@@ -209,9 +224,10 @@ function generateSEOHead(route, routeInfo) {
     if (categories[0]) ogImageParams.set('category', categories[0])
     const ogImageUrl = `${SITE_URL}/og?${ogImageParams.toString()}`
     
+    const isNews = isNewsArticle(data)
     const articleSchema = {
       "@context": "https://schema.org",
-      "@type": "BlogPosting",
+      "@type": isNews ? "NewsArticle" : "BlogPosting",
       "headline": stripHtml(data.title?.rendered || ''),
       "description": stripHtml(data.excerpt?.rendered || ''),
       "image": featuredImage ? {
@@ -240,6 +256,10 @@ function generateSEOHead(route, routeInfo) {
         "@id": canonicalUrl
       },
       "keywords": categories.join(', '),
+      // NewsArticle-specific: dateline for news content
+      ...(isNews && {
+        "dateline": "San Francisco, CA"
+      }),
       "speakable": {
         "@type": "SpeakableSpecification",
         "cssSelector": ["h1", ".post-content p:first-of-type"]

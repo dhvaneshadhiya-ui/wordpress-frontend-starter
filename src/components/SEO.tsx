@@ -1,8 +1,20 @@
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { WPPost, WPCategory, WPAuthor, stripHtml } from '@/lib/wordpress';
-import { FRONTEND_URL } from '@/lib/constants';
+import { FRONTEND_URL, NEWS_CATEGORY_SLUGS } from '@/lib/constants';
 import { generateOgImageUrl } from '@/lib/og-utils';
+
+// Detect if post is news-type content based on categories
+function isNewsArticle(post: WPPost): boolean {
+  try {
+    const categories = post._embedded?.['wp:term']?.[0] || [];
+    return categories.some((cat: { slug: string }) => 
+      NEWS_CATEGORY_SLUGS.includes(cat.slug.toLowerCase())
+    );
+  } catch {
+    return false;
+  }
+}
 
 interface FAQ {
   question: string;
@@ -95,11 +107,13 @@ const websiteSchema = {
 };
 
 // Generate Article JSON-LD schema for blog posts with enhanced fields
+// Uses NewsArticle type for news categories to improve Google News eligibility
 function generateArticleSchema(post: WPPost, imageUrl: string, description: string, canonicalUrl: string) {
   const author = post._embedded?.author?.[0];
   const categories = post._embedded?.['wp:term']?.[0] || [];
   const tags = post._embedded?.['wp:term']?.[1] || [];
   const primaryCategory = categories[0];
+  const isNews = isNewsArticle(post);
   
   // Calculate word count from content
   const wordCount = post.content?.rendered 
@@ -111,7 +125,7 @@ function generateArticleSchema(post: WPPost, imageUrl: string, description: stri
   
   return {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": isNews ? "NewsArticle" : "BlogPosting",
     "headline": stripHtml(post.title.rendered),
     "description": description,
     "image": {
@@ -143,6 +157,10 @@ function generateArticleSchema(post: WPPost, imageUrl: string, description: stri
     },
     ...(primaryCategory && {
       "articleSection": primaryCategory.name
+    }),
+    // NewsArticle-specific: dateline for news content
+    ...(isNews && {
+      "dateline": "San Francisco, CA"
     }),
     // Speakable specification for voice search optimization
     "speakable": {
