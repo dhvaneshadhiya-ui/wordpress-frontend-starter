@@ -13,6 +13,12 @@
   [headers.values]
     Cache-Control = "public, s-maxage=31536000, immutable"
 
+# Block indexing via HTTP header (staging site)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
 # Build settings
 [build]
   command = "npm run build"
