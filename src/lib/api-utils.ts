@@ -56,8 +56,6 @@ export async function fetchWithRetry(
 ): Promise<Response> {
   let lastError: Error | null = null;
   
-  console.log(`[API] Fetching: ${url}`);
-  
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const response = await fetchWithTimeout(url, options, timeout);
@@ -69,7 +67,6 @@ export async function fetchWithRetry(
         continue;
       }
       
-      console.log(`[API] Success: ${url} (status: ${response.status})`);
       return response;
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
