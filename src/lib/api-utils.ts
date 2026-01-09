@@ -2,9 +2,9 @@
  * API utility functions for resilient fetching
  */
 
-const DEFAULT_TIMEOUT = 15000; // 15 seconds (increased for stability)
-const MAX_RETRIES = 3;
-const RETRY_DELAYS = [1000, 2000, 4000]; // Progressive backoff
+const DEFAULT_TIMEOUT = 8000; // 8 seconds (reduced for faster fallback)
+const MAX_RETRIES = 2; // Fewer retries for faster failure
+const RETRY_DELAYS = [500, 1000, 2000]; // Faster backoff
 
 // Request deduplication - prevent duplicate concurrent requests
 const inflightRequests = new Map<string, Promise<Response>>();
