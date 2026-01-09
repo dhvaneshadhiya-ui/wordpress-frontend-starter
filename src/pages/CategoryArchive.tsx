@@ -9,6 +9,7 @@ import { useCategory, useCategoryPosts } from '@/hooks/useWordPress';
 import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
 import { fetchPosts } from '@/lib/wordpress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { FRONTEND_URL } from '@/lib/constants';
 
 export default function CategoryArchive() {
   const { slug } = useParams<{ slug: string }>();
@@ -32,6 +33,10 @@ export default function CategoryArchive() {
   if (categoryLoading) {
     return (
       <Layout>
+        <SEO 
+          title="Loading..."
+          url={`${FRONTEND_URL}/category/${slug}`}
+        />
         <div className="container mx-auto px-4 py-8">
           <Skeleton className="mb-2 h-10 w-48" />
           <Skeleton className="h-4 w-32" />
@@ -57,7 +62,7 @@ export default function CategoryArchive() {
       <SEO 
         title={category.name}
         description={category.description || `Browse all ${category.name} articles on iGeeksBlog`}
-        url={`https://wp.dev.igeeksblog.com/category/${category.slug}`}
+        url={`${FRONTEND_URL}/category/${category.slug}`}
         category={category}
       />
       

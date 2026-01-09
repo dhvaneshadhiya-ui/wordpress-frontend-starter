@@ -10,6 +10,7 @@ import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
 import { fetchPosts } from '@/lib/wordpress';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { FRONTEND_URL } from '@/lib/constants';
 
 export default function AuthorArchive() {
   const { slug } = useParams<{ slug: string }>();
@@ -33,6 +34,10 @@ export default function AuthorArchive() {
   if (authorLoading) {
     return (
       <Layout>
+        <SEO 
+          title="Loading..."
+          url={`${FRONTEND_URL}/author/${slug}`}
+        />
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center gap-4">
             <Skeleton className="h-20 w-20 rounded-full" />
@@ -63,7 +68,7 @@ export default function AuthorArchive() {
       <SEO 
         title={`${author.name} - Author`}
         description={author.description || `Articles written by ${author.name} on iGeeksBlog`}
-        url={`https://wp.dev.igeeksblog.com/author/${author.slug}`}
+        url={`${FRONTEND_URL}/author/${author.slug}`}
         image={author.avatar_urls?.['96']}
         author={author}
       />

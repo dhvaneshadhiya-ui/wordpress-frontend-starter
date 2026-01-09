@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { WPPost, WPCategory, WPAuthor, stripHtml } from '@/lib/wordpress';
+import { FRONTEND_URL } from '@/lib/constants';
 
 interface FAQ {
   question: string;
@@ -49,7 +50,6 @@ interface SEOProps {
 const SITE_NAME = 'iGeeksBlog';
 const DEFAULT_DESCRIPTION = 'Your daily source for Apple news, how-to guides, tips, and app reviews.';
 const DEFAULT_IMAGE = 'https://dev.igeeksblog.com/wp-content/uploads/2020/12/igeeksblog-logo.png';
-const SITE_URL = 'https://wp.dev.igeeksblog.com';
 const TWITTER_HANDLE = '@igeeksblog';
 
 // Environment-based indexing control
@@ -60,7 +60,7 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "iGeeksBlog",
-  "url": SITE_URL,
+  "url": FRONTEND_URL,
   "logo": DEFAULT_IMAGE,
   "description": DEFAULT_DESCRIPTION,
   "foundingDate": "2012",
@@ -76,11 +76,11 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "iGeeksBlog",
-  "url": SITE_URL,
+  "url": FRONTEND_URL,
   "description": DEFAULT_DESCRIPTION,
   "potentialAction": {
     "@type": "SearchAction",
-    "target": `${SITE_URL}/?s={search_term_string}`,
+    "target": `${FRONTEND_URL}/?s={search_term_string}`,
     "query-input": "required name=search_term_string"
   }
 };
@@ -113,7 +113,7 @@ function generateArticleSchema(post: WPPost, imageUrl: string, description: stri
     "author": {
       "@type": "Person",
       "name": author?.name || "iGeeksBlog",
-      "url": author?.slug ? `${SITE_URL}/author/${author.slug}` : SITE_URL
+      "url": author?.slug ? `${FRONTEND_URL}/author/${author.slug}` : FRONTEND_URL
     },
     "publisher": {
       "@type": "Organization",
@@ -158,7 +158,7 @@ function generatePersonSchema(author: WPAuthor) {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": author.name,
-    "url": `${SITE_URL}/author/${author.slug}`,
+    "url": `${FRONTEND_URL}/author/${author.slug}`,
     "description": author.description || undefined,
     "image": author.avatar_urls?.['96']
   };
@@ -393,7 +393,7 @@ export function SEO({
   const yoastData = post?.yoast_head_json;
   
   // Generate dynamic canonical URL from current path
-  const dynamicUrl = `${SITE_URL}${location.pathname}`;
+  const dynamicUrl = `${FRONTEND_URL}${location.pathname}`;
   
   // Priority: AIOSEO JSON > AIOSEO Parsed HTML > Yoast > Props > Defaults
   const finalTitle = 
@@ -428,7 +428,7 @@ export function SEO({
   let finalUrl: string;
   if (type === 'article') {
     // Articles MUST use the explicit URL - never trust AIOSEO canonical for articles
-    finalUrl = url || `${SITE_URL}/${post?.slug || location.pathname.slice(1)}`;
+    finalUrl = url || `${FRONTEND_URL}/${post?.slug || location.pathname.slice(1)}`;
   } else {
     finalUrl = 
       aioseoParsed.canonical || 
@@ -441,7 +441,7 @@ export function SEO({
   const postAuthor = post?._embedded?.author?.[0];
   const postCategories = post?._embedded?.['wp:term']?.[0] || [];
   const primaryCategory = postCategories[0];
-  const authorUrl = postAuthor?.slug ? `${SITE_URL}/author/${postAuthor.slug}` : undefined;
+  const authorUrl = postAuthor?.slug ? `${FRONTEND_URL}/author/${postAuthor.slug}` : undefined;
 
   // Generate Article schema for blog posts
   const articleSchema = (type === 'article' && post) 
@@ -450,14 +450,14 @@ export function SEO({
 
   // Generate breadcrumb schema
   const breadcrumbs: { name: string; url: string }[] = [
-    { name: 'Home', url: SITE_URL }
+    { name: 'Home', url: FRONTEND_URL }
   ];
   
   if (type === 'article' && post) {
     if (primaryCategory) {
       breadcrumbs.push({ 
         name: primaryCategory.name, 
-        url: `${SITE_URL}/category/${primaryCategory.slug}` 
+        url: `${FRONTEND_URL}/category/${primaryCategory.slug}` 
       });
     }
     breadcrumbs.push({ 

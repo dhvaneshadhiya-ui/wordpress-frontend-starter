@@ -6,6 +6,7 @@ import { SEO } from '@/components/SEO';
 import { AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getFeaturedImageUrl } from '@/lib/wordpress';
+import { FRONTEND_URL } from '@/lib/constants';
 
 const Index = () => {
   const { data, isLoading, isFetching, error, refetch } = usePosts({ perPage: 12 });
@@ -28,6 +29,7 @@ const Index = () => {
         title="iGeeksBlog - Apple News, Tips & Reviews"
         description="Your daily source for Apple news, how-to guides, tips, and app reviews."
         isHomePage={true}
+        url={FRONTEND_URL}
       />
       <div className="container mx-auto px-4">
         {/* Screen reader only H1 for SEO */}

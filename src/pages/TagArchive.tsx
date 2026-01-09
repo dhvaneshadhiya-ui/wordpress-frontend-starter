@@ -8,6 +8,7 @@ import { useTag, useTagPosts } from '@/hooks/useWordPress';
 import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
 import { fetchPosts } from '@/lib/wordpress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { FRONTEND_URL } from '@/lib/constants';
 
 export default function TagArchive() {
   const { slug } = useParams<{ slug: string }>();
@@ -31,6 +32,10 @@ export default function TagArchive() {
   if (tagLoading) {
     return (
       <Layout>
+        <SEO 
+          title="Loading..."
+          url={`${FRONTEND_URL}/tag/${slug}`}
+        />
         <div className="container mx-auto px-4 py-8">
           <Skeleton className="mb-2 h-10 w-48" />
           <Skeleton className="h-4 w-32" />
@@ -56,7 +61,7 @@ export default function TagArchive() {
       <SEO 
         title={`${tag.name} Articles`}
         description={`Browse all articles tagged with ${tag.name} on iGeeksBlog`}
-        url={`https://wp.dev.igeeksblog.com/tag/${tag.slug}`}
+        url={`${FRONTEND_URL}/tag/${tag.slug}`}
       />
       
       {/* Background refresh indicator */}
