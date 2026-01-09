@@ -2,7 +2,7 @@
 // This generates static HTML at build time via prerender.js
 
 interface RouteInfo {
-  type: 'post' | 'category' | 'tag' | 'author' | 'homepage';
+  type: 'post' | 'category' | 'tag' | 'author' | 'homepage' | 'page';
   data: any;
 }
 
@@ -237,11 +237,15 @@ function renderPostHTML(post: any): string {
   `.trim();
 }
 
-// Render category/tag archive HTML
+// Render category/tag archive HTML with post grid
 function renderArchiveHTML(type: string, data: any): string {
   const title = decodeHtmlEntities(data.name || '');
   const description = decodeHtmlEntities(stripHtml(data.description || ''));
   const typeName = type === 'category' ? 'Category' : type === 'tag' ? 'Tag' : 'Author';
+  const posts = data.posts || [];
+  const postGrid = posts.length > 0 
+    ? posts.map((post: any) => renderPostCard(post)).join('\n')
+    : '<p class="text-muted-foreground">No articles found.</p>';
 
   return `
     ${renderHeader()}
@@ -259,9 +263,14 @@ function renderArchiveHTML(type: string, data: any): string {
               ${description}
             </p>
           ` : ''}
+          <p class="text-sm text-muted-foreground mt-2">
+            ${data.count || posts.length} ${(data.count || posts.length) === 1 ? 'article' : 'articles'}
+          </p>
         </header>
         <section aria-label="${title} articles">
-          <p class="text-muted-foreground">Loading articles...</p>
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            ${postGrid}
+          </div>
         </section>
       </main>
     </div>
@@ -269,11 +278,15 @@ function renderArchiveHTML(type: string, data: any): string {
   `.trim();
 }
 
-// Render author archive HTML
+// Render author archive HTML with post grid
 function renderAuthorHTML(data: any): string {
   const name = decodeHtmlEntities(data.name || '');
   const description = decodeHtmlEntities(stripHtml(data.description || ''));
   const avatar = data.avatar_urls?.['96'] || '';
+  const posts = data.posts || [];
+  const postGrid = posts.length > 0 
+    ? posts.map((post: any) => renderPostCard(post)).join('\n')
+    : '<p class="text-muted-foreground">No articles found.</p>';
 
   return `
     ${renderHeader()}
@@ -304,10 +317,40 @@ function renderAuthorHTML(data: any): string {
               ${description}
             </p>
           ` : ''}
+          <p class="text-sm text-muted-foreground mt-2">
+            ${posts.length} ${posts.length === 1 ? 'article' : 'articles'}
+          </p>
         </header>
         <section aria-label="Articles by ${name}">
-          <p class="text-muted-foreground">Loading articles...</p>
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            ${postGrid}
+          </div>
         </section>
+      </main>
+    </div>
+    ${renderFooter()}
+  `.trim();
+}
+
+// Render static page HTML (About, Contact, Privacy Policy)
+function renderPageHTML(page: any): string {
+  const title = decodeHtmlEntities(stripHtml(page.title?.rendered || ''));
+  const content = page.content?.rendered || '';
+
+  return `
+    ${renderHeader()}
+    <div class="min-h-screen bg-background">
+      <main class="max-w-4xl mx-auto px-4 py-8">
+        <article>
+          <header class="mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold">
+              ${title}
+            </h1>
+          </header>
+          <div class="prose prose-lg max-w-none">
+            ${content}
+          </div>
+        </article>
       </main>
     </div>
     ${renderFooter()}
@@ -408,6 +451,11 @@ export function render(url: string, routeInfo?: RouteInfo): string {
   // For author archives
   if (routeInfo?.type === 'author') {
     return renderAuthorHTML(routeInfo.data);
+  }
+  
+  // For static pages
+  if (routeInfo?.type === 'page') {
+    return renderPageHTML(routeInfo.data);
   }
   
   // For other routes, return shell with header/footer

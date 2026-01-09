@@ -238,6 +238,35 @@ export async function fetchAuthorBySlug(slug: string): Promise<WPAuthor | null> 
   return authors[0] || null;
 }
 
+// WordPress Page interface
+export interface WPPage {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  content: { rendered: string };
+  excerpt: { rendered: string };
+  date: string;
+  modified: string;
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{
+      source_url: string;
+      alt_text: string;
+    }>;
+  };
+}
+
+// Fetch single page by slug
+export async function fetchPage(slug: string): Promise<WPPage | null> {
+  const response = await fetchWithRetry(`${API_BASE}/pages?slug=${slug}&_embed`);
+  
+  if (!response.ok) {
+    throw new ApiError(`Failed to fetch page: ${response.status}`, response.status);
+  }
+
+  const pages = await response.json();
+  return pages[0] || null;
+}
+
 // Helper functions
 export function getFeaturedImageUrl(post: WPPost, size: 'full' | 'large' | 'medium' = 'large'): string {
   const media = post._embedded?.['wp:featuredmedia']?.[0];
