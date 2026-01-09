@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 
 interface Props {
   children: ReactNode;
+  onReset?: () => void;
 }
 
 interface State {
@@ -26,9 +27,10 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   handleRetry = () => {
-    // Clear any cached state and reload
+    // Reset React Query state if available
+    this.props.onReset?.();
+    // Clear error state
     this.setState({ hasError: false, error: null });
-    window.location.reload();
   };
 
   render() {

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { SEO } from '@/components/SEO';
@@ -14,6 +15,18 @@ import { FRONTEND_URL } from '@/lib/constants';
 export default function SinglePost() {
   const { slug } = useParams<{ slug: string }>();
   const { data: post, isLoading, error, isError } = usePost(slug);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+  
+  // Show error state after 15s of loading (API is likely down)
+  useEffect(() => {
+    if (isLoading) {
+      setLoadingTimeout(false);
+      const timeout = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 15000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isLoading, slug]);
   const { data: redirect, isLoading: redirectLoading } = useRedirect(slug);
   
   // Get primary category for related posts
@@ -50,7 +63,8 @@ export default function SinglePost() {
   }
 
   // Show loading only while fetching post (redirect check is async and non-blocking)
-  if (isLoading) {
+  // If loading takes too long, show error state
+  if (isLoading && !loadingTimeout) {
     return (
       <Layout>
         <SEO 
@@ -72,17 +86,24 @@ export default function SinglePost() {
     );
   }
 
-  if (isError || !post) {
+  if (isError || !post || loadingTimeout) {
+    const isTimeout = loadingTimeout && !isError;
     return (
       <Layout>
         <SEO 
-          title="Post Not Found" 
+          title={isTimeout ? "Loading Timeout" : "Post Not Found"} 
           type="article"
           url={`${FRONTEND_URL}/${slug}`}
         />
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-2xl font-bold text-foreground">Post not found</h1>
-          <p className="mt-2 text-muted-foreground">The article you're looking for doesn't exist.</p>
+          <h1 className="text-2xl font-bold text-foreground">
+            {isTimeout ? "Unable to load article" : "Post not found"}
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            {isTimeout 
+              ? "The server is taking too long to respond. Please try again later."
+              : "The article you're looking for doesn't exist."}
+          </p>
           <Link 
             to="/" 
             className="mt-6 inline-block rounded-lg bg-primary px-6 py-3 text-primary-foreground hover:opacity-90 transition-opacity"

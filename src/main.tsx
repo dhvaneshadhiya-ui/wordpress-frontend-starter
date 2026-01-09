@@ -15,8 +15,9 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 5 * 60 * 1000,
       gcTime: 30 * 60 * 1000,
-      retry: 2,
+      retry: 1, // Reduced for faster fallback
       refetchOnWindowFocus: false,
+      throwOnError: false, // Never throw - handle via error state
     },
   },
 });
