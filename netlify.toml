@@ -18,8 +18,10 @@
   command = "npm run build"
   publish = "dist"
 
-# Redirects for SPA
+# Redirects for SPA - only apply if file doesn't exist
+# This allows pre-rendered .html files from SSG to be served directly
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
