@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
@@ -10,13 +10,27 @@ import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
 import { fetchPosts } from '@/lib/wordpress';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 import { FRONTEND_URL } from '@/lib/constants';
+import { RefreshCw } from 'lucide-react';
 
 export default function AuthorArchive() {
   const { slug } = useParams<{ slug: string }>();
   const [page, setPage] = useState(1);
-  const { data: author, isLoading: authorLoading } = useAuthor(slug);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+  const { data: author, isLoading: authorLoading, refetch } = useAuthor(slug);
   const { data: postsData, isLoading: postsLoading, isFetching } = useAuthorPosts(slug, page);
+
+  // Loading timeout - show error after 15 seconds
+  useEffect(() => {
+    if (authorLoading) {
+      setLoadingTimeout(false);
+      const timeout = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 15000);
+      return () => clearTimeout(timeout);
+    }
+  }, [authorLoading]);
 
   // Prefetch next page when user scrolls near pagination
   const prefetchRef = usePrefetchNextPage({
@@ -31,7 +45,7 @@ export default function AuthorArchive() {
     enabled: !!author && !!postsData,
   });
 
-  if (authorLoading) {
+  if (authorLoading && !loadingTimeout) {
     return (
       <Layout>
         <SEO 
@@ -51,13 +65,24 @@ export default function AuthorArchive() {
     );
   }
 
-  if (!author) {
+  if (!author || loadingTimeout) {
     return (
       <Layout>
-        <SEO title="Author Not Found" />
+        <SEO title="Author Not Found" url={`${FRONTEND_URL}/author/${slug}`} />
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-2xl font-bold text-foreground">Author not found</h1>
-          <p className="mt-2 text-muted-foreground">The author you're looking for doesn't exist.</p>
+          <h1 className="text-2xl font-bold text-foreground">
+            {loadingTimeout ? 'Unable to load author' : 'Author not found'}
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            {loadingTimeout 
+              ? 'The server is taking too long to respond. Please try again.' 
+              : "The author you're looking for doesn't exist."
+            }
+          </p>
+          <Button onClick={() => refetch()} className="mt-4" variant="outline">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Try Again
+          </Button>
         </div>
       </Layout>
     );

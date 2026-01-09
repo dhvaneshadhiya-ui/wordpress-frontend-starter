@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
@@ -8,13 +8,27 @@ import { useTag, useTagPosts } from '@/hooks/useWordPress';
 import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
 import { fetchPosts } from '@/lib/wordpress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 import { FRONTEND_URL } from '@/lib/constants';
+import { RefreshCw } from 'lucide-react';
 
 export default function TagArchive() {
   const { slug } = useParams<{ slug: string }>();
   const [page, setPage] = useState(1);
-  const { data: tag, isLoading: tagLoading } = useTag(slug);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+  const { data: tag, isLoading: tagLoading, refetch } = useTag(slug);
   const { data: postsData, isLoading: postsLoading, isFetching } = useTagPosts(slug, page);
+
+  // Loading timeout - show error after 15 seconds
+  useEffect(() => {
+    if (tagLoading) {
+      setLoadingTimeout(false);
+      const timeout = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 15000);
+      return () => clearTimeout(timeout);
+    }
+  }, [tagLoading]);
 
   // Prefetch next page when user scrolls near pagination
   const prefetchRef = usePrefetchNextPage({
@@ -29,7 +43,7 @@ export default function TagArchive() {
     enabled: !!tag && !!postsData,
   });
 
-  if (tagLoading) {
+  if (tagLoading && !loadingTimeout) {
     return (
       <Layout>
         <SEO 
@@ -44,13 +58,24 @@ export default function TagArchive() {
     );
   }
 
-  if (!tag) {
+  if (!tag || loadingTimeout) {
     return (
       <Layout>
-        <SEO title="Tag Not Found" />
+        <SEO title="Tag Not Found" url={`${FRONTEND_URL}/tag/${slug}`} />
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-2xl font-bold text-foreground">Tag not found</h1>
-          <p className="mt-2 text-muted-foreground">The tag you're looking for doesn't exist.</p>
+          <h1 className="text-2xl font-bold text-foreground">
+            {loadingTimeout ? 'Unable to load tag' : 'Tag not found'}
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            {loadingTimeout 
+              ? 'The server is taking too long to respond. Please try again.' 
+              : "The tag you're looking for doesn't exist."
+            }
+          </p>
+          <Button onClick={() => refetch()} className="mt-4" variant="outline">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Try Again
+          </Button>
         </div>
       </Layout>
     );
