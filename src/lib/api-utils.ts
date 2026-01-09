@@ -3,8 +3,8 @@
  */
 
 const DEFAULT_TIMEOUT = 8000; // 8 seconds (reduced for faster fallback)
-const MAX_RETRIES = 2; // Fewer retries for faster failure
-const RETRY_DELAYS = [500, 1000, 2000]; // Faster backoff
+const MAX_RETRIES = 1; // Reduced for faster failure with fallback
+const RETRY_DELAYS = [500, 1000]; // Faster backoff
 
 // Request deduplication - prevent duplicate concurrent requests
 const inflightRequests = new Map<string, Promise<Response>>();

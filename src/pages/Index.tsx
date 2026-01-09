@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
 import { usePosts } from '@/hooks/useWordPress';
@@ -18,6 +18,22 @@ const Index = () => {
   const { data, isLoading, isFetching, error, refetch } = usePosts({ perPage: 12 });
   const posts = data?.posts ?? [];
   const showLoading = isLoading && posts.length === 0;
+  
+  // Hide "updating" indicator after timeout if API keeps failing
+  const [showUpdating, setShowUpdating] = useState(true);
+  
+  useEffect(() => {
+    if (isFetching) {
+      setShowUpdating(true);
+      // Hide updating indicator after 10 seconds if still fetching
+      const timeout = setTimeout(() => {
+        setShowUpdating(false);
+      }, 10000);
+      return () => clearTimeout(timeout);
+    } else {
+      setShowUpdating(false);
+    }
+  }, [isFetching]);
   
   // Detect if we're showing demo/cached data due to API failure
   const isOffline = useMemo(() => {
@@ -58,8 +74,8 @@ const Index = () => {
         {/* Screen reader only H1 for SEO */}
         <h1 className="sr-only">iGeeksBlog - Apple News, Tips & Reviews</h1>
         
-        {/* Background refresh indicator */}
-        {isFetching && !isLoading && (
+        {/* Background refresh indicator - with timeout to prevent infinite display */}
+        {isFetching && !isLoading && showUpdating && (
           <div className="fixed top-20 right-4 z-50">
             <div className="bg-primary/10 text-primary text-xs px-3 py-1.5 rounded-full flex items-center gap-2 shadow-sm">
               <span className="h-2 w-2 bg-primary rounded-full animate-pulse" />
