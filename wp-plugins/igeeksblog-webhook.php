@@ -1,19 +1,23 @@
 <?php
 /**
- * Plugin Name: iGeeksBlog Vercel Webhook
- * Description: Automatically triggers Vercel rebuild when posts are published, updated, or deleted
- * Version: 1.0.0
+ * Plugin Name: iGeeksBlog Deploy Webhook
+ * Description: Automatically triggers site rebuild when posts are published, updated, or deleted. Works with Vercel, Netlify, or any webhook-based deployment.
+ * Version: 1.1.0
  * Author: iGeeksBlog
  * 
  * Configuration (add to wp-config.php):
- * define('IGB_WEBHOOK_URL', 'https://your-vercel-domain.vercel.app/api/webhook');
- * define('IGB_WEBHOOK_SECRET', 'your-secure-secret-key');
+ * define('IGB_WEBHOOK_URL', 'https://your-deploy-hook-url');
+ * define('IGB_WEBHOOK_SECRET', 'your-secure-secret-key'); // Optional
+ * 
+ * Supported platforms:
+ * - Vercel: https://api.vercel.com/v1/integrations/deploy/xxx/yyy
+ * - Netlify: https://api.netlify.com/build_hooks/xxx
  */
 
 if (!defined('ABSPATH')) exit;
 
 /**
- * Send webhook notification to Vercel
+ * Send webhook notification to trigger deployment
  */
 function igb_trigger_webhook($action, $post_id, $post = null) {
     $webhook_url = defined('IGB_WEBHOOK_URL') ? IGB_WEBHOOK_URL : '';
@@ -133,7 +137,7 @@ add_action('edited_post_tag', function($term_id) {
 add_action('admin_notices', function() {
     if (!defined('IGB_WEBHOOK_URL') || empty(IGB_WEBHOOK_URL)) {
         echo '<div class="notice notice-warning"><p>';
-        echo '<strong>iGeeksBlog Webhook:</strong> Vercel webhook URL not configured. ';
+        echo '<strong>iGeeksBlog Deploy Webhook:</strong> Deploy hook URL not configured. ';
         echo 'Add <code>define(\'IGB_WEBHOOK_URL\', \'your-url\');</code> to wp-config.php';
         echo '</p></div>';
     }
