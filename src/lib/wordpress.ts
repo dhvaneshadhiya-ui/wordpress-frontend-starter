@@ -286,12 +286,44 @@ export function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim();
 }
 
-// Preview API - fetch draft posts with token validation
-const PREVIEW_API_BASE = import.meta.env.VITE_WORDPRESS_API_URL?.replace('/wp/v2', '') || 'https://dev.igeeksblog.com/wp-json';
+// Custom API base for iGeeksBlog endpoints
+const CUSTOM_API_BASE = import.meta.env.VITE_WORDPRESS_API_URL?.replace('/wp/v2', '') || 'https://dev.igeeksblog.com/wp-json';
 
+// Redirect info interface
+export interface RedirectInfo {
+  found: boolean;
+  url: string;
+  target?: string;
+  code?: number;  // 301, 302, 410, 404
+  type?: string;  // 'url', 'error', etc.
+  error?: string;
+}
+
+// Check for redirect rules from WordPress Redirection plugin
+export async function checkRedirect(slug: string): Promise<RedirectInfo> {
+  try {
+    const response = await fetchWithRetry(
+      `${CUSTOM_API_BASE}/igeeksblog/v1/redirect?url=/${encodeURIComponent(slug)}`,
+      undefined,
+      5000, // 5 second timeout for redirect checks
+      1     // Only 1 retry
+    );
+    
+    if (!response.ok) {
+      return { found: false, url: `/${slug}` };
+    }
+    
+    return response.json();
+  } catch {
+    // Fail silently - if redirect check fails, just show the post
+    return { found: false, url: `/${slug}` };
+  }
+}
+
+// Preview API - fetch draft posts with token validation
 export async function fetchPreviewPost(postId: number, token: string): Promise<WPPost> {
   const response = await fetchWithRetry(
-    `${PREVIEW_API_BASE}/igeeksblog/v1/preview?id=${postId}&token=${encodeURIComponent(token)}`
+    `${CUSTOM_API_BASE}/igeeksblog/v1/preview?id=${postId}&token=${encodeURIComponent(token)}`
   );
 
   if (!response.ok) {
