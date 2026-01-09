@@ -97,6 +97,65 @@ function getReadingTime(content: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
+// Render static header for SSR
+function renderHeader(): string {
+  return `
+    <header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div class="container flex h-14 items-center">
+        <a href="/" class="flex items-center space-x-2">
+          <img src="/logo.png" alt="iGeeksBlog" class="h-8 w-auto" width="32" height="32" />
+        </a>
+        <nav class="ml-auto flex items-center space-x-4">
+          <a href="/" class="text-sm font-medium transition-colors hover:text-primary">Home</a>
+        </nav>
+      </div>
+    </header>
+  `.trim();
+}
+
+// Render static footer for SSR
+function renderFooter(): string {
+  const currentYear = new Date().getFullYear();
+  return `
+    <footer class="border-t border-border bg-card mt-16">
+      <div class="container mx-auto px-4 py-12">
+        <div class="grid gap-8 md:grid-cols-3">
+          <div>
+            <a href="/">
+              <img src="/logo.png" alt="iGeeksBlog" class="h-8 w-auto" width="32" height="32" />
+            </a>
+            <p class="mt-4 text-sm text-muted-foreground">
+              Your daily source for Apple news, how-to guides, tips, and app reviews.
+            </p>
+          </div>
+          <div>
+            <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide">Categories</h3>
+            <ul class="space-y-2">
+              <li><a href="/category/how-to" class="text-sm text-muted-foreground hover:text-foreground">How To</a></li>
+              <li><a href="/category/tips-tricks" class="text-sm text-muted-foreground hover:text-foreground">Tips & Tricks</a></li>
+              <li><a href="/category/apps" class="text-sm text-muted-foreground hover:text-foreground">Apps</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide">Quick Links</h3>
+            <ul class="space-y-2">
+              <li><a href="/" class="text-sm text-muted-foreground hover:text-foreground">Home</a></li>
+              <li><a href="/about" class="text-sm text-muted-foreground hover:text-foreground">About Us</a></li>
+              <li><a href="/contact-us" class="text-sm text-muted-foreground hover:text-foreground">Contact</a></li>
+              <li><a href="/privacy-policy" class="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-12 border-t border-border pt-8 text-center">
+          <p class="text-sm text-muted-foreground">
+            © ${currentYear} iGeeksBlog. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  `.trim();
+}
+
 // Render full post HTML for SSR
 function renderPostHTML(post: any): string {
   const title = decodeHtmlEntities(stripHtml(post.title?.rendered || ''));
@@ -109,6 +168,7 @@ function renderPostHTML(post: any): string {
   const readingTime = getReadingTime(content);
 
   return `
+    ${renderHeader()}
     <div class="min-h-screen bg-background">
       <main class="max-w-4xl mx-auto px-4 py-8">
         <article class="post-content">
@@ -173,6 +233,7 @@ function renderPostHTML(post: any): string {
         </article>
       </main>
     </div>
+    ${renderFooter()}
   `.trim();
 }
 
@@ -183,6 +244,7 @@ function renderArchiveHTML(type: string, data: any): string {
   const typeName = type === 'category' ? 'Category' : type === 'tag' ? 'Tag' : 'Author';
 
   return `
+    ${renderHeader()}
     <div class="min-h-screen bg-background">
       <main class="max-w-6xl mx-auto px-4 py-8">
         <header class="mb-8">
@@ -203,6 +265,7 @@ function renderArchiveHTML(type: string, data: any): string {
         </section>
       </main>
     </div>
+    ${renderFooter()}
   `.trim();
 }
 
@@ -213,6 +276,7 @@ function renderAuthorHTML(data: any): string {
   const avatar = data.avatar_urls?.['96'] || '';
 
   return `
+    ${renderHeader()}
     <div class="min-h-screen bg-background">
       <main class="max-w-6xl mx-auto px-4 py-8">
         <header class="mb-8">
@@ -246,6 +310,7 @@ function renderAuthorHTML(data: any): string {
         </section>
       </main>
     </div>
+    ${renderFooter()}
   `.trim();
 }
 
@@ -266,6 +331,14 @@ export function render(url: string, routeInfo?: RouteInfo): string {
     return renderAuthorHTML(routeInfo.data);
   }
   
-  // For homepage and other routes, return minimal shell
-  return '<div class="min-h-screen bg-background"></div>';
+  // For homepage and other routes, return shell with header/footer
+  return `
+    ${renderHeader()}
+    <div class="min-h-screen bg-background">
+      <main class="container mx-auto px-4 py-8">
+        <p class="text-muted-foreground">Loading...</p>
+      </main>
+    </div>
+    ${renderFooter()}
+  `.trim();
 }
