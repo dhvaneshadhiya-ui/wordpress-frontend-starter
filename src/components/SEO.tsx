@@ -32,6 +32,12 @@ interface VideoData {
   contentUrl?: string;
 }
 
+interface ArchiveItem {
+  name: string;
+  url: string;
+  position: number;
+}
+
 interface SEOProps {
   title?: string;
   description?: string;
@@ -40,7 +46,9 @@ interface SEOProps {
   type?: 'website' | 'article';
   post?: WPPost;
   category?: WPCategory;
+  tag?: { name: string; slug: string; count?: number };
   author?: WPAuthor;
+  posts?: WPPost[]; // For archive pages - used in CollectionPage schema
   noindex?: boolean;
   isHomePage?: boolean;
   faqs?: FAQ[];
@@ -106,7 +114,12 @@ function generateArticleSchema(post: WPPost, imageUrl: string, description: stri
     "@type": "BlogPosting",
     "headline": stripHtml(post.title.rendered),
     "description": description,
-    "image": imageUrl,
+    "image": {
+      "@type": "ImageObject",
+      "url": imageUrl,
+      "width": 1200,
+      "height": 675
+    },
     "datePublished": post.date,
     "dateModified": post.modified,
     ...(wordCount && { "wordCount": wordCount }),
@@ -162,6 +175,71 @@ function generatePersonSchema(author: WPAuthor) {
     "url": `${FRONTEND_URL}/author/${author.slug}`,
     "description": author.description || undefined,
     "image": author.avatar_urls?.['96']
+  };
+}
+
+// Generate ProfilePage JSON-LD schema for author archive pages
+function generateProfilePageSchema(author: WPAuthor, posts: WPPost[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "mainEntity": {
+      "@type": "Person",
+      "@id": `${FRONTEND_URL}/author/${author.slug}#person`,
+      "name": author.name,
+      "url": `${FRONTEND_URL}/author/${author.slug}`,
+      "description": author.description || undefined,
+      "image": author.avatar_urls?.['96']
+    },
+    "name": `${author.name} - Author Profile`,
+    "description": author.description || `Articles written by ${author.name}`,
+    "url": `${FRONTEND_URL}/author/${author.slug}`,
+    ...(posts.length > 0 && {
+      "mainContentOfPage": {
+        "@type": "ItemList",
+        "numberOfItems": posts.length,
+        "itemListElement": posts.slice(0, 10).map((post, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "url": `${FRONTEND_URL}/${post.slug}`,
+          "name": stripHtml(post.title.rendered)
+        }))
+      }
+    })
+  };
+}
+
+// Generate CollectionPage JSON-LD schema for category/tag archive pages
+function generateCollectionPageSchema(
+  name: string,
+  description: string,
+  url: string,
+  collectionType: 'category' | 'tag',
+  posts: WPPost[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": name,
+    "description": description,
+    "url": url,
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "iGeeksBlog",
+      "url": FRONTEND_URL
+    },
+    ...(posts.length > 0 && {
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": posts.length,
+        "itemListElement": posts.slice(0, 10).map((post, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "url": `${FRONTEND_URL}/${post.slug}`,
+          "name": stripHtml(post.title.rendered)
+        }))
+      }
+    })
   };
 }
 
@@ -379,7 +457,9 @@ export function SEO({
   type = 'website', 
   post, 
   category,
+  tag,
   author,
+  posts,
   noindex = false,
   isHomePage = false,
   faqs,
@@ -477,8 +557,36 @@ export function SEO({
 
   const breadcrumbSchema = breadcrumbs.length > 1 ? generateBreadcrumbSchema(breadcrumbs) : null;
   
-  // Generate Person schema for author pages
+  // Generate Person schema for author pages (used in breadcrumbs context)
   const personSchema = author ? generatePersonSchema(author) : null;
+  
+  // Generate ProfilePage schema for author archive pages (with post list)
+  const profilePageSchema = (author && posts && posts.length > 0) 
+    ? generateProfilePageSchema(author, posts) 
+    : null;
+  
+  // Generate CollectionPage schema for category/tag archive pages
+  const collectionPageSchema = (() => {
+    if (category && posts && posts.length > 0) {
+      return generateCollectionPageSchema(
+        category.name,
+        category.description || `Browse all ${category.name} articles on iGeeksBlog`,
+        `${FRONTEND_URL}/category/${category.slug}`,
+        'category',
+        posts
+      );
+    }
+    if (tag && posts && posts.length > 0) {
+      return generateCollectionPageSchema(
+        tag.name,
+        `Browse all articles tagged with ${tag.name} on iGeeksBlog`,
+        `${FRONTEND_URL}/tag/${tag.slug}`,
+        'tag',
+        posts
+      );
+    }
+    return null;
+  })();
 
   // Generate FAQ schema - use provided FAQs or extract from post content
   const detectedFaqs = post?.content?.rendered 
@@ -570,10 +678,24 @@ export function SEO({
         </script>
       )}
       
-      {/* JSON-LD Schema for Person (Author pages) */}
-      {personSchema && (
+      {/* JSON-LD Schema for Person (Author pages - standalone) */}
+      {personSchema && !profilePageSchema && (
         <script type="application/ld+json">
           {JSON.stringify(personSchema)}
+        </script>
+      )}
+      
+      {/* JSON-LD Schema for ProfilePage (Author archive with posts) */}
+      {profilePageSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(profilePageSchema)}
+        </script>
+      )}
+      
+      {/* JSON-LD Schema for CollectionPage (Category/Tag archives) */}
+      {collectionPageSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(collectionPageSchema)}
         </script>
       )}
       

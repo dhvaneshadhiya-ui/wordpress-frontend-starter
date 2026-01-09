@@ -71,6 +71,7 @@ export default function AuthorArchive() {
         url={`${FRONTEND_URL}/author/${author.slug}`}
         image={author.avatar_urls?.['96']}
         author={author}
+        posts={postsData?.posts}
       />
       
       {/* Background refresh indicator */}
