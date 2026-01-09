@@ -24,12 +24,34 @@
   command = "npm run build"
   publish = "dist"
 
-# Enable Pretty URLs - automatically serves /slug/index.html for /slug requests
-[build.processing]
-  skip_processing = false
+# Rewrite clean URLs to flat .html files (before SPA fallback)
+# Post slugs at root: /my-post -> /my-post.html
+[[redirects]]
+  from = "/:slug"
+  to = "/:slug.html"
+  status = 200
+  force = false
 
-[build.processing.html]
-  pretty_urls = true
+# Category archives: /category/tech -> /category/tech.html
+[[redirects]]
+  from = "/category/:slug"
+  to = "/category/:slug.html"
+  status = 200
+  force = false
+
+# Tag archives: /tag/iphone -> /tag/iphone.html
+[[redirects]]
+  from = "/tag/:slug"
+  to = "/tag/:slug.html"
+  status = 200
+  force = false
+
+# Author archives: /author/john -> /author/john.html
+[[redirects]]
+  from = "/author/:slug"
+  to = "/author/:slug.html"
+  status = 200
+  force = false
 
 # SPA fallback - only if no static file matches
 [[redirects]]

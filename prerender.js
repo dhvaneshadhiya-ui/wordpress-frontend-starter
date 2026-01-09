@@ -525,7 +525,7 @@ ${urlEntries.join('\n')}
         .replace(/<!-- Default title - React Helmet will override per page -->\s*<title>iGeeksBlog<\/title>\s*/, '')
         .replace(/<meta name="description" content="Your daily source.*?" \/>/, '')
       
-      // Determine file path - use directory structure for clean URLs
+      // Determine file path - use flat HTML files for reliable Netlify serving
       let filePath;
       if (routeUrl === '/') {
         filePath = 'dist/index.html';
@@ -533,8 +533,8 @@ ${urlEntries.join('\n')}
         // Static files like /llm.html stay as-is
         filePath = `dist${routeUrl}`;
       } else {
-        // Dynamic routes: /slug -> /slug/index.html
-        filePath = `dist${routeUrl}/index.html`;
+        // Dynamic routes: /slug -> /slug.html (flat file, not directory)
+        filePath = `dist${routeUrl}.html`;
       }
       
       ensureDir(toAbsolute(filePath))
