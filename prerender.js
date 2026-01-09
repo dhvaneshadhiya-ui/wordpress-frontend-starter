@@ -522,7 +522,6 @@ ${urlEntries.join('\n')}
       html = html
         .replace(/<!-- Default title - React Helmet will override per page -->\s*<title>iGeeksBlog<\/title>\s*/, '')
         .replace(/<meta name="description" content="Your daily source.*?" \/>/, '')
-        .replace(/<meta name="robots" content="noindex, nofollow" \/>/, '')
       
       // Determine file path - use directory structure for clean URLs
       let filePath;
