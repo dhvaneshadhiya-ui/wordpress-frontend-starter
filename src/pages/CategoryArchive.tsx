@@ -7,6 +7,7 @@ import { SEO } from '@/components/SEO';
 import { useCategory, useCategoryPosts } from '@/hooks/useWordPress';
 import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
 import { fetchPosts } from '@/lib/wordpress';
+import { transformContentLinks } from '@/lib/content-utils';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function CategoryArchive() {
@@ -77,7 +78,10 @@ export default function CategoryArchive() {
             {category.name}
           </h1>
           {category.description && (
-            <p className="mt-2 text-muted-foreground">{category.description}</p>
+            <div 
+              className="mt-2 text-muted-foreground prose prose-sm dark:prose-invert"
+              dangerouslySetInnerHTML={{ __html: transformContentLinks(category.description) }}
+            />
           )}
           <p className="mt-2 text-sm text-muted-foreground">
             {category.count} {category.count === 1 ? 'article' : 'articles'}

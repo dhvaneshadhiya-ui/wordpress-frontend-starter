@@ -7,6 +7,7 @@ import { SEO } from '@/components/SEO';
 import { useAuthor, useAuthorPosts } from '@/hooks/useWordPress';
 import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
 import { fetchPosts } from '@/lib/wordpress';
+import { transformContentLinks } from '@/lib/content-utils';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -91,9 +92,10 @@ export default function AuthorArchive() {
               {author.name}
             </h1>
             {author.description && (
-              <p className="mt-2 text-muted-foreground max-w-2xl">
-                {author.description}
-              </p>
+              <div 
+                className="mt-2 text-muted-foreground max-w-2xl prose prose-sm dark:prose-invert"
+                dangerouslySetInnerHTML={{ __html: transformContentLinks(author.description) }}
+              />
             )}
             {postsData && (
               <p className="mt-2 text-sm text-muted-foreground">

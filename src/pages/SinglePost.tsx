@@ -167,9 +167,16 @@ export default function SinglePost() {
               <Link to={author.slug ? `/author/${author.slug}` : '#'} className="hover:text-primary transition-colors">
                 <h3 className="text-lg font-bold text-foreground">{author.name}</h3>
               </Link>
-              <p className="mt-1 text-muted-foreground">
-                Author at iGeeksBlog
-              </p>
+              {author.description ? (
+                <div 
+                  className="mt-1 text-muted-foreground prose prose-sm dark:prose-invert"
+                  dangerouslySetInnerHTML={{ __html: transformContentLinks(author.description) }}
+                />
+              ) : (
+                <p className="mt-1 text-muted-foreground">
+                  Author at iGeeksBlog
+                </p>
+              )}
             </div>
           </div>
         </div>
