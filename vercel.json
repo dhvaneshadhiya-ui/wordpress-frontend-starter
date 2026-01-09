@@ -1,0 +1,18 @@
+{
+  "functions": {
+    "api/og.tsx": {
+      "runtime": "@vercel/edge"
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/og",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

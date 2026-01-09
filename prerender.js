@@ -194,19 +194,27 @@ function generateSEOHead(route, routeInfo) {
   if (type === 'post') {
     const title = escapeHtml(stripHtml(data.title?.rendered || data.slug))
     const description = escapeHtml(stripHtml(data.excerpt?.rendered || '').slice(0, 160))
-    const image = getFeaturedImage(data)
+    const featuredImage = getFeaturedImage(data)
     const author = getAuthorName(data)
     const categories = getCategories(data)
     const canonicalUrl = `${SITE_URL}/${data.slug}`
     const publishDate = formatDate(data.date)
     const modifiedDate = formatDate(data.modified)
     
+    // Generate dynamic OG image URL
+    const ogImageParams = new URLSearchParams()
+    ogImageParams.set('title', stripHtml(data.title?.rendered || ''))
+    if (featuredImage) ogImageParams.set('image', featuredImage)
+    if (author) ogImageParams.set('author', author)
+    if (categories[0]) ogImageParams.set('category', categories[0])
+    const ogImageUrl = `${SITE_URL}/og?${ogImageParams.toString()}`
+    
     const articleSchema = {
       "@context": "https://schema.org",
       "@type": "Article",
       "headline": stripHtml(data.title?.rendered || ''),
       "description": stripHtml(data.excerpt?.rendered || ''),
-      "image": image || undefined,
+      "image": featuredImage || undefined,
       "author": {
         "@type": "Person",
         "name": author
@@ -238,13 +246,15 @@ function generateSEOHead(route, routeInfo) {
     <meta property="og:description" content="${description}" />
     <meta property="og:url" content="${canonicalUrl}" />
     <meta property="og:site_name" content="iGeeksBlog" />
-    ${image ? `<meta property="og:image" content="${image}" />` : ''}
+    <meta property="og:image" content="${ogImageUrl}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="article:published_time" content="${publishDate}" />
     <meta property="article:modified_time" content="${modifiedDate}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
-    ${image ? `<meta name="twitter:image" content="${image}" />` : ''}
+    <meta name="twitter:image" content="${ogImageUrl}" />
     <script type="application/ld+json">
     ${JSON.stringify(articleSchema)}
     </script>`.trim()
