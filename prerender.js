@@ -518,13 +518,11 @@ ${urlEntries.join('\n')}
         .replace('<!--seo-head-->', seoHead)
         .replace('<!--app-html-->', appHtml)
       
-      // Remove default meta tags that we're overriding (for non-homepage routes)
-      if (routeData.has(routeUrl)) {
-        html = html
-          .replace(/<title>iGeeksBlog - Apple News.*?<\/title>/, '')
-          .replace(/<meta name="description" content="Your daily source.*?" \/>/, '')
-          .replace(/<meta name="robots" content="noindex, nofollow" \/>/, '')
-      }
+      // Remove default title and meta tags to avoid duplicates (SSG injects proper ones)
+      html = html
+        .replace(/<!-- Default title - React Helmet will override per page -->\s*<title>iGeeksBlog<\/title>\s*/, '')
+        .replace(/<meta name="description" content="Your daily source.*?" \/>/, '')
+        .replace(/<meta name="robots" content="noindex, nofollow" \/>/, '')
       
       // Determine file path
       const filePath = routeUrl === '/' 
