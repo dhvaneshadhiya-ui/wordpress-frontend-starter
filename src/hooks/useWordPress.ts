@@ -71,9 +71,9 @@ export function usePosts(params: {
     },
     staleTime: DEFAULT_STALE_TIME,
     gcTime: GC_TIME,
-    retry: 2, // Increased from 1
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000), // Exponential backoff
-    refetchOnMount: 'always', // Always check for fresh data
+    retry: 1, // Reduced for faster fallback
+    retryDelay: 1000, // Fixed delay - no exponential backoff
+    refetchOnMount: true, // Only refetch if stale
     refetchOnWindowFocus: false, // Don't refetch on tab switch
   });
 }
