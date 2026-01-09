@@ -8,7 +8,7 @@ const toAbsolute = (p) => path.resolve(__dirname, p)
 // Configuration
 const SITE_URL = process.env.SITE_URL || 'https://wp.dev.igeeksblog.com'
 const WP_API_URL = 'https://dev.igeeksblog.com/wp-json/wp/v2'
-const API_TIMEOUT = process.env.API_TIMEOUT ? parseInt(process.env.API_TIMEOUT) : 30000 // 30 seconds default
+const API_TIMEOUT = process.env.API_TIMEOUT ? parseInt(process.env.API_TIMEOUT) : 60000 // 60 seconds default
 const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
 
 // Category slugs that trigger NewsArticle schema for Google News eligibility
@@ -65,21 +65,36 @@ async function fetchWithTimeout(url, timeout = API_TIMEOUT) {
   }
 }
 
-// Fetch all items with pagination
-async function fetchAllPaginated(endpoint, perPage = 100) {
+// Fetch all items with pagination and retry logic
+async function fetchAllPaginated(endpoint, perPage = 100, maxRetries = 2) {
   const items = []
   let page = 1
   let hasMore = true
   
   while (hasMore) {
-    try {
-      const url = `${WP_API_URL}/${endpoint}?per_page=${perPage}&page=${page}`
-      const data = await fetchWithTimeout(url)
-      items.push(...data)
-      hasMore = data.length === perPage
-      page++
-    } catch (error) {
-      console.warn(`[SSG] Failed to fetch ${endpoint} page ${page}: ${error.message}`)
+    let lastError = null
+    let success = false
+    
+    for (let attempt = 1; attempt <= maxRetries + 1; attempt++) {
+      try {
+        const url = `${WP_API_URL}/${endpoint}${endpoint.includes('?') ? '&' : '?'}per_page=${perPage}&page=${page}`
+        const data = await fetchWithTimeout(url)
+        items.push(...data)
+        hasMore = data.length === perPage
+        page++
+        success = true
+        break
+      } catch (error) {
+        lastError = error
+        if (attempt <= maxRetries) {
+          console.warn(`[SSG] Retry ${attempt}/${maxRetries} for ${endpoint} page ${page}...`)
+          await new Promise(r => setTimeout(r, 2000)) // Wait 2s before retry
+        }
+      }
+    }
+    
+    if (!success) {
+      console.warn(`[SSG] Failed to fetch ${endpoint} page ${page} after ${maxRetries + 1} attempts: ${lastError?.message}`)
       hasMore = false
     }
   }
@@ -95,15 +110,22 @@ async function fetchAllRoutes() {
   const routeData = new Map()
   
   try {
-    // Fetch posts, categories, tags, authors in parallel
-    const [posts, categories, tags, authors] = await Promise.all([
-      fetchAllPaginated('posts?_embed=true'),
-      fetchAllPaginated('categories'),
-      fetchAllPaginated('tags'),
-      fetchAllPaginated('users'),
-    ])
+    // Fetch sequentially to avoid overwhelming the WordPress server
+    console.log('[SSG] Fetching posts...')
+    const posts = await fetchAllPaginated('posts?_embed=true')
+    console.log(`[SSG] ✓ Fetched ${posts.length} posts`)
     
-    console.log(`[SSG] Found ${posts.length} posts, ${categories.length} categories, ${tags.length} tags, ${authors.length} authors`)
+    console.log('[SSG] Fetching categories...')
+    const categories = await fetchAllPaginated('categories')
+    console.log(`[SSG] ✓ Fetched ${categories.length} categories`)
+    
+    console.log('[SSG] Fetching tags...')
+    const tags = await fetchAllPaginated('tags')
+    console.log(`[SSG] ✓ Fetched ${tags.length} tags`)
+    
+    console.log('[SSG] Fetching authors...')
+    const authors = await fetchAllPaginated('users')
+    console.log(`[SSG] ✓ Fetched ${authors.length} authors`)
     
     // Add homepage route with latest posts for SSR
     const homepagePosts = posts.slice(0, 20) // First 20 posts for homepage grid
