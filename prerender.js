@@ -117,29 +117,51 @@ async function fetchAllRoutes() {
       routeData.set(route, { type: 'post', data: post })
     }
     
-    // Add category routes
+    // Add category routes with posts
     for (const category of categories) {
       if (category.count > 0) {
         const route = `/category/${category.slug}`
         routes.push(route)
-        routeData.set(route, { type: 'category', data: category })
+        // Fetch posts for this category
+        const categoryPosts = posts.filter(p => p.categories?.includes(category.id)).slice(0, 12)
+        routeData.set(route, { type: 'category', data: { ...category, posts: categoryPosts } })
       }
     }
     
-    // Add tag routes
+    // Add tag routes with posts
     for (const tag of tags) {
       if (tag.count > 0) {
         const route = `/tag/${tag.slug}`
         routes.push(route)
-        routeData.set(route, { type: 'tag', data: tag })
+        // Fetch posts for this tag
+        const tagPosts = posts.filter(p => p.tags?.includes(tag.id)).slice(0, 12)
+        routeData.set(route, { type: 'tag', data: { ...tag, posts: tagPosts } })
       }
     }
     
-    // Add author routes
+    // Add author routes with posts
     for (const author of authors) {
       const route = `/author/${author.slug}`
       routes.push(route)
-      routeData.set(route, { type: 'author', data: author })
+      // Fetch posts by this author
+      const authorPosts = posts.filter(p => p.author === author.id).slice(0, 12)
+      routeData.set(route, { type: 'author', data: { ...author, posts: authorPosts } })
+    }
+    
+    // Add static pages
+    const staticPageSlugs = ['about', 'contact-us', 'privacy-policy']
+    for (const pageSlug of staticPageSlugs) {
+      try {
+        const pageData = await fetchWithTimeout(`${WP_API_URL}/pages?slug=${pageSlug}&_embed=true`)
+        if (pageData && pageData[0]) {
+          const route = `/${pageSlug}`
+          routes.push(route)
+          routeData.set(route, { type: 'page', data: pageData[0] })
+          console.log(`[SSG] Added static page: ${pageSlug}`)
+        }
+      } catch (error) {
+        console.warn(`[SSG] Failed to fetch static page ${pageSlug}: ${error.message}`)
+      }
     }
     
   } catch (error) {
@@ -490,6 +512,43 @@ function generateSEOHead(route, routeInfo) {
     <meta name="twitter:description" content="${description}" />
     <script type="application/ld+json">
     ${JSON.stringify(profilePageSchema)}
+    </script>`.trim()
+  }
+  
+  // Static pages (About, Contact, Privacy Policy)
+  if (type === 'page') {
+    const title = escapeHtml(stripHtml(data.title?.rendered || data.slug))
+    const description = escapeHtml(stripHtml(data.excerpt?.rendered || data.content?.rendered || '').slice(0, 160))
+    const canonicalUrl = `${SITE_URL}/${data.slug}`
+    
+    const webPageSchema = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": title,
+      "description": description,
+      "url": canonicalUrl,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "iGeeksBlog",
+        "url": SITE_URL
+      }
+    }
+    
+    return `
+    <title>${title} - iGeeksBlog</title>
+    <meta name="description" content="${description}" />
+    <meta name="robots" content="${robotsContent}" />
+    <link rel="canonical" href="${canonicalUrl}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:url" content="${canonicalUrl}" />
+    <meta property="og:site_name" content="iGeeksBlog" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="${title}" />
+    <meta name="twitter:description" content="${description}" />
+    <script type="application/ld+json">
+    ${JSON.stringify(webPageSchema)}
     </script>`.trim()
   }
   

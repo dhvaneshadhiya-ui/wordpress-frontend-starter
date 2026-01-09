@@ -11,6 +11,7 @@ import CategoryArchive from './pages/CategoryArchive';
 import TagArchive from './pages/TagArchive';
 import AuthorArchive from './pages/AuthorArchive';
 import PreviewPost from './pages/PreviewPost';
+import StaticPage from './pages/StaticPage';
 import NotFound from './pages/NotFound';
 import { ScrollToTop } from '@/components/ScrollToTop';
 
@@ -26,6 +27,11 @@ const App = () => (
         <Route path="/category/:slug" element={<CategoryArchive />} />
         <Route path="/tag/:slug" element={<TagArchive />} />
         <Route path="/author/:slug" element={<AuthorArchive />} />
+        {/* Static pages */}
+        <Route path="/about" element={<StaticPage />} />
+        <Route path="/contact-us" element={<StaticPage />} />
+        <Route path="/privacy-policy" element={<StaticPage />} />
+        {/* Dynamic post route - must come after specific routes */}
         <Route path="/:slug" element={<SinglePost />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
