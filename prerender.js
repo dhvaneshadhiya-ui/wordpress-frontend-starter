@@ -14,6 +14,22 @@ const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
 // Category slugs that trigger NewsArticle schema for Google News eligibility
 const NEWS_CATEGORY_SLUGS = ['news', 'breaking-news', 'breaking', 'updates', 'announcements', 'latest']
 
+// Author social profile mappings for sameAs schema property (E-E-A-T signals)
+const AUTHOR_SOCIAL_LINKS = {
+  'dhvanesh': [
+    'https://twitter.com/igeeksblog',
+    'https://www.linkedin.com/in/dhvanesh-adhiya/'
+  ],
+  'iosblogger': [
+    'https://twitter.com/jikiblg'
+  ]
+}
+
+// Get sameAs array for an author by slug
+function getAuthorSameAs(authorSlug) {
+  return AUTHOR_SOCIAL_LINKS[authorSlug] || []
+}
+
 // Check if post belongs to a news category
 function isNewsArticle(post) {
   try {
@@ -225,6 +241,9 @@ function generateSEOHead(route, routeInfo) {
     const ogImageUrl = `${SITE_URL}/og?${ogImageParams.toString()}`
     
     const isNews = isNewsArticle(data)
+    const authorSlug = data._embedded?.author?.[0]?.slug
+    const authorSameAs = authorSlug ? getAuthorSameAs(authorSlug) : []
+    
     const articleSchema = {
       "@context": "https://schema.org",
       "@type": isNews ? "NewsArticle" : "BlogPosting",
@@ -239,7 +258,8 @@ function generateSEOHead(route, routeInfo) {
       "author": {
         "@type": "Person",
         "name": author,
-        "url": `${SITE_URL}/author/${data._embedded?.author?.[0]?.slug || 'igeeksblog'}`
+        "url": `${SITE_URL}/author/${authorSlug || 'igeeksblog'}`,
+        ...(authorSameAs.length > 0 && { "sameAs": authorSameAs })
       },
       "publisher": {
         "@type": "Organization",
@@ -371,6 +391,8 @@ function generateSEOHead(route, routeInfo) {
     const avatar = data.avatar_urls?.['96'] || ''
     
     // ProfilePage schema for author archives (enhanced from Person)
+    const sameAs = getAuthorSameAs(data.slug)
+    
     const profilePageSchema = {
       "@context": "https://schema.org",
       "@type": "ProfilePage",
@@ -380,7 +402,8 @@ function generateSEOHead(route, routeInfo) {
         "name": data.name,
         "url": canonicalUrl,
         "image": avatar || undefined,
-        "description": data.description || undefined
+        "description": data.description || undefined,
+        ...(sameAs.length > 0 && { "sameAs": sameAs })
       },
       "name": `${data.name} - Author Profile`,
       "description": description,

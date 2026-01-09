@@ -86,6 +86,14 @@ export interface WPAuthor {
   slug: string;
   description?: string;
   avatar_urls?: { [key: string]: string };
+  // Social links (if exposed by WordPress via custom REST field)
+  social_links?: {
+    twitter?: string;
+    facebook?: string;
+    linkedin?: string;
+    instagram?: string;
+    youtube?: string;
+  };
 }
 
 // Fetch posts with embedded data
