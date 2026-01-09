@@ -56,7 +56,7 @@ export default function TagArchive() {
       <SEO 
         title={`${tag.name} Articles`}
         description={`Browse all articles tagged with ${tag.name} on iGeeksBlog`}
-        url={`https://dev.igeeksblog.com/tag/${tag.slug}`}
+        url={`https://wp.dev.igeeksblog.com/tag/${tag.slug}`}
       />
       
       {/* Background refresh indicator */}
