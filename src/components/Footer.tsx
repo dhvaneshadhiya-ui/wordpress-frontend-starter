@@ -55,34 +55,28 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a
-                  href="https://dev.igeeksblog.com/about/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  to="/about"
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="https://dev.igeeksblog.com/contact-us/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  to="/contact-us"
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   Contact
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="https://dev.igeeksblog.com/privacy-policy/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  to="/privacy-policy"
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   Privacy Policy
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
