@@ -12,9 +12,11 @@ export function Footer() {
           {/* Brand */}
           <div>
             <Link to="/" className="inline-block">
-              <span className="text-xl font-bold tracking-tight text-foreground">
-                iGEEKS<span className="text-primary">BLOG</span>
-              </span>
+              <img 
+                src="/logo.png" 
+                alt="iGeeksBlog" 
+                className="h-8 w-auto"
+              />
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
               Your daily source for Apple news, how-to guides, tips, and app reviews.
