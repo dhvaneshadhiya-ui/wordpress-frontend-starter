@@ -31,6 +31,7 @@ const GC_TIME = 60 * 60 * 1000; // 1 hour
 const typedDemoPosts = demoPosts as unknown as WPPost[];
 
 // Fetch posts with pagination - stale-while-revalidate with localStorage caching
+// Falls back to demo posts when both API and cache fail (for homepage only)
 export function usePosts(params: {
   page?: number;
   perPage?: number;
@@ -40,6 +41,7 @@ export function usePosts(params: {
   search?: string;
 } = {}) {
   const cacheKey = generateCacheKey('posts', params);
+  const isHomepageRequest = !params.categories && !params.tags && !params.author && !params.search && (!params.page || params.page === 1);
   
   type PostsResult = { posts: WPPost[]; totalPages: number; total: number };
   
@@ -52,11 +54,25 @@ export function usePosts(params: {
       return result;
     },
     // Show cached data immediately while fetching fresh
-    placeholderData: () => getCachedData<PostsResult>(cacheKey) ?? undefined,
+    // For homepage, fall back to demo posts if no cache exists
+    placeholderData: () => {
+      const cached = getCachedData<PostsResult>(cacheKey);
+      if (cached) return cached;
+      
+      // Use demo posts as ultimate fallback for homepage only
+      if (isHomepageRequest) {
+        return {
+          posts: typedDemoPosts,
+          totalPages: 1,
+          total: typedDemoPosts.length,
+        };
+      }
+      return undefined;
+    },
     staleTime: DEFAULT_STALE_TIME,
     gcTime: GC_TIME,
-    retry: 1,
-    retryDelay: 1000,
+    retry: 2, // Increased from 1
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000), // Exponential backoff
     refetchOnMount: 'always', // Always check for fresh data
     refetchOnWindowFocus: false, // Don't refetch on tab switch
   });

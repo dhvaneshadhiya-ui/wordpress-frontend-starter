@@ -2,9 +2,12 @@
  * API utility functions for resilient fetching
  */
 
-const DEFAULT_TIMEOUT = 10000; // 10 seconds
-const MAX_RETRIES = 2;
-const RETRY_DELAYS = [1000, 2000];
+const DEFAULT_TIMEOUT = 15000; // 15 seconds (increased for stability)
+const MAX_RETRIES = 3;
+const RETRY_DELAYS = [1000, 2000, 4000]; // Progressive backoff
+
+// Request deduplication - prevent duplicate concurrent requests
+const inflightRequests = new Map<string, Promise<Response>>();
 
 export class ApiError extends Error {
   status?: number;
@@ -90,4 +93,50 @@ export async function fetchWithRetry(
 
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Fetch with deduplication - prevents duplicate concurrent requests to the same URL
+ * Useful for avoiding redundant API calls when multiple components request the same data
+ */
+export async function fetchWithDedup(
+  url: string,
+  options: RequestInit = {},
+  timeout = DEFAULT_TIMEOUT
+): Promise<Response> {
+  // Create a cache key from URL and relevant options
+  const cacheKey = `${url}|${options.method || 'GET'}`;
+  
+  // If there's already an in-flight request for this URL, return it
+  const existing = inflightRequests.get(cacheKey);
+  if (existing) {
+    return existing.then(response => response.clone());
+  }
+  
+  // Create new request and track it
+  const promise = fetchWithRetry(url, options, timeout)
+    .finally(() => {
+      // Clean up after request completes
+      inflightRequests.delete(cacheKey);
+    });
+  
+  inflightRequests.set(cacheKey, promise);
+  
+  return promise;
+}
+
+/**
+ * Check if API is reachable with a lightweight request
+ */
+export async function checkApiHealth(apiBaseUrl: string): Promise<boolean> {
+  try {
+    const response = await fetchWithTimeout(
+      `${apiBaseUrl}/posts?per_page=1&_fields=id`,
+      { cache: 'no-store' },
+      5000 // 5 second timeout for health check
+    );
+    return response.ok;
+  } catch {
+    return false;
+  }
 }
