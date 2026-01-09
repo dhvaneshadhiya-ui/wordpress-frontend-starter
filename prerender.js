@@ -15,7 +15,9 @@ const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
 const NEWS_CATEGORY_SLUGS = ['news', 'breaking-news', 'breaking', 'updates', 'announcements', 'latest']
 
 // Import author social links from shared JSON (single source of truth)
-import authorSocialLinks from './src/data/author-social-links.json' assert { type: 'json' }
+const authorSocialLinks = JSON.parse(
+  fs.readFileSync(toAbsolute('src/data/author-social-links.json'), 'utf-8')
+)
 
 // Get sameAs array for an author by slug
 function getAuthorSameAs(authorSlug) {
