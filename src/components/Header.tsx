@@ -33,9 +33,11 @@ export function Header() {
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <Link to="/" className="flex items-center">
-              <span className="text-xl font-bold tracking-tight text-foreground">
-                iGEEKS<span className="text-primary">BLOG</span>
-              </span>
+              <img 
+                src="/logo.png" 
+                alt="iGeeksBlog" 
+                className="h-8 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation */}
