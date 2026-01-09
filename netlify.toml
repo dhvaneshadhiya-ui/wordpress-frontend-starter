@@ -1,4 +1,8 @@
-# Netlify configuration for OG image generation
+# Netlify configuration for OG image generation and Image CDN
+
+# Enable Image CDN for remote WordPress images
+[images]
+  remote_images = ["https://dev.igeeksblog.com/.*"]
 
 [[edge_functions]]
   function = "og"

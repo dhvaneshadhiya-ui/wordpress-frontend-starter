@@ -1,21 +1,19 @@
 /**
  * Image optimization utilities
- * Uses Vercel's image optimization API when deployed, original URLs otherwise
+ * Uses platform-specific image CDN when deployed, original URLs otherwise
  */
 
-const VERCEL_IMAGE_BASE = '/_vercel/image';
+import { isVercel, isNetlify } from '@/lib/platform';
 
-// Check if running on Vercel (production/preview deployments)
-const isVercel = typeof window !== 'undefined' && 
-  (window.location.hostname.includes('vercel.app') || 
-   window.location.hostname === 'wp.dev.igeeksblog.com');
+const VERCEL_IMAGE_BASE = '/_vercel/image';
+const NETLIFY_IMAGE_BASE = '/.netlify/images';
 
 // Responsive image widths for srcSet
 export const RESPONSIVE_WIDTHS = [320, 480, 640, 768, 1024, 1280, 1536];
 
 /**
  * Get an optimized image URL
- * Uses Vercel's optimization on Vercel, original URLs elsewhere
+ * Uses Vercel/Netlify image CDN when deployed, original URLs elsewhere
  */
 export function getOptimizedImageUrl(
   url: string,
@@ -32,12 +30,17 @@ export function getOptimizedImageUrl(
     return url;
   }
 
-  // Only use Vercel optimization when deployed to Vercel
+  // Vercel Image Optimization
   if (isVercel) {
     return `${VERCEL_IMAGE_BASE}?url=${encodeURIComponent(url)}&w=${width}&q=${quality}`;
   }
 
-  // Return original URL for Lovable preview and other environments
+  // Netlify Image CDN
+  if (isNetlify) {
+    return `${NETLIFY_IMAGE_BASE}?url=${encodeURIComponent(url)}&w=${width}&q=${quality}`;
+  }
+
+  // Fallback: return original URL for Lovable preview and local dev
   return url;
 }
 

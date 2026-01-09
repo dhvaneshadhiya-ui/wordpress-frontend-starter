@@ -4,6 +4,14 @@
       "runtime": "@vercel/edge"
     }
   },
+  "images": {
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "dev.igeeksblog.com"
+      }
+    ]
+  },
   "headers": [
     {
       "source": "/api/og",

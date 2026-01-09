@@ -1,9 +1,10 @@
 import { WPPost, stripHtml } from './wordpress';
 import { FRONTEND_URL } from './constants';
+import { isVercel } from './platform';
 
 /**
  * Generate dynamic OG image URL for a post
- * Points to the /og or /api/og edge function
+ * Points to the /api/og (Vercel) or /og (Netlify) edge function
  */
 export function generateOgImageUrl(post: WPPost): string {
   const params = new URLSearchParams();
@@ -30,8 +31,9 @@ export function generateOgImageUrl(post: WPPost): string {
     params.set('category', category);
   }
 
-  // Use /og for Netlify compatibility, Vercel will route /api/og
-  return `${FRONTEND_URL}/og?${params.toString()}`;
+  // Platform-specific OG endpoint
+  const ogPath = isVercel ? '/api/og' : '/og';
+  return `${FRONTEND_URL}${ogPath}?${params.toString()}`;
 }
 
 /**
@@ -59,5 +61,7 @@ export function generateOgImageUrlFromData(data: {
     params.set('category', data.category);
   }
 
-  return `${FRONTEND_URL}/og?${params.toString()}`;
+  // Platform-specific OG endpoint
+  const ogPath = isVercel ? '/api/og' : '/og';
+  return `${FRONTEND_URL}${ogPath}?${params.toString()}`;
 }
