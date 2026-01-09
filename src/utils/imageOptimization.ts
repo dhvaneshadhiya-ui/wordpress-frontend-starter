@@ -1,18 +1,21 @@
 /**
- * Image optimization utilities for Vercel deployment
- * Uses Vercel's built-in image optimization API
+ * Image optimization utilities
+ * Uses Vercel's image optimization API when deployed, original URLs otherwise
  */
 
 const VERCEL_IMAGE_BASE = '/_vercel/image';
+
+// Check if running on Vercel (production/preview deployments)
+const isVercel = typeof window !== 'undefined' && 
+  (window.location.hostname.includes('vercel.app') || 
+   window.location.hostname === 'wp.dev.igeeksblog.com');
 
 // Responsive image widths for srcSet
 export const RESPONSIVE_WIDTHS = [320, 480, 640, 768, 1024, 1280, 1536];
 
 /**
- * Get an optimized image URL using Vercel's image optimization
- * @param url - Original image URL
- * @param width - Desired width
- * @param quality - Image quality (1-100, default 75)
+ * Get an optimized image URL
+ * Uses Vercel's optimization on Vercel, original URLs elsewhere
  */
 export function getOptimizedImageUrl(
   url: string,
@@ -24,13 +27,18 @@ export function getOptimizedImageUrl(
     return '/placeholder.svg';
   }
 
-  // Don't optimize local assets or already optimized URLs
+  // Don't optimize local assets
   if (url.startsWith('/') && !url.startsWith('//')) {
     return url;
   }
 
-  // Use Vercel's image optimization API
-  return `${VERCEL_IMAGE_BASE}?url=${encodeURIComponent(url)}&w=${width}&q=${quality}`;
+  // Only use Vercel optimization when deployed to Vercel
+  if (isVercel) {
+    return `${VERCEL_IMAGE_BASE}?url=${encodeURIComponent(url)}&w=${width}&q=${quality}`;
+  }
+
+  // Return original URL for Lovable preview and other environments
+  return url;
 }
 
 /**
