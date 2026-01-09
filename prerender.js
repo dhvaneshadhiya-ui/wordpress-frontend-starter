@@ -712,7 +712,6 @@ ${urlEntries.join('\n')}
   // Build summary
   console.log(`\n[SSG] ========== BUILD SUMMARY ==========`);
   console.log(`[SSG] Total routes generated: ${successCount}`);
-  const postCount = [...routeData.entries()].filter(([_, v]) => v.type === 'post').length;
   const categoryCount = [...routeData.entries()].filter(([_, v]) => v.type === 'category').length;
   const tagCount = [...routeData.entries()].filter(([_, v]) => v.type === 'tag').length;
   const authorCount = [...routeData.entries()].filter(([_, v]) => v.type === 'author').length;
