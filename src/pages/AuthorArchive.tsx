@@ -4,10 +4,10 @@ import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
 import { PaginationNav } from '@/components/PaginationNav';
 import { SEO } from '@/components/SEO';
+import { ArticleContent } from '@/components/ArticleContent';
 import { useAuthor, useAuthorPosts } from '@/hooks/useWordPress';
 import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
 import { fetchPosts } from '@/lib/wordpress';
-import { transformContentLinks } from '@/lib/content-utils';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -92,10 +92,7 @@ export default function AuthorArchive() {
               {author.name}
             </h1>
             {author.description && (
-              <div 
-                className="mt-2 text-muted-foreground max-w-2xl prose prose-sm dark:prose-invert"
-                dangerouslySetInnerHTML={{ __html: transformContentLinks(author.description) }}
-              />
+              <ArticleContent html={author.description} size="sm" className="mt-2 text-muted-foreground max-w-2xl" />
             )}
             {postsData && (
               <p className="mt-2 text-sm text-muted-foreground">

@@ -1,9 +1,9 @@
 import { useSearchParams, Link } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { SEO } from '@/components/SEO';
+import { ArticleContent } from '@/components/ArticleContent';
 import { usePreviewPost } from '@/hooks/useWordPress';
 import { getFeaturedImageUrl, getAuthor, getCategories, getTags, getReadingTime, formatDate, stripHtml } from '@/lib/wordpress';
-import { transformContentLinks } from '@/lib/content-utils';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertTriangle, Eye, ExternalLink } from 'lucide-react';
@@ -158,10 +158,7 @@ export default function PreviewPost() {
         )}
 
         {/* Content */}
-        <div
-          className="prose prose-lg max-w-none dark:prose-invert prose-headings:text-foreground prose-p:text-foreground/90 prose-a:text-primary prose-strong:text-foreground"
-          dangerouslySetInnerHTML={{ __html: transformContentLinks(post.content.rendered) }}
-        />
+        <ArticleContent html={post.content.rendered} size="lg" />
 
         {/* Tags */}
         {tags.length > 0 && (
@@ -189,10 +186,7 @@ export default function PreviewPost() {
             <div>
               <h3 className="text-lg font-bold text-foreground">{author.name}</h3>
               {author.description ? (
-                <div 
-                  className="mt-1 text-muted-foreground prose prose-sm dark:prose-invert"
-                  dangerouslySetInnerHTML={{ __html: transformContentLinks(author.description) }}
-                />
+                <ArticleContent html={author.description} size="sm" className="mt-1 text-muted-foreground" />
               ) : (
                 <p className="mt-1 text-muted-foreground">
                   Author at iGeeksBlog

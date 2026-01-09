@@ -4,10 +4,10 @@ import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
 import { PaginationNav } from '@/components/PaginationNav';
 import { SEO } from '@/components/SEO';
+import { ArticleContent } from '@/components/ArticleContent';
 import { useCategory, useCategoryPosts } from '@/hooks/useWordPress';
 import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
 import { fetchPosts } from '@/lib/wordpress';
-import { transformContentLinks } from '@/lib/content-utils';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function CategoryArchive() {
@@ -78,10 +78,7 @@ export default function CategoryArchive() {
             {category.name}
           </h1>
           {category.description && (
-            <div 
-              className="mt-2 text-muted-foreground prose prose-sm dark:prose-invert"
-              dangerouslySetInnerHTML={{ __html: transformContentLinks(category.description) }}
-            />
+            <ArticleContent html={category.description} size="sm" className="mt-2 text-muted-foreground" />
           )}
           <p className="mt-2 text-sm text-muted-foreground">
             {category.count} {category.count === 1 ? 'article' : 'articles'}
