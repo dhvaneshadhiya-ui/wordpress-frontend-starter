@@ -263,7 +263,7 @@ function generateSEOHead(route, routeInfo) {
         "name": "iGeeksBlog",
         "logo": {
           "@type": "ImageObject",
-          "url": `${SITE_URL}/favicon.ico`
+          "url": `${SITE_URL}/og-default.png`
         }
       },
       "datePublished": publishDate,

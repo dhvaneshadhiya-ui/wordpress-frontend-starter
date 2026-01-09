@@ -6,7 +6,7 @@ import url from 'node:url'
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
 const enableIndexing = process.env.VITE_ENABLE_INDEXING === 'true'
-const siteUrl = process.env.SITE_URL || 'https://igeeksblog.com'
+const siteUrl = process.env.SITE_URL || 'https://wp.dev.igeeksblog.com'
 
 const stagingRobots = `# Staging - Block all crawlers
 User-agent: *
