@@ -8,7 +8,7 @@ const toAbsolute = (p) => path.resolve(__dirname, p)
 // Configuration
 const SITE_URL = process.env.SITE_URL || 'https://wp.dev.igeeksblog.com'
 const WP_API_URL = 'https://dev.igeeksblog.com/wp-json/wp/v2'
-const API_TIMEOUT = 10000 // 10 seconds
+const API_TIMEOUT = process.env.API_TIMEOUT ? parseInt(process.env.API_TIMEOUT) : 30000 // 30 seconds default
 const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
 
 // Category slugs that trigger NewsArticle schema for Google News eligibility
@@ -138,7 +138,16 @@ async function fetchAllRoutes() {
     }
     
   } catch (error) {
-    console.warn(`[SSG] API unreachable, using static routes only: ${error.message}`)
+    console.error(`[SSG] ❌ CRITICAL: WordPress API unreachable!`)
+    console.error(`[SSG] API URL: ${WP_API_URL}`)
+    console.error(`[SSG] Error: ${error.message}`)
+    console.error(`[SSG] This means NO article pages will be generated.`)
+    console.error(`[SSG] Falling back to ${STATIC_ROUTES.length} static routes only.`)
+    
+    // Optionally fail the build if API is required
+    if (process.env.REQUIRE_API === 'true') {
+      throw new Error('Build failed: WordPress API is required but unreachable')
+    }
   }
   
   return { routes, routeData }
@@ -496,9 +505,32 @@ ${urlEntries.join('\n')}
   }
   const { render } = await import(`./dist/server/assets/${entryFile}`)
   
+  // Test WordPress API connectivity first
+  console.log('[SSG] Testing WordPress API connectivity...')
+  try {
+    const testUrl = `${WP_API_URL}/posts?per_page=1`
+    const response = await fetchWithTimeout(testUrl, 5000)
+    if (response.ok) {
+      console.log('[SSG] ✓ WordPress API is accessible')
+    } else {
+      console.error(`[SSG] ⚠️  WordPress API returned status ${response.status}`)
+    }
+  } catch (error) {
+    console.error(`[SSG] ❌ WordPress API test failed: ${error.message}`)
+  }
+  
   // Fetch all routes
   const { routes, routeData } = await fetchAllRoutes()
   console.log(`[SSG] Pre-rendering ${routes.length} routes...`)
+  
+  // Verify we have content to render
+  const postCount = [...routeData.values()].filter(r => r.type === 'post').length
+  if (postCount === 0) {
+    console.error(`[SSG] ⚠️  WARNING: No posts found! Check WordPress API connectivity.`)
+    console.error(`[SSG] Only static routes will be generated: ${routes.join(', ')}`)
+  } else {
+    console.log(`[SSG] ✓ Found ${postCount} posts to pre-render`)
+  }
   
   let successCount = 0
   let errorCount = 0
