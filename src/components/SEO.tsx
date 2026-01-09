@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { WPPost, WPCategory, WPAuthor, stripHtml } from '@/lib/wordpress';
 import { FRONTEND_URL, NEWS_CATEGORY_SLUGS } from '@/lib/constants';
 import { generateOgImageUrl } from '@/lib/og-utils';
-import { getAuthorSameAs } from '@/lib/author-social-links';
+import { getAuthorSameAs, getAuthorTwitter } from '@/lib/author-social-links';
 
 // Detect if post is news-type content based on categories
 function isNewsArticle(post: WPPost): boolean {
@@ -656,6 +656,8 @@ export function SEO({
       <meta property="og:title" content={finalTitle} />
       <meta property="og:description" content={finalDescription} />
       <meta property="og:image" content={finalImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
       <meta property="og:url" content={finalUrl} />
       <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:locale" content="en_US" />
@@ -673,7 +675,7 @@ export function SEO({
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content={TWITTER_HANDLE} />
-      <meta name="twitter:creator" content={TWITTER_HANDLE} />
+      <meta name="twitter:creator" content={postAuthor?.slug ? (getAuthorTwitter(postAuthor.slug) || TWITTER_HANDLE) : TWITTER_HANDLE} />
       <meta name="twitter:title" content={finalTitle} />
       <meta name="twitter:description" content={finalDescription} />
       <meta name="twitter:image" content={aioseoParsed['twitter:image'] || finalImage} />
