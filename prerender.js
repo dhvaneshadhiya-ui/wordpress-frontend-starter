@@ -14,20 +14,17 @@ const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
 // Category slugs that trigger NewsArticle schema for Google News eligibility
 const NEWS_CATEGORY_SLUGS = ['news', 'breaking-news', 'breaking', 'updates', 'announcements', 'latest']
 
-// Author social profile mappings for sameAs schema property (E-E-A-T signals)
-const AUTHOR_SOCIAL_LINKS = {
-  'dhvanesh': [
-    'https://twitter.com/igeeksblog',
-    'https://www.linkedin.com/in/dhvanesh-adhiya/'
-  ],
-  'iosblogger': [
-    'https://twitter.com/jikiblg'
-  ]
-}
+// Import author social links from shared JSON (single source of truth)
+import authorSocialLinks from './src/data/author-social-links.json' assert { type: 'json' }
 
 // Get sameAs array for an author by slug
 function getAuthorSameAs(authorSlug) {
-  return AUTHOR_SOCIAL_LINKS[authorSlug] || []
+  return authorSocialLinks[authorSlug]?.sameAs || []
+}
+
+// Get Twitter handle for an author by slug
+function getAuthorTwitter(authorSlug) {
+  return authorSocialLinks[authorSlug]?.twitter || null
 }
 
 // Check if post belongs to a news category
