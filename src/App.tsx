@@ -28,9 +28,9 @@ const App = () => (
         <Route path="/tag/:slug" element={<TagArchive />} />
         <Route path="/author/:slug" element={<AuthorArchive />} />
         {/* Static pages */}
-        <Route path="/about" element={<StaticPage />} />
-        <Route path="/contact-us" element={<StaticPage />} />
-        <Route path="/privacy-policy" element={<StaticPage />} />
+        <Route path="/about" element={<StaticPage slug="about" />} />
+        <Route path="/contact-us" element={<StaticPage slug="contact-us" />} />
+        <Route path="/privacy-policy" element={<StaticPage slug="privacy-policy" />} />
         {/* Dynamic post route - must come after specific routes */}
         <Route path="/:slug" element={<SinglePost />} />
         <Route path="*" element={<NotFound />} />

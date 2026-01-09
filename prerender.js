@@ -709,6 +709,22 @@ ${urlEntries.join('\n')}
   fs.writeFileSync(toAbsolute('dist/sitemap.xml'), sitemap)
   console.log('[SSG] ✓ sitemap.xml')
   
+  // Build summary
+  console.log(`\n[SSG] ========== BUILD SUMMARY ==========`);
+  console.log(`[SSG] Total routes generated: ${successCount}`);
+  const postCount = [...routeData.entries()].filter(([_, v]) => v.type === 'post').length;
+  const categoryCount = [...routeData.entries()].filter(([_, v]) => v.type === 'category').length;
+  const tagCount = [...routeData.entries()].filter(([_, v]) => v.type === 'tag').length;
+  const authorCount = [...routeData.entries()].filter(([_, v]) => v.type === 'author').length;
+  const pageCount = [...routeData.entries()].filter(([_, v]) => v.type === 'page').length;
+  console.log(`[SSG] Posts: ${postCount}`);
+  console.log(`[SSG] Categories: ${categoryCount}`);
+  console.log(`[SSG] Tags: ${tagCount}`);
+  console.log(`[SSG] Authors: ${authorCount}`);
+  console.log(`[SSG] Pages: ${pageCount}`);
+  console.log(`[SSG] Errors: ${errorCount}`);
+  console.log(`[SSG] ======================================\n`);
+  
   const duration = ((Date.now() - buildStart) / 1000).toFixed(1)
   console.log(`[SSG] Build complete: ${successCount} pages, ${errorCount} errors, ${duration}s`)
 })()

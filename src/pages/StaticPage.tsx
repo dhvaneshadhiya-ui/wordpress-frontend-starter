@@ -6,9 +6,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { fetchPage, stripHtml } from '@/lib/wordpress';
 import { FRONTEND_URL } from '@/lib/constants';
 
+interface StaticPageProps {
+  slug?: string;
+}
+
 // Static page component for About, Contact, Privacy Policy, etc.
-export default function StaticPage() {
-  const { slug } = useParams<{ slug: string }>();
+export default function StaticPage({ slug: propSlug }: StaticPageProps) {
+  const { slug: paramSlug } = useParams<{ slug: string }>();
+  const slug = propSlug || paramSlug;
   
   const { data: page, isLoading, error } = useQuery({
     queryKey: ['page', slug],
