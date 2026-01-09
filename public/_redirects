@@ -1,3 +1,2 @@
-# Netlify serves pre-rendered .html files automatically
-# This fallback only applies when no matching file exists
-/*    /index.html   200
+# Redirects handled by netlify.toml
+# This file intentionally minimal to avoid conflicts

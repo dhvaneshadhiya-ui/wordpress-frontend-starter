@@ -198,6 +198,8 @@ function generateSEOHead(route, routeInfo) {
   // Default/homepage SEO
   if (route === '/' || !routeInfo) {
     return `
+    <title>iGeeksBlog - Apple News, How-To Guides, Tips & App Reviews</title>
+    <meta name="description" content="Your daily source for Apple news, how-to guides, tips, and app reviews covering iPhone, iPad, Mac, Apple Watch, and more." />
     <meta name="robots" content="${robotsContent}" />
     <link rel="canonical" href="${SITE_URL}/" />
     <meta property="og:type" content="website" />

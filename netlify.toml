@@ -24,8 +24,26 @@
   command = "npm run build"
   publish = "dist"
 
-# Redirects for SPA - only apply if file doesn't exist
-# This allows pre-rendered .html files from SSG to be served directly
+# Handle clean URLs - serve index.html from subdirectories
+[[redirects]]
+  from = "/category/:slug"
+  to = "/category/:slug/index.html"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/tag/:slug"
+  to = "/tag/:slug/index.html"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/author/:slug"
+  to = "/author/:slug/index.html"
+  status = 200
+  force = false
+
+# SPA fallback - only if no file matches
 [[redirects]]
   from = "/*"
   to = "/index.html"
