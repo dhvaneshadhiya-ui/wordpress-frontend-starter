@@ -2,7 +2,7 @@
 // This generates static HTML at build time via prerender.js
 
 interface RouteInfo {
-  type: 'post' | 'category' | 'tag' | 'author';
+  type: 'post' | 'category' | 'tag' | 'author' | 'homepage';
   data: any;
 }
 
@@ -314,8 +314,87 @@ function renderAuthorHTML(data: any): string {
   `.trim();
 }
 
+// Render a single post card for the homepage grid
+function renderPostCard(post: any): string {
+  const title = decodeHtmlEntities(stripHtml(post.title?.rendered || ''));
+  const featuredImage = getFeaturedImage(post);
+  const author = getAuthor(post);
+  const categories = getCategories(post);
+  const publishDate = formatDate(post.date);
+  const readingTime = getReadingTime(post.content?.rendered || '');
+  const category = categories[0];
+
+  return `
+    <article class="group relative overflow-hidden rounded-lg bg-card border border-border transition-all hover:shadow-lg">
+      <a href="/${post.slug}" class="block">
+        <div class="aspect-video overflow-hidden bg-muted">
+          ${featuredImage 
+            ? `<img 
+                src="${featuredImage}" 
+                alt="${title}"
+                class="w-full h-full object-cover transition-transform group-hover:scale-105"
+                width="400"
+                height="225"
+                loading="lazy"
+              />`
+            : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-700 to-slate-900">
+                <span class="text-4xl">📰</span>
+              </div>`
+          }
+        </div>
+        <div class="p-4">
+          ${category ? `
+            <span class="inline-block text-xs font-medium uppercase tracking-wider text-primary mb-2">
+              ${decodeHtmlEntities(category.name)}
+            </span>
+          ` : ''}
+          <h2 class="text-lg font-semibold leading-tight mb-2 group-hover:text-primary transition-colors line-clamp-2">
+            ${title}
+          </h2>
+          <div class="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>${author.name}</span>
+            <span>·</span>
+            <time datetime="${post.date}">${publishDate}</time>
+            <span>·</span>
+            <span>${readingTime} min read</span>
+          </div>
+        </div>
+      </a>
+    </article>
+  `.trim();
+}
+
+// Render homepage with post grid
+function renderHomepageHTML(posts: any[]): string {
+  const postGrid = posts.map(post => renderPostCard(post)).join('\n');
+
+  return `
+    ${renderHeader()}
+    <div class="min-h-screen bg-background">
+      <main class="max-w-7xl mx-auto px-4 py-8">
+        <section aria-labelledby="latest-articles-heading">
+          <h1 id="latest-articles-heading" class="sr-only">Latest Articles from iGeeksBlog</h1>
+          <div class="flex items-center gap-3 mb-8">
+            <div class="w-1 h-6 bg-primary rounded-full"></div>
+            <h2 class="text-2xl font-bold">Latest Articles</h2>
+          </div>
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            ${postGrid}
+          </div>
+        </section>
+      </main>
+    </div>
+    ${renderFooter()}
+  `.trim();
+}
+
 // Main SSR render function
 export function render(url: string, routeInfo?: RouteInfo): string {
+  // For homepage with posts
+  if (routeInfo?.type === 'homepage') {
+    return renderHomepageHTML(routeInfo.data.posts || []);
+  }
+  
   // For posts, render full article content
   if (routeInfo?.type === 'post') {
     return renderPostHTML(routeInfo.data);
@@ -331,7 +410,7 @@ export function render(url: string, routeInfo?: RouteInfo): string {
     return renderAuthorHTML(routeInfo.data);
   }
   
-  // For homepage and other routes, return shell with header/footer
+  // For other routes, return shell with header/footer
   return `
     ${renderHeader()}
     <div class="min-h-screen bg-background">

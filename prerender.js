@@ -105,6 +105,11 @@ async function fetchAllRoutes() {
     
     console.log(`[SSG] Found ${posts.length} posts, ${categories.length} categories, ${tags.length} tags, ${authors.length} authors`)
     
+    // Add homepage route with latest posts for SSR
+    const homepagePosts = posts.slice(0, 20) // First 20 posts for homepage grid
+    routeData.set('/', { type: 'homepage', data: { posts: homepagePosts } })
+    console.log(`[SSG] Homepage will render ${homepagePosts.length} posts`)
+    
     // Add post routes
     for (const post of posts) {
       const route = `/${post.slug}`
@@ -204,30 +209,79 @@ function formatDate(dateString) {
 function generateSEOHead(route, routeInfo) {
   const robotsContent = ENABLE_INDEXING ? 'index, follow' : 'noindex, nofollow'
   
-  // Default/homepage SEO
-  if (route === '/' || !routeInfo) {
+  // Homepage SEO with enhanced schemas
+  if (route === '/' || routeInfo?.type === 'homepage') {
+    const homepageDescription = 'Your daily source for Apple news, how-to guides, tips, and app reviews covering iPhone, iPad, Mac, Apple Watch, and more.'
+    
+    // Build ItemList schema from homepage posts if available
+    const posts = routeInfo?.data?.posts || []
+    const itemListItems = posts.slice(0, 10).map((post, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "url": `${SITE_URL}/${post.slug}`,
+      "name": stripHtml(post.title?.rendered || post.slug)
+    }))
+    
+    const schemas = [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "iGeeksBlog",
+        "url": SITE_URL,
+        "description": homepageDescription,
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": `${SITE_URL}/?s={search_term_string}`,
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "iGeeksBlog",
+        "url": SITE_URL,
+        "logo": `${SITE_URL}/og-default.png`,
+        "sameAs": [
+          "https://twitter.com/iaborapple",
+          "https://www.facebook.com/iGeeksBlog",
+          "https://www.youtube.com/igeeksblog"
+        ]
+      }
+    ]
+    
+    // Add ItemList if we have posts
+    if (itemListItems.length > 0) {
+      schemas.push({
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Latest Articles",
+        "itemListElement": itemListItems
+      })
+    }
+    
     return `
     <title>iGeeksBlog - Apple News, How-To Guides, Tips & App Reviews</title>
-    <meta name="description" content="Your daily source for Apple news, how-to guides, tips, and app reviews covering iPhone, iPad, Mac, Apple Watch, and more." />
+    <meta name="description" content="${homepageDescription}" />
     <meta name="robots" content="${robotsContent}" />
     <link rel="canonical" href="${SITE_URL}/" />
     <meta property="og:type" content="website" />
+    <meta property="og:title" content="iGeeksBlog - Apple News, How-To Guides, Tips & App Reviews" />
+    <meta property="og:description" content="${homepageDescription}" />
     <meta property="og:url" content="${SITE_URL}/" />
     <meta property="og:site_name" content="iGeeksBlog" />
+    <meta property="og:image" content="${SITE_URL}/og-default.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
-    <script type="application/ld+json">
-    ${JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "iGeeksBlog",
-      "url": SITE_URL,
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": `${SITE_URL}/?s={search_term_string}`,
-        "query-input": "required name=search_term_string"
-      }
-    })}
-    </script>`.trim()
+    <meta name="twitter:title" content="iGeeksBlog - Apple News, How-To Guides, Tips & App Reviews" />
+    <meta name="twitter:description" content="${homepageDescription}" />
+    <meta name="twitter:image" content="${SITE_URL}/og-default.png" />
+    ${schemas.map(s => `<script type="application/ld+json">\n    ${JSON.stringify(s)}\n    </script>`).join('\n    ')}`.trim()
+  }
+  
+  // No routeInfo for non-homepage routes
+  if (!routeInfo) {
+    return ''
   }
   
   const { type, data } = routeInfo
