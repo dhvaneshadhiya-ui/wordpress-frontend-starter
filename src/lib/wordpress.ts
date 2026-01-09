@@ -362,7 +362,21 @@ export async function checkRedirect(slug: string): Promise<RedirectInfo> {
       return { found: false, url: `/${slug}` };
     }
     
-    return response.json();
+    // Get response as text first to handle malformed responses
+    // (WordPress may output HTML errors before JSON)
+    const text = await response.text();
+    
+    // Try to extract JSON from the response
+    const jsonMatch = text.match(/\{[\s\S]*\}$/);
+    if (jsonMatch) {
+      try {
+        return JSON.parse(jsonMatch[0]);
+      } catch {
+        return { found: false, url: `/${slug}` };
+      }
+    }
+    
+    return { found: false, url: `/${slug}` };
   } catch {
     // Fail silently - if redirect check fails, just show the post
     return { found: false, url: `/${slug}` };
