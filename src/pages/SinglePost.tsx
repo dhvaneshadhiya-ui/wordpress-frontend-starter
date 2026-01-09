@@ -1,16 +1,20 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { SEO } from '@/components/SEO';
 import { ArticleContent } from '@/components/ArticleContent';
+import { GonePage } from '@/components/GonePage';
 import { usePost, usePosts } from '@/hooks/useWordPress';
+import { useRedirect } from '@/hooks/useRedirect';
 import { getFeaturedImageUrl, getAuthor, getCategories, getTags, getReadingTime, formatDate, stripHtml } from '@/lib/wordpress';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PostGrid } from '@/components/PostGrid';
+import { FRONTEND_URL } from '@/lib/constants';
 
 export default function SinglePost() {
   const { slug } = useParams<{ slug: string }>();
   const { data: post, isLoading, error, isError } = usePost(slug);
+  const { data: redirect, isLoading: redirectLoading } = useRedirect(slug);
   
   // Get primary category for related posts
   const categories = post ? getCategories(post) : [];
@@ -22,13 +26,37 @@ export default function SinglePost() {
     perPage: 4 
   });
 
-  if (isLoading) {
+  // Handle redirect before showing post
+  if (redirect?.found && redirect.code) {
+    // 301/302: Redirect to new URL
+    if (redirect.code === 301 || redirect.code === 302) {
+      const target = redirect.target || '/';
+      // Handle internal vs external redirects
+      const frontendDomain = FRONTEND_URL.replace(/^https?:\/\//, '');
+      if (target.startsWith('/') || target.includes(frontendDomain)) {
+        const internalPath = target.replace(/^https?:\/\/[^/]+/, '');
+        return <Navigate to={internalPath} replace />;
+      } else {
+        // External redirect - use window.location
+        window.location.href = target;
+        return null;
+      }
+    }
+    
+    // 410: Content is gone
+    if (redirect.code === 410) {
+      return <GonePage slug={slug || ''} />;
+    }
+  }
+
+  // Show loading while checking redirect AND fetching post
+  if (isLoading || redirectLoading) {
     return (
       <Layout>
         <SEO 
           title="Loading..."
           type="article"
-          url={`https://wp.dev.igeeksblog.com/${slug}`}
+          url={`${FRONTEND_URL}/${slug}`}
         />
         <div className="container mx-auto px-4 py-8">
           <Skeleton className="mb-4 h-8 w-3/4" />
@@ -50,7 +78,7 @@ export default function SinglePost() {
         <SEO 
           title="Post Not Found" 
           type="article"
-          url={`https://wp.dev.igeeksblog.com/${slug}`}
+          url={`${FRONTEND_URL}/${slug}`}
         />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-foreground">Post not found</h1>
@@ -84,7 +112,7 @@ export default function SinglePost() {
         post={post}
         type="article"
         image={imageUrl}
-        url={`https://wp.dev.igeeksblog.com/${post.slug}`}
+        url={`${FRONTEND_URL}/${post.slug}`}
       />
       <article className="container mx-auto px-4 py-8">
         {/* Hero Section */}
