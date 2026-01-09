@@ -509,14 +509,22 @@ ${urlEntries.join('\n')}
   console.log('[SSG] Testing WordPress API connectivity...')
   try {
     const testUrl = `${WP_API_URL}/posts?per_page=1`
-    const response = await fetchWithTimeout(testUrl, 5000)
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
+    const response = await fetch(testUrl, { signal: controller.signal })
+    clearTimeout(timeoutId)
+    
     if (response.ok) {
-      console.log('[SSG] ✓ WordPress API is accessible')
+      console.log(`[SSG] ✓ WordPress API is accessible (status ${response.status})`)
     } else {
       console.error(`[SSG] ⚠️  WordPress API returned status ${response.status}`)
     }
   } catch (error) {
-    console.error(`[SSG] ❌ WordPress API test failed: ${error.message}`)
+    if (error.name === 'AbortError') {
+      console.error(`[SSG] ❌ WordPress API test timed out after 5 seconds`)
+    } else {
+      console.error(`[SSG] ❌ WordPress API test failed: ${error.message}`)
+    }
   }
   
   // Fetch all routes
