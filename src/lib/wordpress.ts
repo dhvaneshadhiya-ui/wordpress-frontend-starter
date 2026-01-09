@@ -239,12 +239,13 @@ export function getFeaturedImageUrl(post: WPPost, size: 'full' | 'large' | 'medi
   return sizes?.[size]?.source_url || sizes?.full?.source_url || media.source_url || '/placeholder.svg';
 }
 
-export function getAuthor(post: WPPost): { name: string; avatar: string; slug: string } {
+export function getAuthor(post: WPPost): { name: string; avatar: string; slug: string; description: string } {
   const author = post._embedded?.author?.[0];
   return {
     name: author?.name || 'Unknown',
     avatar: author?.avatar_urls?.['48'] || author?.avatar_urls?.['96'] || '/placeholder.svg',
     slug: author?.slug || '',
+    description: author?.description || '',
   };
 }
 

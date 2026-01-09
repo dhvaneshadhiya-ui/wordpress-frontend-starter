@@ -188,9 +188,16 @@ export default function PreviewPost() {
             </Avatar>
             <div>
               <h3 className="text-lg font-bold text-foreground">{author.name}</h3>
-              <p className="mt-1 text-muted-foreground">
-                Author at iGeeksBlog
-              </p>
+              {author.description ? (
+                <div 
+                  className="mt-1 text-muted-foreground prose prose-sm dark:prose-invert"
+                  dangerouslySetInnerHTML={{ __html: transformContentLinks(author.description) }}
+                />
+              ) : (
+                <p className="mt-1 text-muted-foreground">
+                  Author at iGeeksBlog
+                </p>
+              )}
             </div>
           </div>
         </div>
