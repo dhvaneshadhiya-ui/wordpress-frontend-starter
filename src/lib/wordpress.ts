@@ -290,8 +290,49 @@ export function formatDate(dateString: string): string {
   });
 }
 
+// Decode HTML entities (SSR-compatible, no DOM required)
+function decodeHtmlEntities(text: string): string {
+  const entities: Record<string, string> = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'",
+    '&apos;': "'",
+    '&#8211;': '–', // en-dash
+    '&#8212;': '—', // em-dash
+    '&#8216;': '\u2018', // left single quote
+    '&#8217;': '\u2019', // right single quote
+    '&#8220;': '\u201C', // left double quote
+    '&#8221;': '\u201D', // right double quote
+    '&#038;': '&',
+    '&nbsp;': ' ',
+  };
+  
+  let result = text;
+  
+  // Replace named and numeric entities
+  for (const [entity, char] of Object.entries(entities)) {
+    result = result.split(entity).join(char);
+  }
+  
+  // Handle remaining numeric entities (&#xxx;)
+  result = result.replace(/&#(\d+);/g, (_, code) => 
+    String.fromCharCode(parseInt(code, 10))
+  );
+  
+  // Handle hex entities (&#xXXX;)
+  result = result.replace(/&#x([0-9a-fA-F]+);/g, (_, code) => 
+    String.fromCharCode(parseInt(code, 16))
+  );
+  
+  return result;
+}
+
 export function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '').trim();
+  // First remove HTML tags, then decode entities
+  const stripped = html.replace(/<[^>]*>/g, '').trim();
+  return decodeHtmlEntities(stripped);
 }
 
 // Custom API base for iGeeksBlog endpoints
