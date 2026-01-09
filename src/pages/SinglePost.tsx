@@ -49,8 +49,8 @@ export default function SinglePost() {
     }
   }
 
-  // Show loading while checking redirect AND fetching post
-  if (isLoading || redirectLoading) {
+  // Show loading only while fetching post (redirect check is async and non-blocking)
+  if (isLoading) {
     return (
       <Layout>
         <SEO 
