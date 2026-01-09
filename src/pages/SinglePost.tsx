@@ -3,6 +3,7 @@ import { Layout } from '@/components/Layout';
 import { SEO } from '@/components/SEO';
 import { usePost, usePosts } from '@/hooks/useWordPress';
 import { getFeaturedImageUrl, getAuthor, getCategories, getTags, getReadingTime, formatDate, stripHtml } from '@/lib/wordpress';
+import { transformContentLinks } from '@/lib/content-utils';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PostGrid } from '@/components/PostGrid';
@@ -131,7 +132,7 @@ export default function SinglePost() {
         {/* Content */}
         <div
           className="prose prose-lg max-w-none dark:prose-invert prose-headings:text-foreground prose-p:text-foreground/90 prose-a:text-primary prose-strong:text-foreground"
-          dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+          dangerouslySetInnerHTML={{ __html: transformContentLinks(post.content.rendered) }}
         />
 
         {/* Tags */}
