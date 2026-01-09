@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { WPPost, WPCategory, WPAuthor, stripHtml } from '@/lib/wordpress';
 import { FRONTEND_URL, NEWS_CATEGORY_SLUGS } from '@/lib/constants';
 import { generateOgImageUrl } from '@/lib/og-utils';
+import { getAuthorSameAs } from '@/lib/author-social-links';
 
 // Detect if post is news-type content based on categories
 function isNewsArticle(post: WPPost): boolean {
@@ -123,6 +124,9 @@ function generateArticleSchema(post: WPPost, imageUrl: string, description: stri
   // Extract keywords from tags
   const keywords = tags.map((tag: { name: string }) => tag.name);
   
+  // Get author sameAs links for E-E-A-T signals
+  const authorSameAs = author?.slug ? getAuthorSameAs(author.slug) : [];
+  
   return {
     "@context": "https://schema.org",
     "@type": isNews ? "NewsArticle" : "BlogPosting",
@@ -141,7 +145,8 @@ function generateArticleSchema(post: WPPost, imageUrl: string, description: stri
     "author": {
       "@type": "Person",
       "name": author?.name || "iGeeksBlog",
-      "url": author?.slug ? `${FRONTEND_URL}/author/${author.slug}` : FRONTEND_URL
+      "url": author?.slug ? `${FRONTEND_URL}/author/${author.slug}` : FRONTEND_URL,
+      ...(authorSameAs.length > 0 && { "sameAs": authorSameAs })
     },
     "publisher": {
       "@type": "Organization",
@@ -186,18 +191,23 @@ function generateBreadcrumbSchema(items: { name: string; url: string }[]) {
 
 // Generate Person JSON-LD schema for author pages
 function generatePersonSchema(author: WPAuthor) {
+  const sameAs = getAuthorSameAs(author.slug);
+  
   return {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": author.name,
     "url": `${FRONTEND_URL}/author/${author.slug}`,
     "description": author.description || undefined,
-    "image": author.avatar_urls?.['96']
+    "image": author.avatar_urls?.['96'],
+    ...(sameAs.length > 0 && { "sameAs": sameAs })
   };
 }
 
 // Generate ProfilePage JSON-LD schema for author archive pages
 function generateProfilePageSchema(author: WPAuthor, posts: WPPost[]) {
+  const sameAs = getAuthorSameAs(author.slug);
+  
   return {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
@@ -207,7 +217,8 @@ function generateProfilePageSchema(author: WPAuthor, posts: WPPost[]) {
       "name": author.name,
       "url": `${FRONTEND_URL}/author/${author.slug}`,
       "description": author.description || undefined,
-      "image": author.avatar_urls?.['96']
+      "image": author.avatar_urls?.['96'],
+      ...(sameAs.length > 0 && { "sameAs": sameAs })
     },
     "name": `${author.name} - Author Profile`,
     "description": author.description || `Articles written by ${author.name}`,
