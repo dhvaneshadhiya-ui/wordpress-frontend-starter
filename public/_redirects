@@ -1,8 +1,3 @@
-# Serve static files directly (before catch-all)
-/sitemap.xml    /sitemap.xml    200
-/robots.txt     /robots.txt     200
-/llm.html       /llm.html       200
-/favicon.ico    /favicon.ico    200
-
-# SPA catch-all for React Router (must be last)
+# Netlify serves pre-rendered .html files automatically
+# This fallback only applies when no matching file exists
 /*    /index.html   200
