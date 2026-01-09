@@ -524,10 +524,17 @@ ${urlEntries.join('\n')}
         .replace(/<meta name="description" content="Your daily source.*?" \/>/, '')
         .replace(/<meta name="robots" content="noindex, nofollow" \/>/, '')
       
-      // Determine file path
-      const filePath = routeUrl === '/' 
-        ? 'dist/index.html' 
-        : `dist${routeUrl}.html`
+      // Determine file path - use directory structure for clean URLs
+      let filePath;
+      if (routeUrl === '/') {
+        filePath = 'dist/index.html';
+      } else if (routeUrl.endsWith('.html')) {
+        // Static files like /llm.html stay as-is
+        filePath = `dist${routeUrl}`;
+      } else {
+        // Dynamic routes: /slug -> /slug/index.html
+        filePath = `dist${routeUrl}/index.html`;
+      }
       
       ensureDir(toAbsolute(filePath))
       fs.writeFileSync(toAbsolute(filePath), html)
