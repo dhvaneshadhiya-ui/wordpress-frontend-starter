@@ -257,14 +257,20 @@ export interface WPPage {
 
 // Fetch single page by slug
 export async function fetchPage(slug: string): Promise<WPPage | null> {
-  const response = await fetchWithRetry(`${API_BASE}/pages?slug=${slug}&_embed`);
-  
-  if (!response.ok) {
-    throw new ApiError(`Failed to fetch page: ${response.status}`, response.status);
-  }
+  try {
+    const response = await fetchWithRetry(`${API_BASE}/pages?slug=${slug}&_embed`);
+    
+    if (!response.ok) {
+      console.warn(`Failed to fetch page ${slug}: ${response.status}`);
+      return null; // Return null instead of throwing
+    }
 
-  const pages = await response.json();
-  return pages[0] || null;
+    const pages = await response.json();
+    return pages[0] || null;
+  } catch (error) {
+    console.warn(`Error fetching page ${slug}:`, error);
+    return null; // Return null on timeout/network error
+  }
 }
 
 // Helper functions

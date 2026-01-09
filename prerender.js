@@ -170,19 +170,26 @@ async function fetchAllRoutes() {
       routeData.set(route, { type: 'author', data: { ...author, posts: authorPosts } })
     }
     
-    // Add static pages
+    // Add static pages with retry logic
     const staticPageSlugs = ['about', 'contact-us', 'privacy-policy']
     for (const pageSlug of staticPageSlugs) {
-      try {
-        const pageData = await fetchWithTimeout(`${WP_API_URL}/pages?slug=${pageSlug}&_embed=true`)
-        if (pageData && pageData[0]) {
-          const route = `/${pageSlug}`
-          routes.push(route)
-          routeData.set(route, { type: 'page', data: pageData[0] })
-          console.log(`[SSG] Added static page: ${pageSlug}`)
+      let pageData = null
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          pageData = await fetchWithTimeout(`${WP_API_URL}/pages?slug=${pageSlug}&_embed=true`)
+          if (pageData && pageData[0]) break
+        } catch (error) {
+          console.warn(`[SSG] Attempt ${attempt}/3 for page ${pageSlug} failed: ${error.message}`)
+          if (attempt < 3) await new Promise(r => setTimeout(r, 2000))
         }
-      } catch (error) {
-        console.warn(`[SSG] Failed to fetch static page ${pageSlug}: ${error.message}`)
+      }
+      if (pageData && pageData[0]) {
+        const route = `/${pageSlug}`
+        routes.push(route)
+        routeData.set(route, { type: 'page', data: pageData[0] })
+        console.log(`[SSG] ✓ Added static page: ${pageSlug}`)
+      } else {
+        console.warn(`[SSG] ⚠ Static page ${pageSlug} not pre-rendered (API unavailable after 3 attempts)`)
       }
     }
     

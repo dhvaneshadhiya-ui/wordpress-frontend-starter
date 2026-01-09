@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
@@ -9,13 +9,27 @@ import { useCategory, useCategoryPosts } from '@/hooks/useWordPress';
 import { usePrefetchNextPage } from '@/hooks/usePrefetchNextPage';
 import { fetchPosts } from '@/lib/wordpress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 import { FRONTEND_URL } from '@/lib/constants';
+import { RefreshCw } from 'lucide-react';
 
 export default function CategoryArchive() {
   const { slug } = useParams<{ slug: string }>();
   const [page, setPage] = useState(1);
-  const { data: category, isLoading: categoryLoading } = useCategory(slug);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+  const { data: category, isLoading: categoryLoading, refetch } = useCategory(slug);
   const { data: postsData, isLoading: postsLoading, isFetching } = useCategoryPosts(slug, page);
+
+  // Loading timeout - show error after 15 seconds
+  useEffect(() => {
+    if (categoryLoading) {
+      setLoadingTimeout(false);
+      const timeout = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 15000);
+      return () => clearTimeout(timeout);
+    }
+  }, [categoryLoading]);
 
   // Prefetch next page when user scrolls near pagination
   const prefetchRef = usePrefetchNextPage({
@@ -30,7 +44,7 @@ export default function CategoryArchive() {
     enabled: !!category && !!postsData,
   });
 
-  if (categoryLoading) {
+  if (categoryLoading && !loadingTimeout) {
     return (
       <Layout>
         <SEO 
@@ -45,13 +59,24 @@ export default function CategoryArchive() {
     );
   }
 
-  if (!category) {
+  if (!category || loadingTimeout) {
     return (
       <Layout>
-        <SEO title="Category Not Found" />
+        <SEO title="Category Not Found" url={`${FRONTEND_URL}/category/${slug}`} />
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-2xl font-bold text-foreground">Category not found</h1>
-          <p className="mt-2 text-muted-foreground">The category you're looking for doesn't exist.</p>
+          <h1 className="text-2xl font-bold text-foreground">
+            {loadingTimeout ? 'Unable to load category' : 'Category not found'}
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            {loadingTimeout 
+              ? 'The server is taking too long to respond. Please try again.' 
+              : "The category you're looking for doesn't exist."
+            }
+          </p>
+          <Button onClick={() => refetch()} className="mt-4" variant="outline">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Try Again
+          </Button>
         </div>
       </Layout>
     );
