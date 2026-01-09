@@ -1,17 +1,36 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Layout } from '@/components/Layout';
 import { PostGrid } from '@/components/PostGrid';
 import { usePosts } from '@/hooks/useWordPress';
 import { SEO } from '@/components/SEO';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getFeaturedImageUrl } from '@/lib/wordpress';
 import { FRONTEND_URL } from '@/lib/constants';
+import { OfflineBanner } from '@/components/OfflineBanner';
+import demoPosts from '@/data/demo-posts.json';
+import type { WPPost } from '@/lib/wordpress';
+
+// Cast demo posts for comparison
+const typedDemoPosts = demoPosts as unknown as WPPost[];
 
 const Index = () => {
   const { data, isLoading, isFetching, error, refetch } = usePosts({ perPage: 12 });
   const posts = data?.posts ?? [];
   const showLoading = isLoading && posts.length === 0;
+  
+  // Detect if we're showing demo/cached data due to API failure
+  const isOffline = useMemo(() => {
+    if (!error) return false;
+    // Check if posts match demo posts (API failed, showing fallback)
+    if (posts.length > 0 && posts.length === typedDemoPosts.length) {
+      return posts[0]?.id === typedDemoPosts[0]?.id;
+    }
+    return false;
+  }, [error, posts]);
+  
+  // Check if showing cached data (not demo) during API failure
+  const isShowingCached = error && posts.length > 0 && !isOffline;
 
   // Preload first 4 post images for faster perceived loading
   useEffect(() => {
@@ -31,6 +50,10 @@ const Index = () => {
         isHomePage={true}
         url={FRONTEND_URL}
       />
+      
+      {/* Offline/cached content banner */}
+      <OfflineBanner isVisible={isOffline || isShowingCached} isUsingDemoData={isOffline} />
+      
       <div className="container mx-auto px-4">
         {/* Screen reader only H1 for SEO */}
         <h1 className="sr-only">iGeeksBlog - Apple News, Tips & Reviews</h1>
@@ -42,6 +65,21 @@ const Index = () => {
               <span className="h-2 w-2 bg-primary rounded-full animate-pulse" />
               Updating...
             </div>
+          </div>
+        )}
+        
+        {/* Retry button when showing offline content */}
+        {(isOffline || isShowingCached) && !isFetching && (
+          <div className="flex justify-center py-4">
+            <Button 
+              onClick={() => refetch()} 
+              variant="outline" 
+              size="sm"
+              className="gap-2"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Retry Connection
+            </Button>
           </div>
         )}
         
