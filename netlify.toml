@@ -43,6 +43,13 @@
   status = 200
   force = false
 
+# Post slugs at root level (must be before SPA fallback)
+[[redirects]]
+  from = "/:slug"
+  to = "/:slug/index.html"
+  status = 200
+  force = false
+
 # SPA fallback - only if no file matches
 [[redirects]]
   from = "/*"
