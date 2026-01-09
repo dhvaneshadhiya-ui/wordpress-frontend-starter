@@ -24,33 +24,14 @@
   command = "npm run build"
   publish = "dist"
 
-# Handle clean URLs - serve index.html from subdirectories
-[[redirects]]
-  from = "/category/:slug"
-  to = "/category/:slug/index.html"
-  status = 200
-  force = false
+# Enable Pretty URLs - automatically serves /slug/index.html for /slug requests
+[build.processing]
+  skip_processing = false
 
-[[redirects]]
-  from = "/tag/:slug"
-  to = "/tag/:slug/index.html"
-  status = 200
-  force = false
+[build.processing.html]
+  pretty_urls = true
 
-[[redirects]]
-  from = "/author/:slug"
-  to = "/author/:slug/index.html"
-  status = 200
-  force = false
-
-# Post slugs at root level (must be before SPA fallback)
-[[redirects]]
-  from = "/:slug"
-  to = "/:slug/index.html"
-  status = 200
-  force = false
-
-# SPA fallback - only if no file matches
+# SPA fallback - only if no static file matches
 [[redirects]]
   from = "/*"
   to = "/index.html"
