@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { transformContentLinks } from '@/lib/content-utils';
 import { usePrefetchPost } from '@/hooks/usePrefetch';
@@ -23,6 +24,7 @@ export function ArticleContent({
 }: ArticleContentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const prefetchPost = usePrefetchPost();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -32,20 +34,30 @@ export function ArticleContent({
     
     const frontendDomain = FRONTEND_URL.replace(/^https?:\/\//, '');
 
+    // Helper to extract internal path from href
+    const getInternalPath = (href: string): string | null => {
+      if (href.startsWith('/') && !href.startsWith('//')) {
+        return href;
+      } else if (href.includes(frontendDomain)) {
+        try {
+          const url = new URL(href);
+          return url.pathname;
+        } catch {
+          return null;
+        }
+      }
+      return null;
+    };
+
     const handlePrefetch = (e: Event) => {
       const link = e.currentTarget as HTMLAnchorElement;
       const href = link.getAttribute('href');
-      
       if (!href) return;
       
-      let slug: string | null = null;
+      const path = getInternalPath(href);
+      if (!path) return;
       
-      if (href.startsWith('/') && !href.startsWith('//')) {
-        slug = href.replace(/^\//, '').replace(/\/$/, '');
-      } else if (href.includes(frontendDomain)) {
-        const url = new URL(href);
-        slug = url.pathname.replace(/^\//, '').replace(/\/$/, '');
-      }
+      const slug = path.replace(/^\//, '').replace(/\/$/, '');
       
       // Only prefetch posts (no slashes in slug)
       if (slug && !slug.includes('/') && slug.length > 0) {
@@ -53,18 +65,36 @@ export function ArticleContent({
       }
     };
 
+    const handleClick = (e: MouseEvent) => {
+      // Don't intercept if modifier keys are pressed
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      
+      const link = e.currentTarget as HTMLAnchorElement;
+      const href = link.getAttribute('href');
+      if (!href) return;
+      
+      const path = getInternalPath(href);
+      if (!path) return;
+      
+      // Prevent default navigation and use React Router
+      e.preventDefault();
+      navigate(path);
+    };
+
     links.forEach(link => {
       link.addEventListener('mouseenter', handlePrefetch);
       link.addEventListener('focus', handlePrefetch);
+      link.addEventListener('click', handleClick);
     });
 
     return () => {
       links.forEach(link => {
         link.removeEventListener('mouseenter', handlePrefetch);
         link.removeEventListener('focus', handlePrefetch);
+        link.removeEventListener('click', handleClick);
       });
     };
-  }, [html, prefetchPost]);
+  }, [html, prefetchPost, navigate]);
 
   if (!html) return null;
 
