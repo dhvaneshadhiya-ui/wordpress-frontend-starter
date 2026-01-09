@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { WPPost, WPCategory, WPAuthor, stripHtml } from '@/lib/wordpress';
 import { FRONTEND_URL } from '@/lib/constants';
+import { generateOgImageUrl } from '@/lib/og-utils';
 
 interface FAQ {
   question: string;
@@ -415,10 +416,14 @@ export function SEO({
     excerptFallback ||
     DEFAULT_DESCRIPTION;
   
+  // For articles, use dynamic OG image; otherwise use static image
+  const dynamicOgImage = (type === 'article' && post) ? generateOgImageUrl(post) : null;
+  
   const finalImage = 
+    dynamicOgImage ||
     aioseoJson?.['og:image'] || 
     aioseoParsed['og:image'] ||
-    yoastData?.og_image?.[0]?.url || 
+    yoastData?.og_image?.[0]?.url ||
     image || 
     DEFAULT_IMAGE;
   
