@@ -62,7 +62,7 @@ export default function AuthorArchive() {
       <SEO 
         title={`${author.name} - Author`}
         description={author.description || `Articles written by ${author.name} on iGeeksBlog`}
-        url={`https://dev.igeeksblog.com/author/${author.slug}`}
+        url={`https://wp.dev.igeeksblog.com/author/${author.slug}`}
         image={author.avatar_urls?.['96']}
         author={author}
       />

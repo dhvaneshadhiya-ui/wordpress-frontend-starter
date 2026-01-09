@@ -27,7 +27,7 @@ export default function SinglePost() {
         <SEO 
           title="Loading..."
           type="article"
-          url={`https://dev.igeeksblog.com/${slug}`}
+          url={`https://wp.dev.igeeksblog.com/${slug}`}
         />
         <div className="container mx-auto px-4 py-8">
           <Skeleton className="mb-4 h-8 w-3/4" />
@@ -49,7 +49,7 @@ export default function SinglePost() {
         <SEO 
           title="Post Not Found" 
           type="article"
-          url={`https://dev.igeeksblog.com/${slug}`}
+          url={`https://wp.dev.igeeksblog.com/${slug}`}
         />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-foreground">Post not found</h1>
@@ -83,7 +83,7 @@ export default function SinglePost() {
         post={post}
         type="article"
         image={imageUrl}
-        url={`https://dev.igeeksblog.com/${post.slug}`}
+        url={`https://wp.dev.igeeksblog.com/${post.slug}`}
       />
       <article className="container mx-auto px-4 py-8">
         {/* Hero Section */}

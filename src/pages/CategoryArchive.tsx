@@ -56,7 +56,7 @@ export default function CategoryArchive() {
       <SEO 
         title={category.name}
         description={category.description || `Browse all ${category.name} articles on iGeeksBlog`}
-        url={`https://dev.igeeksblog.com/category/${category.slug}`}
+        url={`https://wp.dev.igeeksblog.com/category/${category.slug}`}
         category={category}
       />
       
