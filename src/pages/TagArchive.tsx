@@ -62,6 +62,8 @@ export default function TagArchive() {
         title={`${tag.name} Articles`}
         description={`Browse all articles tagged with ${tag.name} on iGeeksBlog`}
         url={`${FRONTEND_URL}/tag/${tag.slug}`}
+        tag={tag}
+        posts={postsData?.posts}
       />
       
       {/* Background refresh indicator */}

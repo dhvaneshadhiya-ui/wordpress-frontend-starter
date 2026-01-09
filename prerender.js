@@ -211,13 +211,19 @@ function generateSEOHead(route, routeInfo) {
     
     const articleSchema = {
       "@context": "https://schema.org",
-      "@type": "Article",
+      "@type": "BlogPosting",
       "headline": stripHtml(data.title?.rendered || ''),
       "description": stripHtml(data.excerpt?.rendered || ''),
-      "image": featuredImage || undefined,
+      "image": featuredImage ? {
+        "@type": "ImageObject",
+        "url": featuredImage,
+        "width": 1200,
+        "height": 675
+      } : undefined,
       "author": {
         "@type": "Person",
-        "name": author
+        "name": author,
+        "url": `${SITE_URL}/author/${data._embedded?.author?.[0]?.slug || 'igeeksblog'}`
       },
       "publisher": {
         "@type": "Organization",
@@ -233,7 +239,11 @@ function generateSEOHead(route, routeInfo) {
         "@type": "WebPage",
         "@id": canonicalUrl
       },
-      "keywords": categories.join(', ')
+      "keywords": categories.join(', '),
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": ["h1", ".post-content p:first-of-type"]
+      }
     }
     
     return `
@@ -265,6 +275,20 @@ function generateSEOHead(route, routeInfo) {
     const description = escapeHtml(stripHtml(data.description || `Browse ${data.name} articles`).slice(0, 160))
     const canonicalUrl = `${SITE_URL}/category/${data.slug}`
     
+    // CollectionPage schema for categories
+    const collectionPageSchema = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": data.name,
+      "description": description,
+      "url": canonicalUrl,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "iGeeksBlog",
+        "url": SITE_URL
+      }
+    }
+    
     return `
     <title>${title} Archives - iGeeksBlog</title>
     <meta name="description" content="${description}" />
@@ -277,13 +301,30 @@ function generateSEOHead(route, routeInfo) {
     <meta property="og:site_name" content="iGeeksBlog" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="${title} Archives" />
-    <meta name="twitter:description" content="${description}" />`.trim()
+    <meta name="twitter:description" content="${description}" />
+    <script type="application/ld+json">
+    ${JSON.stringify(collectionPageSchema)}
+    </script>`.trim()
   }
   
   if (type === 'tag') {
     const title = escapeHtml(data.name)
     const description = escapeHtml(stripHtml(data.description || `Browse articles tagged ${data.name}`).slice(0, 160))
     const canonicalUrl = `${SITE_URL}/tag/${data.slug}`
+    
+    // CollectionPage schema for tags
+    const collectionPageSchema = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": data.name,
+      "description": description,
+      "url": canonicalUrl,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "iGeeksBlog",
+        "url": SITE_URL
+      }
+    }
     
     return `
     <title>${title} - iGeeksBlog</title>
@@ -297,7 +338,10 @@ function generateSEOHead(route, routeInfo) {
     <meta property="og:site_name" content="iGeeksBlog" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="${title}" />
-    <meta name="twitter:description" content="${description}" />`.trim()
+    <meta name="twitter:description" content="${description}" />
+    <script type="application/ld+json">
+    ${JSON.stringify(collectionPageSchema)}
+    </script>`.trim()
   }
   
   if (type === 'author') {
@@ -306,13 +350,21 @@ function generateSEOHead(route, routeInfo) {
     const canonicalUrl = `${SITE_URL}/author/${data.slug}`
     const avatar = data.avatar_urls?.['96'] || ''
     
-    const personSchema = {
+    // ProfilePage schema for author archives (enhanced from Person)
+    const profilePageSchema = {
       "@context": "https://schema.org",
-      "@type": "Person",
-      "name": data.name,
-      "url": canonicalUrl,
-      "image": avatar || undefined,
-      "description": data.description || undefined
+      "@type": "ProfilePage",
+      "mainEntity": {
+        "@type": "Person",
+        "@id": `${canonicalUrl}#person`,
+        "name": data.name,
+        "url": canonicalUrl,
+        "image": avatar || undefined,
+        "description": data.description || undefined
+      },
+      "name": `${data.name} - Author Profile`,
+      "description": description,
+      "url": canonicalUrl
     }
     
     return `
@@ -330,7 +382,7 @@ function generateSEOHead(route, routeInfo) {
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
     <script type="application/ld+json">
-    ${JSON.stringify(personSchema)}
+    ${JSON.stringify(profilePageSchema)}
     </script>`.trim()
   }
   

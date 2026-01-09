@@ -64,6 +64,7 @@ export default function CategoryArchive() {
         description={category.description || `Browse all ${category.name} articles on iGeeksBlog`}
         url={`${FRONTEND_URL}/category/${category.slug}`}
         category={category}
+        posts={postsData?.posts}
       />
       
       {/* Background refresh indicator */}
