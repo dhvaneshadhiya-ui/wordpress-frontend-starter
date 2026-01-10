@@ -1,0 +1,90 @@
+version: 1
+
+# AWS Amplify Build Configuration
+# Environment variables required in Amplify Console:
+# - VITE_WORDPRESS_API_URL: https://dev.igeeksblog.com/wp-json/wp/v2
+# - SITE_URL: https://wp.dev.igeeksblog.com
+# - VITE_ENABLE_INDEXING: true (production) / false (staging)
+
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm use 22
+        - npm ci
+    build:
+      commands:
+        # Full SSG pipeline - identical to Netlify build
+        - echo "Starting full SSG build..."
+        
+        # Step 1: Client build
+        - npm run build:client
+        
+        # Step 2: SSR build for prerendering
+        - npm run build:server
+        
+        # Step 3: Pre-render all routes (posts, categories, tags, authors)
+        - node prerender.js
+        
+        # Step 4: Generate robots.txt based on VITE_ENABLE_INDEXING
+        - node scripts/generate-robots.js
+        
+        # Step 5: Generate sitemap.xml from WordPress API
+        - node scripts/generate-sitemap.js
+        
+        - echo "SSG build complete!"
+  
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  
+  cache:
+    paths:
+      - node_modules/**/*
+
+# Custom headers for caching and security
+customHeaders:
+  - pattern: '**/*'
+    headers:
+      - key: X-Frame-Options
+        value: DENY
+      - key: X-Content-Type-Options
+        value: nosniff
+  
+  - pattern: '*.html'
+    headers:
+      - key: Cache-Control
+        value: 'public, max-age=0, must-revalidate'
+  
+  - pattern: '/assets/*'
+    headers:
+      - key: Cache-Control
+        value: 'public, max-age=31536000, immutable'
+
+# URL rewrites for clean URLs (mirrors Netlify _redirects logic)
+customRules:
+  # Category archives
+  - source: '/category/<slug>'
+    target: '/category/<slug>.html'
+    status: '200'
+  
+  # Tag archives
+  - source: '/tag/<slug>'
+    target: '/tag/<slug>.html'
+    status: '200'
+  
+  # Author archives
+  - source: '/author/<slug>'
+    target: '/author/<slug>.html'
+    status: '200'
+  
+  # Post slugs (must be last before SPA fallback)
+  - source: '/<slug>'
+    target: '/<slug>.html'
+    status: '200'
+  
+  # SPA fallback for unmatched routes
+  - source: '/<*>'
+    target: '/index.html'
+    status: '200'
