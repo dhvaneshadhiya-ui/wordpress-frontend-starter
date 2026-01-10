@@ -6,6 +6,23 @@ import App from "./App.tsx";
 import "./index.css";
 import { clearStaleVersionCaches } from "./lib/local-cache";
 
+// Handle manual cache clearing via URL parameter ?clearCache=1
+if (typeof window !== 'undefined') {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('clearCache') === '1') {
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const key = localStorage.key(i);
+      if (key?.startsWith('igb_cache_')) {
+        localStorage.removeItem(key);
+      }
+    }
+    console.log('[Cache] Manually cleared all caches');
+    urlParams.delete('clearCache');
+    const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+    window.history.replaceState({}, '', newUrl);
+  }
+}
+
 // Clean up old version caches on app init
 clearStaleVersionCaches();
 
