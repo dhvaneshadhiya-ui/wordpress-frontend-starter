@@ -80,13 +80,28 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
         />
       )}
       
-      {/* Dark fallback with gradient */}
+      {/* Dark fallback with image icon */}
       {(showFallback || !isVisible) && (
         <div 
           className="absolute inset-0 flex items-center justify-center"
           style={{ background: 'linear-gradient(135deg, #334155 0%, #0f172a 100%)' }}
         >
-          <span style={{ fontSize: '4rem', opacity: 0.2 }}>📰</span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="64" 
+            height="64" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="1.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+            style={{ color: 'rgba(255,255,255,0.15)' }}
+          >
+            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+            <circle cx="9" cy="9" r="2"/>
+            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+          </svg>
         </div>
       )}
       
