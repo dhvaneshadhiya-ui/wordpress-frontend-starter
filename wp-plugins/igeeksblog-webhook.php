@@ -1,32 +1,89 @@
 <?php
 /**
  * Plugin Name: iGeeksBlog Deploy Webhook
- * Description: Automatically triggers site rebuild when posts are published, updated, or deleted. Works with Vercel, Netlify, AWS Amplify, or any webhook-based deployment.
- * Version: 1.2.0
+ * Description: Automatically triggers site rebuild when posts are published, updated, or deleted. 
+ *              Supports GitHub Actions for content sync + direct deploy hooks for Amplify/Netlify/Vercel.
+ * Version: 2.0.0
  * Author: iGeeksBlog
  * 
  * Configuration (add to wp-config.php):
+ * 
+ * Option 1: GitHub Actions (Recommended - enables incremental content sync)
+ * define('IGB_GITHUB_TOKEN', 'ghp_xxxx');           // GitHub PAT with 'repo' scope
+ * define('IGB_GITHUB_REPO', 'username/repo-name');  // Your GitHub repository
+ * 
+ * Option 2: Direct Deploy Hook (Amplify/Netlify/Vercel)
  * define('IGB_WEBHOOK_URL', 'https://your-deploy-hook-url');
  * define('IGB_WEBHOOK_SECRET', 'your-secure-secret-key'); // Optional
  * 
- * Supported platforms:
- * - Vercel: https://api.vercel.com/v1/integrations/deploy/xxx/yyy
- * - Netlify: https://api.netlify.com/build_hooks/xxx
- * - AWS Amplify: https://webhooks.amplify.{region}.amazonaws.com/prod/webhooks?id=xxx&token=yyy
+ * You can use both options together for redundancy:
+ * - GitHub Action updates content cache (src/data/posts.json)
+ * - Direct webhook triggers immediate build
  */
 
 if (!defined('ABSPATH')) exit;
 
 /**
- * Send webhook notification to trigger deployment
+ * Trigger GitHub Action via repository_dispatch
+ * This updates src/data/posts.json before Amplify builds
+ */
+function igb_trigger_github_action($action, $post_id, $post = null) {
+    $github_token = defined('IGB_GITHUB_TOKEN') ? IGB_GITHUB_TOKEN : '';
+    $github_repo = defined('IGB_GITHUB_REPO') ? IGB_GITHUB_REPO : '';
+    
+    if (empty($github_token) || empty($github_repo)) {
+        return false; // GitHub not configured, skip silently
+    }
+    
+    $api_url = 'https://api.github.com/repos/' . $github_repo . '/dispatches';
+    
+    // Build payload for GitHub Action
+    $payload = array(
+        'event_type' => 'wordpress_content_update',
+        'client_payload' => array(
+            'action'      => $action,
+            'post_id'     => $post_id,
+            'post_title'  => $post ? $post->post_title : '',
+            'post_slug'   => $post ? $post->post_name : '',
+            'timestamp'   => current_time('c'),
+        ),
+    );
+    
+    $response = wp_remote_post($api_url, array(
+        'headers' => array(
+            'Accept'        => 'application/vnd.github.v3+json',
+            'Authorization' => 'token ' . $github_token,
+            'User-Agent'    => 'iGeeksBlog-WordPress-Plugin',
+            'Content-Type'  => 'application/json',
+        ),
+        'body'     => json_encode($payload),
+        'timeout'  => 10,
+        'blocking' => false, // Non-blocking for speed
+    ));
+    
+    if (is_wp_error($response)) {
+        error_log('iGeeksBlog GitHub Action Error: ' . $response->get_error_message());
+        return false;
+    }
+    
+    error_log('iGeeksBlog GitHub Action: Triggered ' . $action . ' for post ID ' . $post_id);
+    return true;
+}
+
+/**
+ * Send webhook notification to trigger deployment (Amplify/Netlify/Vercel)
  */
 function igb_trigger_webhook($action, $post_id, $post = null) {
+    // First, trigger GitHub Action for content sync
+    igb_trigger_github_action($action, $post_id, $post);
+    
+    // Then, trigger direct deploy webhook if configured
     $webhook_url = defined('IGB_WEBHOOK_URL') ? IGB_WEBHOOK_URL : '';
     $webhook_secret = defined('IGB_WEBHOOK_SECRET') ? IGB_WEBHOOK_SECRET : '';
     
     if (empty($webhook_url)) {
-        error_log('iGeeksBlog Webhook: URL not configured in wp-config.php');
-        return false;
+        // No direct webhook configured, GitHub Action alone is sufficient
+        return true;
     }
     
     // Get post object if not provided
@@ -133,13 +190,33 @@ add_action('edited_post_tag', function($term_id) {
 });
 
 /**
- * Admin notice if webhook URL is not configured
+ * Admin notice for configuration status
  */
 add_action('admin_notices', function() {
-    if (!defined('IGB_WEBHOOK_URL') || empty(IGB_WEBHOOK_URL)) {
+    $github_configured = defined('IGB_GITHUB_TOKEN') && !empty(IGB_GITHUB_TOKEN) 
+                       && defined('IGB_GITHUB_REPO') && !empty(IGB_GITHUB_REPO);
+    $webhook_configured = defined('IGB_WEBHOOK_URL') && !empty(IGB_WEBHOOK_URL);
+    
+    // Show warning only if neither is configured
+    if (!$github_configured && !$webhook_configured) {
         echo '<div class="notice notice-warning"><p>';
-        echo '<strong>iGeeksBlog Deploy Webhook:</strong> Deploy hook URL not configured. ';
-        echo 'Add <code>define(\'IGB_WEBHOOK_URL\', \'your-url\');</code> to wp-config.php';
+        echo '<strong>iGeeksBlog Deploy Webhook:</strong> No deployment trigger configured.<br>';
+        echo 'Add to wp-config.php:<br>';
+        echo '<code>define(\'IGB_GITHUB_TOKEN\', \'ghp_xxx\');</code><br>';
+        echo '<code>define(\'IGB_GITHUB_REPO\', \'username/repo\');</code><br>';
+        echo 'Or: <code>define(\'IGB_WEBHOOK_URL\', \'your-deploy-hook-url\');</code>';
+        echo '</p></div>';
+    }
+    
+    // Show success notice on settings pages
+    if (($github_configured || $webhook_configured) && 
+        (isset($_GET['page']) && strpos($_GET['page'], 'options') !== false)) {
+        $methods = array();
+        if ($github_configured) $methods[] = 'GitHub Actions';
+        if ($webhook_configured) $methods[] = 'Direct Webhook';
+        
+        echo '<div class="notice notice-success"><p>';
+        echo '<strong>iGeeksBlog Deploy Webhook:</strong> Active via ' . implode(' + ', $methods);
         echo '</p></div>';
     }
 });
