@@ -14,6 +14,89 @@ const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
 // Category slugs that trigger NewsArticle schema for Google News eligibility
 const NEWS_CATEGORY_SLUGS = ['news', 'breaking-news', 'breaking', 'updates', 'announcements', 'latest']
 
+// ============================================
+// HTML Structure Validation for SSG Output
+// ============================================
+
+/**
+ * Validates the structure of generated HTML files
+ * Catches issues like: content in <head>, unclosed tags, invalid JSON-LD
+ */
+function validateHtmlStructure(html, routeUrl) {
+  const errors = []
+  const warnings = []
+  
+  // 1. Check for body elements accidentally in <head>
+  const headMatch = html.match(/<head[^>]*>([\s\S]*?)<\/head>/i)
+  if (headMatch) {
+    const headContent = headMatch[1]
+    // Check for common body elements that shouldn't be in head
+    if (/<(div|section|article|main|footer|header|nav|p|h[1-6])\b[^>]*>/i.test(headContent)) {
+      errors.push('Body elements (div/section/article/etc.) found inside <head> tag')
+    }
+    // Check for excessive text content (excluding script/style/meta content)
+    const strippedHead = headContent
+      .replace(/<script[\s\S]*?<\/script>/gi, '')
+      .replace(/<style[\s\S]*?<\/style>/gi, '')
+      .replace(/<[^>]+>/g, '')
+      .trim()
+    if (strippedHead.length > 500) {
+      errors.push(`Excessive text content in <head>: ${strippedHead.length} chars (max 500)`)
+    }
+  } else {
+    errors.push('Could not find <head> section')
+  }
+  
+  // 2. Check for mismatched script tags
+  const scriptOpenCount = (html.match(/<script/g) || []).length
+  const scriptCloseCount = (html.match(/<\/script>/g) || []).length
+  if (scriptOpenCount !== scriptCloseCount) {
+    errors.push(`Mismatched script tags: ${scriptOpenCount} open, ${scriptCloseCount} close`)
+  }
+  
+  // 3. Check for required HTML structure
+  if (!/<html/i.test(html)) errors.push('Missing <html> tag')
+  if (!/<head/i.test(html)) errors.push('Missing <head> tag')
+  if (!/<body/i.test(html)) errors.push('Missing <body> tag')
+  if (!/<\/html>/i.test(html)) errors.push('Missing </html> closing tag')
+  if (!/<div id="root"/.test(html)) errors.push('Missing #root container')
+  
+  // 4. Check for content in body (should have SSR content)
+  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)
+  if (bodyMatch) {
+    const bodyContent = bodyMatch[1]
+      .replace(/<script[\s\S]*?<\/script>/gi, '')
+      .replace(/<noscript[\s\S]*?<\/noscript>/gi, '')
+      .trim()
+    if (bodyContent.length < 100) {
+      warnings.push(`Body content appears empty or minimal (${bodyContent.length} chars)`)
+    }
+  }
+  
+  // 5. Validate JSON-LD schemas
+  const jsonLdRegex = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi
+  let match
+  let schemaIndex = 0
+  while ((match = jsonLdRegex.exec(html)) !== null) {
+    schemaIndex++
+    const jsonContent = match[1].trim()
+    try {
+      const parsed = JSON.parse(jsonContent)
+      // Check for required schema fields
+      if (!parsed['@context']) {
+        warnings.push(`JSON-LD schema ${schemaIndex} missing @context`)
+      }
+      if (!parsed['@type']) {
+        warnings.push(`JSON-LD schema ${schemaIndex} missing @type`)
+      }
+    } catch (e) {
+      errors.push(`Invalid JSON-LD in schema ${schemaIndex}: ${e.message.substring(0, 100)}`)
+    }
+  }
+  
+  return { errors, warnings, schemaCount: schemaIndex }
+}
+
 // Import author social links from shared JSON (single source of truth)
 const authorSocialLinks = JSON.parse(
   fs.readFileSync(toAbsolute('src/data/author-social-links.json'), 'utf-8')
@@ -732,6 +815,7 @@ ${urlEntries.join('\n')}
   
   let successCount = 0
   let errorCount = 0
+  let validationErrorCount = 0
   
   // Render all routes
   for (const routeUrl of routes) {
@@ -744,17 +828,6 @@ ${urlEntries.join('\n')}
       
       // Get SEO head for this route
       const seoHead = generateSEOHead(routeUrl, routeInfo)
-      
-      // Validate SEO head for script tag integrity (homepage has multiple schemas)
-      if (routeUrl === '/') {
-        const scriptOpenCount = (seoHead.match(/<script/g) || []).length
-        const scriptCloseCount = (seoHead.match(/<\/script>/g) || []).length
-        if (scriptOpenCount !== scriptCloseCount) {
-          console.error(`[SSG] ⚠️ CRITICAL: Homepage has mismatched script tags: ${scriptOpenCount} open, ${scriptCloseCount} close`)
-        } else {
-          console.log(`[SSG] ✓ Homepage SEO validated: ${scriptOpenCount} schema scripts`)
-        }
-      }
       
       // Inject into template
       let html = template
@@ -772,6 +845,19 @@ ${urlEntries.join('\n')}
       html = html
         .replace(/<!-- Default title - React Helmet will override per page -->\s*<title>iGeeksBlog<\/title>\s*/, '')
         .replace(/<meta name="description" content="Your daily source.*?" \/>/, '')
+      
+      // Validate HTML structure before writing
+      const validation = validateHtmlStructure(html, routeUrl)
+      
+      if (validation.errors.length > 0) {
+        console.error(`[SSG] ⚠️ VALIDATION FAILED for ${routeUrl}:`)
+        validation.errors.forEach(err => console.error(`[SSG]   ✗ ${err}`))
+        validationErrorCount++
+      }
+      
+      if (validation.warnings.length > 0) {
+        validation.warnings.forEach(warn => console.warn(`[SSG]   ⚠ ${routeUrl}: ${warn}`))
+      }
       
       // Determine file path - use flat HTML files for reliable Netlify serving
       let filePath;
@@ -816,8 +902,17 @@ ${urlEntries.join('\n')}
   console.log(`[SSG] Tags: ${tagCount}`);
   console.log(`[SSG] Authors: ${authorCount}`);
   console.log(`[SSG] Pages: ${pageCount}`);
-  console.log(`[SSG] Errors: ${errorCount}`);
+  console.log(`[SSG] Build errors: ${errorCount}`);
+  console.log(`[SSG] Validation errors: ${validationErrorCount}`);
   console.log(`[SSG] ======================================\n`);
+  
+  // Fail build if validation errors found (optional - can be controlled by env var)
+  if (validationErrorCount > 0 && process.env.STRICT_VALIDATION === 'true') {
+    console.error(`[SSG] ❌ Build failed: ${validationErrorCount} validation errors detected`)
+    process.exit(1)
+  } else if (validationErrorCount > 0) {
+    console.warn(`[SSG] ⚠️ Build completed with ${validationErrorCount} validation warnings (set STRICT_VALIDATION=true to fail on errors)`)
+  }
   
   const duration = ((Date.now() - buildStart) / 1000).toFixed(1)
   console.log(`[SSG] Build complete: ${successCount} pages, ${errorCount} errors, ${duration}s`)
