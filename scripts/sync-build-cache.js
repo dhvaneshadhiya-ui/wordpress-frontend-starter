@@ -70,11 +70,12 @@ function restoreCache() {
 }
 
 /**
- * Save built HTML files to cache after build completes
+ * Save built files to cache after build completes
  * This populates the cache for the next partial build
+ * Includes: HTML files, client bundle (assets/), and root files
  */
 function saveCache() {
-  console.log('[Cache] Saving HTML files to cache...')
+  console.log('[Cache] Saving build artifacts to cache...')
   
   if (!fs.existsSync(DIST_DIR)) {
     console.warn('[Cache] ⚠ No dist directory found - nothing to cache')
@@ -86,8 +87,35 @@ function saveCache() {
     fs.mkdirSync(CACHE_DIR, { recursive: true })
   }
   
-  const count = copyDirRecursive(DIST_DIR, CACHE_DIR)
-  console.log(`[Cache] ✓ Saved ${count} HTML files to cache`)
+  // 1. Save HTML files (for partial content rebuilds)
+  const htmlCount = copyDirRecursive(DIST_DIR, CACHE_DIR)
+  console.log(`[Cache] ✓ Saved ${htmlCount} HTML files`)
+  
+  // 2. Save client bundle assets (for skipping Vite build on partial)
+  const assetsDir = path.join(DIST_DIR, 'assets')
+  const cacheAssetsDir = path.join(CACHE_DIR, 'assets')
+  
+  if (fs.existsSync(assetsDir)) {
+    // Clear old assets first
+    if (fs.existsSync(cacheAssetsDir)) {
+      fs.rmSync(cacheAssetsDir, { recursive: true, force: true })
+    }
+    fs.cpSync(assetsDir, cacheAssetsDir, { recursive: true })
+    const assetCount = fs.readdirSync(assetsDir).length
+    console.log(`[Cache] ✓ Saved ${assetCount} client bundle assets`)
+  }
+  
+  // 3. Save root files needed for client bundle
+  const rootFiles = ['index.html', 'favicon.ico', 'logo.png']
+  let rootCount = 0
+  for (const file of rootFiles) {
+    const srcFile = path.join(DIST_DIR, file)
+    if (fs.existsSync(srcFile)) {
+      fs.copyFileSync(srcFile, path.join(CACHE_DIR, file))
+      rootCount++
+    }
+  }
+  console.log(`[Cache] ✓ Saved ${rootCount} root files`)
 }
 
 /**
@@ -109,10 +137,11 @@ function cleanCache() {
  */
 function getCacheStats() {
   if (!fs.existsSync(CACHE_DIR)) {
-    return { exists: false, fileCount: 0, sizeBytes: 0 }
+    return { exists: false, htmlCount: 0, assetCount: 0, sizeBytes: 0 }
   }
   
-  let fileCount = 0
+  let htmlCount = 0
+  let assetCount = 0
   let sizeBytes = 0
   
   function walkDir(dir) {
@@ -121,16 +150,20 @@ function getCacheStats() {
       const fullPath = path.join(dir, entry.name)
       if (entry.isDirectory()) {
         walkDir(fullPath)
-      } else if (entry.name.endsWith('.html')) {
-        fileCount++
+      } else {
         sizeBytes += fs.statSync(fullPath).size
+        if (entry.name.endsWith('.html')) {
+          htmlCount++
+        } else if (dir.includes('assets')) {
+          assetCount++
+        }
       }
     }
   }
   
   walkDir(CACHE_DIR)
   
-  return { exists: true, fileCount, sizeBytes }
+  return { exists: true, htmlCount, assetCount, sizeBytes }
 }
 
 // Main execution
@@ -149,7 +182,7 @@ switch (command) {
   case 'stats':
     const stats = getCacheStats()
     if (stats.exists) {
-      console.log(`[Cache] Files: ${stats.fileCount}, Size: ${(stats.sizeBytes / 1024 / 1024).toFixed(2)} MB`)
+      console.log(`[Cache] HTML: ${stats.htmlCount}, Assets: ${stats.assetCount}, Size: ${(stats.sizeBytes / 1024 / 1024).toFixed(2)} MB`)
     } else {
       console.log('[Cache] No cache exists')
     }

@@ -21,8 +21,20 @@ frontend:
         # Fast SSG pipeline using cached content from GitHub Action
         - echo "Starting optimized SSG build..."
         
-        # Step 1: Client build
-        - npm run build:client
+        # Step 1: Client build (skip on partial builds if cached)
+        - |
+          if [ "$PARTIAL_BUILD" = "true" ] && [ -d ".build-cache/assets" ] && [ -f ".build-cache/index.html" ]; then
+            echo "PARTIAL BUILD: Restoring cached client bundle..."
+            mkdir -p dist
+            cp -r .build-cache/assets dist/
+            cp .build-cache/index.html dist/
+            [ -f ".build-cache/favicon.ico" ] && cp .build-cache/favicon.ico dist/
+            [ -f ".build-cache/logo.png" ] && cp .build-cache/logo.png dist/
+            echo "✓ Client bundle restored from cache (skipping Vite build)"
+          else
+            echo "FULL BUILD: Building fresh client bundle..."
+            npm run build:client
+          fi
         
         # Step 2: SSR build for prerendering
         - npm run build:server
