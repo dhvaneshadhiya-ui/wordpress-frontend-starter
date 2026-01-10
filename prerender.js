@@ -102,6 +102,17 @@ const authorSocialLinks = JSON.parse(
   fs.readFileSync(toAbsolute('src/data/author-social-links.json'), 'utf-8')
 )
 
+// ============================================
+// Local Fallback Data - used when WordPress API fails
+// ============================================
+const localDemoPosts = JSON.parse(fs.readFileSync(toAbsolute('src/data/demo-posts.json'), 'utf-8'))
+const localCategories = JSON.parse(fs.readFileSync(toAbsolute('src/data/categories.json'), 'utf-8'))
+const localTags = JSON.parse(fs.readFileSync(toAbsolute('src/data/tags.json'), 'utf-8'))
+const localAuthors = JSON.parse(fs.readFileSync(toAbsolute('src/data/authors.json'), 'utf-8'))
+const localStaticPages = JSON.parse(fs.readFileSync(toAbsolute('src/data/static-pages.json'), 'utf-8'))
+
+console.log(`[SSG] Loaded fallback data: ${localDemoPosts.length} posts, ${localCategories.length} categories, ${localTags.length} tags, ${localAuthors.length} authors`)
+
 // Get sameAs array for an author by slug
 function getAuthorSameAs(authorSlug) {
   return authorSocialLinks[authorSlug]?.sameAs || []
@@ -214,24 +225,54 @@ async function fetchAllRoutes() {
   
   const routes = [...STATIC_ROUTES]
   const routeData = new Map()
+  let usingFallback = false
   
   try {
     // Fetch sequentially to avoid overwhelming the WordPress server
     console.log('[SSG] Fetching posts...')
-    const posts = await fetchAllPaginated('posts?_embed=true')
-    console.log(`[SSG] ✓ Fetched ${posts.length} posts`)
+    let posts = await fetchAllPaginated('posts?_embed=true')
+    console.log(`[SSG] ✓ Fetched ${posts.length} posts from API`)
+    
+    // FALLBACK: If API returned no posts, use local demo data
+    if (posts.length === 0) {
+      console.warn('[SSG] ⚠️ No posts from API - falling back to local demo posts')
+      posts = localDemoPosts
+      usingFallback = true
+      console.log(`[SSG] ✓ Using ${posts.length} demo posts as fallback`)
+    }
     
     console.log('[SSG] Fetching categories...')
-    const categories = await fetchAllPaginated('categories')
-    console.log(`[SSG] ✓ Fetched ${categories.length} categories`)
+    let categories = await fetchAllPaginated('categories')
+    if (categories.length === 0) {
+      console.warn('[SSG] ⚠️ No categories from API - using local fallback')
+      categories = localCategories
+      usingFallback = true
+      console.log(`[SSG] ✓ Using ${categories.length} local categories`)
+    } else {
+      console.log(`[SSG] ✓ Fetched ${categories.length} categories`)
+    }
     
     console.log('[SSG] Fetching tags...')
-    const tags = await fetchAllPaginated('tags')
-    console.log(`[SSG] ✓ Fetched ${tags.length} tags`)
+    let tags = await fetchAllPaginated('tags')
+    if (tags.length === 0) {
+      console.warn('[SSG] ⚠️ No tags from API - using local fallback')
+      tags = localTags
+      usingFallback = true
+      console.log(`[SSG] ✓ Using ${tags.length} local tags`)
+    } else {
+      console.log(`[SSG] ✓ Fetched ${tags.length} tags`)
+    }
     
     console.log('[SSG] Fetching authors...')
-    const authors = await fetchAllPaginated('users')
-    console.log(`[SSG] ✓ Fetched ${authors.length} authors`)
+    let authors = await fetchAllPaginated('users')
+    if (authors.length === 0) {
+      console.warn('[SSG] ⚠️ No authors from API - using local fallback')
+      authors = localAuthors
+      usingFallback = true
+      console.log(`[SSG] ✓ Using ${authors.length} local authors`)
+    } else {
+      console.log(`[SSG] ✓ Fetched ${authors.length} authors`)
+    }
     
     // Add homepage route with latest posts for SSR
     const homepagePosts = posts.slice(0, 20) // First 20 posts for homepage grid
@@ -276,7 +317,7 @@ async function fetchAllRoutes() {
       routeData.set(route, { type: 'author', data: { ...author, posts: authorPosts } })
     }
     
-    // Add static pages with retry logic
+    // Add static pages with retry logic and fallback
     const staticPageSlugs = ['about', 'contact-us', 'privacy-policy']
     for (const pageSlug of staticPageSlugs) {
       let pageData = null
@@ -289,13 +330,24 @@ async function fetchAllRoutes() {
           if (attempt < 3) await new Promise(r => setTimeout(r, 2000))
         }
       }
+      
       if (pageData && pageData[0]) {
         const route = `/${pageSlug}`
         routes.push(route)
         routeData.set(route, { type: 'page', data: pageData[0] })
         console.log(`[SSG] ✓ Added static page: ${pageSlug}`)
       } else {
-        console.warn(`[SSG] ⚠ Static page ${pageSlug} not pre-rendered (API unavailable after 3 attempts)`)
+        // Try local fallback for static pages
+        const localPage = localStaticPages.find(p => p.slug === pageSlug)
+        if (localPage) {
+          const route = `/${pageSlug}`
+          routes.push(route)
+          routeData.set(route, { type: 'page', data: localPage })
+          usingFallback = true
+          console.log(`[SSG] ✓ Using local fallback for page: ${pageSlug}`)
+        } else {
+          console.warn(`[SSG] ⚠ Static page ${pageSlug} not available (no API data or local fallback)`)
+        }
       }
     }
     
@@ -303,8 +355,51 @@ async function fetchAllRoutes() {
     console.error(`[SSG] ❌ CRITICAL: WordPress API unreachable!`)
     console.error(`[SSG] API URL: ${WP_API_URL}`)
     console.error(`[SSG] Error: ${error.message}`)
-    console.error(`[SSG] This means NO article pages will be generated.`)
-    console.error(`[SSG] Falling back to ${STATIC_ROUTES.length} static routes only.`)
+    console.error(`[SSG] Falling back to local demo data...`)
+    
+    usingFallback = true
+    
+    // Use all local fallback data
+    const posts = localDemoPosts
+    const categories = localCategories
+    const tags = localTags
+    const authors = localAuthors
+    
+    console.log(`[SSG] ✓ Using ${posts.length} demo posts, ${categories.length} categories, ${tags.length} tags, ${authors.length} authors`)
+    
+    // Add homepage with demo posts
+    routeData.set('/', { type: 'homepage', data: { posts: posts.slice(0, 20) } })
+    
+    // Add post routes
+    for (const post of posts) {
+      const route = `/${post.slug}`
+      routes.push(route)
+      routeData.set(route, { type: 'post', data: post })
+    }
+    
+    // Add category routes
+    for (const category of categories) {
+      if (category.count > 0) {
+        const route = `/category/${category.slug}`
+        routes.push(route)
+        routeData.set(route, { type: 'category', data: { ...category, posts: [] } })
+      }
+    }
+    
+    // Add author routes
+    for (const author of authors) {
+      const route = `/author/${author.slug}`
+      routes.push(route)
+      routeData.set(route, { type: 'author', data: { ...author, posts: [] } })
+    }
+    
+    // Add static pages from local data
+    for (const page of localStaticPages) {
+      const route = `/${page.slug}`
+      routes.push(route)
+      routeData.set(route, { type: 'page', data: page })
+      console.log(`[SSG] ✓ Added local static page: ${page.slug}`)
+    }
     
     // Optionally fail the build if API is required
     if (process.env.REQUIRE_API === 'true') {
@@ -312,7 +407,7 @@ async function fetchAllRoutes() {
     }
   }
   
-  return { routes, routeData }
+  return { routes, routeData, usingFallback }
 }
 
 // Strip HTML tags
@@ -801,7 +896,7 @@ ${urlEntries.join('\n')}
   }
   
   // Fetch all routes
-  const { routes, routeData } = await fetchAllRoutes()
+  const { routes, routeData, usingFallback } = await fetchAllRoutes()
   console.log(`[SSG] Pre-rendering ${routes.length} routes...`)
   
   // Verify we have content to render
@@ -810,7 +905,7 @@ ${urlEntries.join('\n')}
     console.error(`[SSG] ⚠️  WARNING: No posts found! Check WordPress API connectivity.`)
     console.error(`[SSG] Only static routes will be generated: ${routes.join(', ')}`)
   } else {
-    console.log(`[SSG] ✓ Found ${postCount} posts to pre-render`)
+    console.log(`[SSG] ✓ Found ${postCount} posts to pre-render${usingFallback ? ' (using fallback data)' : ''}`)
   }
   
   let successCount = 0
@@ -892,15 +987,18 @@ ${urlEntries.join('\n')}
   
   // Build summary
   console.log(`\n[SSG] ========== BUILD SUMMARY ==========`);
+  if (usingFallback) {
+    console.log(`[SSG] ⚠️  USING FALLBACK DATA (WordPress API failed)`);
+  }
   console.log(`[SSG] Total routes generated: ${successCount}`);
   const categoryCount = [...routeData.entries()].filter(([_, v]) => v.type === 'category').length;
   const tagCount = [...routeData.entries()].filter(([_, v]) => v.type === 'tag').length;
   const authorCount = [...routeData.entries()].filter(([_, v]) => v.type === 'author').length;
   const pageCount = [...routeData.entries()].filter(([_, v]) => v.type === 'page').length;
-  console.log(`[SSG] Posts: ${postCount}`);
-  console.log(`[SSG] Categories: ${categoryCount}`);
-  console.log(`[SSG] Tags: ${tagCount}`);
-  console.log(`[SSG] Authors: ${authorCount}`);
+  console.log(`[SSG] Posts: ${postCount}${usingFallback ? ' (demo)' : ''}`);
+  console.log(`[SSG] Categories: ${categoryCount}${usingFallback ? ' (local)' : ''}`);
+  console.log(`[SSG] Tags: ${tagCount}${usingFallback ? ' (local)' : ''}`);
+  console.log(`[SSG] Authors: ${authorCount}${usingFallback ? ' (local)' : ''}`);
   console.log(`[SSG] Pages: ${pageCount}`);
   console.log(`[SSG] Build errors: ${errorCount}`);
   console.log(`[SSG] Validation errors: ${validationErrorCount}`);
