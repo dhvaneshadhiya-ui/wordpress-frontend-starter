@@ -659,7 +659,21 @@ ${urlEntries.join('\n')}
   console.log('[SSG] Starting pre-render build...')
   
   // Read template
-  const template = fs.readFileSync(toAbsolute('dist/index.html'), 'utf-8')
+  let template = fs.readFileSync(toAbsolute('dist/index.html'), 'utf-8')
+  
+  // Log template structure for debugging
+  console.log(`[SSG] Template size: ${template.length} bytes`)
+  console.log(`[SSG] Template has <!--seo-head-->: ${template.includes('<!--seo-head-->')}`)
+  console.log(`[SSG] Template has <!--app-html-->: ${template.includes('<!--app-html-->')}`)
+  console.log(`[SSG] Template has <div id="root">: ${template.includes('<div id="root">')}`)
+  
+  // If the <!--app-html--> placeholder is missing but we have #root, that's fine (fallback will work)
+  if (!template.includes('<!--seo-head-->')) {
+    console.warn('[SSG] ⚠️ Missing <!--seo-head--> placeholder in dist/index.html')
+  }
+  if (!template.includes('<!--app-html-->') && !template.includes('<div id="root"></div>')) {
+    console.warn('[SSG] ⚠️ Missing <!--app-html--> placeholder and no empty #root in dist/index.html')
+  }
   
   // Load server entry
   const serverAssetsDir = toAbsolute('dist/server/assets')
@@ -723,7 +737,14 @@ ${urlEntries.join('\n')}
       // Inject into template
       let html = template
         .replace('<!--seo-head-->', seoHead)
-        .replace('<!--app-html-->', appHtml)
+      
+      // Inject app HTML into #root - try comment first, then fallback to empty #root
+      if (html.includes('<!--app-html-->')) {
+        html = html.replace('<!--app-html-->', appHtml)
+      } else {
+        // Fallback: inject into empty <div id="root"></div>
+        html = html.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`)
+      }
       
       // Remove default title and meta tags to avoid duplicates (SSG injects proper ones)
       html = html
