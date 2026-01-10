@@ -1158,16 +1158,15 @@ function getCachedFile(routeUrl) {
   
   // Log template structure for debugging
   console.log(`[SSG] Template size: ${template.length} bytes`)
-  console.log(`[SSG] Template has <!--seo-head-->: ${template.includes('<!--seo-head-->')}`)
-  console.log(`[SSG] Template has <!--app-html-->: ${template.includes('<!--app-html-->')}`)
+  console.log(`[SSG] Template has </head>: ${template.includes('</head>')}`)
   console.log(`[SSG] Template has <div id="root">: ${template.includes('<div id="root">')}`)
   
-  // If the <!--app-html--> placeholder is missing but we have #root, that's fine (fallback will work)
-  if (!template.includes('<!--seo-head-->')) {
-    console.warn('[SSG] ⚠️ Missing <!--seo-head--> placeholder in dist/index.html')
+  // Verify required injection points exist
+  if (!template.includes('</head>')) {
+    console.error('[SSG] ❌ Missing </head> tag in dist/index.html - cannot inject SEO')
   }
-  if (!template.includes('<!--app-html-->') && !template.includes('<div id="root"></div>')) {
-    console.warn('[SSG] ⚠️ Missing <!--app-html--> placeholder and no empty #root in dist/index.html')
+  if (!template.includes('<div id="root"></div>') && !template.includes('<div id="root">')) {
+    console.error('[SSG] ❌ Missing #root container in dist/index.html - cannot inject content')
   }
   
   // Load server entry
@@ -1252,22 +1251,15 @@ function getCachedFile(routeUrl) {
       // Get SEO head for this route
       const seoHead = generateSEOHead(routeUrl, routeInfo)
       
-      // Inject into template
+      // Inject SEO head before </head> and app HTML into #root
       let html = template
-        .replace('<!--seo-head-->', seoHead)
+        // Inject SEO tags before closing </head>
+        .replace('</head>', `${seoHead}\n  </head>`)
+        // Inject rendered content into #root
+        .replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`)
       
-      // Inject app HTML into #root - try comment first, then fallback to empty #root
-      if (html.includes('<!--app-html-->')) {
-        html = html.replace('<!--app-html-->', appHtml)
-      } else {
-        // Fallback: inject into empty <div id="root"></div>
-        html = html.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`)
-      }
-      
-      // Remove default title and meta tags to avoid duplicates (SSG injects proper ones)
-      html = html
-        .replace(/<!-- Default title - React Helmet will override per page -->\s*<title>iGeeksBlog<\/title>\s*/, '')
-        .replace(/<meta name="description" content="Your daily source.*?" \/>/, '')
+      // Remove default title to avoid duplicates (SSG injects proper one via seoHead)
+      html = html.replace(/<title>iGeeksBlog<\/title>/, '')
       
       // Validate HTML structure before writing
       const validation = validateHtmlStructure(html, routeUrl)
