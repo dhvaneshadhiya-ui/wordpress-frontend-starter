@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { FRONTEND_URL } from '@/lib/constants';
 import { RefreshCw } from 'lucide-react';
+import { usePrerenderReady } from '@/hooks/usePrerenderReady';
 
 export default function AuthorArchive() {
   const { slug } = useParams<{ slug: string }>();
@@ -20,6 +21,9 @@ export default function AuthorArchive() {
   const [loadingTimeout, setLoadingTimeout] = useState(false);
   const { data: author, isLoading: authorLoading, refetch } = useAuthor(slug);
   const { data: postsData, isLoading: postsLoading, isFetching } = useAuthorPosts(slug, page);
+  
+  // Signal prerender ready when author and posts are loaded
+  usePrerenderReady(!authorLoading && !postsLoading && !!author);
 
   // Loading timeout - show error after 15 seconds
   useEffect(() => {

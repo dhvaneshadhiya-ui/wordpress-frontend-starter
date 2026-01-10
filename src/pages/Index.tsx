@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { getFeaturedImageUrl } from '@/lib/wordpress';
 import { FRONTEND_URL } from '@/lib/constants';
 import { OfflineBanner } from '@/components/OfflineBanner';
+import { usePrerenderReady } from '@/hooks/usePrerenderReady';
 import demoPosts from '@/data/demo-posts.json';
 import type { WPPost } from '@/lib/wordpress';
 
@@ -18,6 +19,9 @@ const Index = () => {
   const { data, isLoading, isFetching, error, refetch } = usePosts({ perPage: 12 });
   const posts = data?.posts ?? [];
   const showLoading = isLoading && posts.length === 0;
+  
+  // Signal prerender ready when posts are loaded
+  usePrerenderReady(!isLoading && posts.length > 0);
   
   // Hide "updating" indicator after timeout if API keeps failing
   const [showUpdating, setShowUpdating] = useState(true);

@@ -11,11 +11,15 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PostGrid } from '@/components/PostGrid';
 import { FRONTEND_URL } from '@/lib/constants';
+import { usePrerenderReady } from '@/hooks/usePrerenderReady';
 
 export default function SinglePost() {
   const { slug } = useParams<{ slug: string }>();
   const { data: post, isLoading, error, isError } = usePost(slug);
   const [loadingTimeout, setLoadingTimeout] = useState(false);
+  
+  // Signal prerender ready when post is loaded
+  usePrerenderReady(!isLoading && !!post);
   
   // Show error state after 15s of loading (API is likely down)
   useEffect(() => {
