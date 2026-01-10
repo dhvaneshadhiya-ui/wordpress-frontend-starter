@@ -9,6 +9,8 @@ const toAbsolute = (p) => path.resolve(__dirname, p)
 const SITE_URL = process.env.SITE_URL || 'https://wp.dev.igeeksblog.com'
 const WP_API_URL = 'https://dev.igeeksblog.com/wp-json/wp/v2'
 const API_TIMEOUT = process.env.API_TIMEOUT ? parseInt(process.env.API_TIMEOUT) : 60000 // 60 seconds default
+const POSTS_PER_PAGE = process.env.POSTS_PER_PAGE ? parseInt(process.env.POSTS_PER_PAGE) : 20 // Reduced to prevent WordPress memory exhaustion
+const REQUEST_DELAY = process.env.REQUEST_DELAY ? parseInt(process.env.REQUEST_DELAY) : 500 // Delay between API requests (ms)
 const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
 
 // Category slugs that trigger NewsArticle schema for Google News eligibility
@@ -182,11 +184,12 @@ async function fetchWithTimeout(url, timeout = API_TIMEOUT) {
   }
 }
 
-// Fetch all items with pagination and retry logic
-async function fetchAllPaginated(endpoint, perPage = 100, maxRetries = 2) {
+// Fetch all items with pagination, retry logic, and progressive per_page reduction
+async function fetchAllPaginated(endpoint, perPage = POSTS_PER_PAGE, maxRetries = 3) {
   const items = []
   let page = 1
   let hasMore = true
+  let currentPerPage = perPage
   
   while (hasMore) {
     let lastError = null
@@ -194,17 +197,30 @@ async function fetchAllPaginated(endpoint, perPage = 100, maxRetries = 2) {
     
     for (let attempt = 1; attempt <= maxRetries + 1; attempt++) {
       try {
-        const url = `${WP_API_URL}/${endpoint}${endpoint.includes('?') ? '&' : '?'}per_page=${perPage}&page=${page}`
+        const url = `${WP_API_URL}/${endpoint}${endpoint.includes('?') ? '&' : '?'}per_page=${currentPerPage}&page=${page}`
         const data = await fetchWithTimeout(url)
         items.push(...data)
-        hasMore = data.length === perPage
+        hasMore = data.length === currentPerPage
         page++
         success = true
+        
+        // Add delay between requests to give WordPress time to free memory
+        if (hasMore) {
+          await new Promise(r => setTimeout(r, REQUEST_DELAY))
+        }
         break
       } catch (error) {
         lastError = error
+        
+        // Progressive per_page reduction on failure (memory optimization)
         if (attempt <= maxRetries) {
-          console.warn(`[SSG] Retry ${attempt}/${maxRetries} for ${endpoint} page ${page}...`)
+          const previousPerPage = currentPerPage
+          if (currentPerPage > 10) {
+            currentPerPage = 10
+          } else if (currentPerPage > 5) {
+            currentPerPage = 5
+          }
+          console.warn(`[SSG] Retry ${attempt}/${maxRetries} for ${endpoint} page ${page} (reduced per_page: ${previousPerPage} → ${currentPerPage})...`)
           await new Promise(r => setTimeout(r, 2000)) // Wait 2s before retry
         }
       }
@@ -219,18 +235,39 @@ async function fetchAllPaginated(endpoint, perPage = 100, maxRetries = 2) {
   return items
 }
 
+// Fetch a single item by ID with retry logic
+async function fetchSingleItem(endpoint, id, maxRetries = 2) {
+  for (let attempt = 1; attempt <= maxRetries + 1; attempt++) {
+    try {
+      const url = `${WP_API_URL}/${endpoint}/${id}`
+      return await fetchWithTimeout(url, 10000) // Shorter timeout for single items
+    } catch (error) {
+      if (attempt <= maxRetries) {
+        await new Promise(r => setTimeout(r, 1000))
+      }
+    }
+  }
+  return null
+}
+
 // Fetch all dynamic routes from WordPress
 async function fetchAllRoutes() {
   console.log('[SSG] Fetching routes from WordPress API...')
+  console.log(`[SSG] Configuration: per_page=${POSTS_PER_PAGE}, timeout=${API_TIMEOUT}ms, delay=${REQUEST_DELAY}ms`)
   
   const routes = [...STATIC_ROUTES]
   const routeData = new Map()
   let usingFallback = false
   
   try {
-    // Fetch sequentially to avoid overwhelming the WordPress server
-    console.log('[SSG] Fetching posts...')
-    let posts = await fetchAllPaginated('posts?_embed=true')
+    // ============================================
+    // MEMORY OPTIMIZATION: Fetch posts WITHOUT _embed
+    // Then fetch media and authors separately
+    // This prevents WordPress memory exhaustion
+    // ============================================
+    
+    console.log('[SSG] Fetching posts (without _embed to reduce memory)...')
+    let posts = await fetchAllPaginated('posts')
     console.log(`[SSG] ✓ Fetched ${posts.length} posts from API`)
     
     // FALLBACK: If API returned no posts, use local demo data
@@ -239,39 +276,134 @@ async function fetchAllRoutes() {
       posts = localDemoPosts
       usingFallback = true
       console.log(`[SSG] ✓ Using ${posts.length} demo posts as fallback`)
+    } else {
+      // Fetch featured media and authors separately to attach to posts
+      console.log('[SSG] Fetching media and authors separately...')
+      
+      // Get unique media IDs and author IDs
+      const mediaIds = [...new Set(posts.map(p => p.featured_media).filter(Boolean))]
+      const authorIds = [...new Set(posts.map(p => p.author).filter(Boolean))]
+      
+      console.log(`[SSG] Need to fetch ${mediaIds.length} media items and ${authorIds.length} authors`)
+      
+      // Fetch all media in batches
+      const mediaMap = new Map()
+      const mediaBatchSize = 50 // Fetch 50 media items at a time
+      for (let i = 0; i < mediaIds.length; i += mediaBatchSize) {
+        const batchIds = mediaIds.slice(i, i + mediaBatchSize)
+        try {
+          const mediaUrl = `${WP_API_URL}/media?include=${batchIds.join(',')}&per_page=${mediaBatchSize}`
+          const mediaItems = await fetchWithTimeout(mediaUrl, 30000)
+          for (const item of mediaItems) {
+            mediaMap.set(item.id, item)
+          }
+          console.log(`[SSG] ✓ Fetched media batch ${Math.floor(i / mediaBatchSize) + 1}: ${mediaItems.length} items`)
+          await new Promise(r => setTimeout(r, REQUEST_DELAY))
+        } catch (error) {
+          console.warn(`[SSG] ⚠️ Failed to fetch media batch: ${error.message}`)
+        }
+      }
+      
+      // Fetch all authors in one request (usually < 20 authors)
+      const authorMap = new Map()
+      if (authorIds.length > 0) {
+        try {
+          const authorsUrl = `${WP_API_URL}/users?include=${authorIds.join(',')}&per_page=100`
+          const authorItems = await fetchWithTimeout(authorsUrl, 30000)
+          for (const author of authorItems) {
+            authorMap.set(author.id, author)
+          }
+          console.log(`[SSG] ✓ Fetched ${authorItems.length} authors`)
+        } catch (error) {
+          console.warn(`[SSG] ⚠️ Failed to fetch authors: ${error.message}`)
+        }
+      }
+      
+      // Fetch categories and tags for posts (needed for _embedded simulation)
+      console.log('[SSG] Fetching all categories and tags for post embedding...')
+      let allCategories = []
+      let allTags = []
+      
+      try {
+        allCategories = await fetchAllPaginated('categories')
+        console.log(`[SSG] ✓ Fetched ${allCategories.length} categories`)
+      } catch (error) {
+        console.warn(`[SSG] ⚠️ Failed to fetch categories: ${error.message}`)
+      }
+      
+      try {
+        allTags = await fetchAllPaginated('tags')
+        console.log(`[SSG] ✓ Fetched ${allTags.length} tags`)
+      } catch (error) {
+        console.warn(`[SSG] ⚠️ Failed to fetch tags: ${error.message}`)
+      }
+      
+      const categoryMap = new Map(allCategories.map(c => [c.id, c]))
+      const tagMap = new Map(allTags.map(t => [t.id, t]))
+      
+      // Attach _embedded data to each post (simulating what _embed=true would do)
+      posts = posts.map(post => {
+        const featuredMedia = mediaMap.get(post.featured_media)
+        const author = authorMap.get(post.author)
+        const postCategories = (post.categories || []).map(id => categoryMap.get(id)).filter(Boolean)
+        const postTags = (post.tags || []).map(id => tagMap.get(id)).filter(Boolean)
+        
+        return {
+          ...post,
+          _embedded: {
+            'wp:featuredmedia': featuredMedia ? [featuredMedia] : [],
+            'author': author ? [author] : [],
+            'wp:term': [postCategories, postTags] // [categories, tags]
+          }
+        }
+      })
+      
+      console.log(`[SSG] ✓ Attached embedded data to ${posts.length} posts`)
     }
     
-    console.log('[SSG] Fetching categories...')
-    let categories = await fetchAllPaginated('categories')
+    // Categories already fetched above for embedding, reuse or fetch if fallback
+    let categories = [...new Map(posts.flatMap(p => p._embedded?.['wp:term']?.[0] || []).map(c => [c.id, c])).values()]
+    if (categories.length === 0) {
+      console.log('[SSG] Fetching categories separately...')
+      categories = await fetchAllPaginated('categories')
+    }
     if (categories.length === 0) {
       console.warn('[SSG] ⚠️ No categories from API - using local fallback')
       categories = localCategories
       usingFallback = true
       console.log(`[SSG] ✓ Using ${categories.length} local categories`)
     } else {
-      console.log(`[SSG] ✓ Fetched ${categories.length} categories`)
+      console.log(`[SSG] ✓ Have ${categories.length} categories`)
     }
     
-    console.log('[SSG] Fetching tags...')
-    let tags = await fetchAllPaginated('tags')
+    // Tags already fetched above for embedding, reuse or fetch if fallback
+    let tags = [...new Map(posts.flatMap(p => p._embedded?.['wp:term']?.[1] || []).map(t => [t.id, t])).values()]
+    if (tags.length === 0) {
+      console.log('[SSG] Fetching tags separately...')
+      tags = await fetchAllPaginated('tags')
+    }
     if (tags.length === 0) {
       console.warn('[SSG] ⚠️ No tags from API - using local fallback')
       tags = localTags
       usingFallback = true
       console.log(`[SSG] ✓ Using ${tags.length} local tags`)
     } else {
-      console.log(`[SSG] ✓ Fetched ${tags.length} tags`)
+      console.log(`[SSG] ✓ Have ${tags.length} tags`)
     }
     
-    console.log('[SSG] Fetching authors...')
-    let authors = await fetchAllPaginated('users')
+    // Authors already fetched above for embedding, reuse or fetch if fallback
+    let authors = [...new Map(posts.flatMap(p => p._embedded?.['author'] || []).map(a => [a.id, a])).values()]
+    if (authors.length === 0) {
+      console.log('[SSG] Fetching authors separately...')
+      authors = await fetchAllPaginated('users')
+    }
     if (authors.length === 0) {
       console.warn('[SSG] ⚠️ No authors from API - using local fallback')
       authors = localAuthors
       usingFallback = true
       console.log(`[SSG] ✓ Using ${authors.length} local authors`)
     } else {
-      console.log(`[SSG] ✓ Fetched ${authors.length} authors`)
+      console.log(`[SSG] ✓ Have ${authors.length} authors`)
     }
     
     // Add homepage route with latest posts for SSR
