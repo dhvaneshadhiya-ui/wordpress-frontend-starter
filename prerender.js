@@ -111,7 +111,12 @@ const localDemoPosts = JSON.parse(fs.readFileSync(toAbsolute('src/data/demo-post
 const localCategories = JSON.parse(fs.readFileSync(toAbsolute('src/data/categories.json'), 'utf-8'))
 const localTags = JSON.parse(fs.readFileSync(toAbsolute('src/data/tags.json'), 'utf-8'))
 const localAuthors = JSON.parse(fs.readFileSync(toAbsolute('src/data/authors.json'), 'utf-8'))
-const localStaticPages = JSON.parse(fs.readFileSync(toAbsolute('src/data/static-pages.json'), 'utf-8'))
+const localStaticPagesObj = JSON.parse(fs.readFileSync(toAbsolute('src/data/static-pages.json'), 'utf-8'))
+// Convert object to array format for iteration (.find() and for...of loops)
+const localStaticPages = Object.entries(localStaticPagesObj).map(([slug, page]) => ({
+  ...page,
+  slug: page.slug || slug
+}))
 
 console.log(`[SSG] Loaded fallback data: ${localDemoPosts.length} posts, ${localCategories.length} categories, ${localTags.length} tags, ${localAuthors.length} authors`)
 
