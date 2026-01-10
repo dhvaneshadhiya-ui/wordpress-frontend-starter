@@ -34,7 +34,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'npm'
       
       - name: Install dependencies
@@ -72,6 +72,21 @@ jobs:
             git diff --staged --name-only
           fi
       
+      - name: Extract change count from manifest
+        id: manifest
+        run: |
+          if [ -f src/data/build-manifest.json ]; then
+            CHANGED_COUNT=$(cat src/data/build-manifest.json | jq -r '.changedCount // 0')
+            FULL_REBUILD=$(cat src/data/build-manifest.json | jq -r '.fullRebuildRequired // false')
+            echo "changed_count=$CHANGED_COUNT" >> $GITHUB_OUTPUT
+            echo "full_rebuild=$FULL_REBUILD" >> $GITHUB_OUTPUT
+            echo "📊 Manifest: $CHANGED_COUNT routes changed, full rebuild: $FULL_REBUILD"
+          else
+            echo "changed_count=0" >> $GITHUB_OUTPUT
+            echo "full_rebuild=true" >> $GITHUB_OUTPUT
+            echo "📊 No manifest found - will do full rebuild"
+          fi
+      
       - name: Commit and push changes
         if: steps.changes.outputs.changed == 'true'
         run: |
@@ -86,7 +101,13 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.changes.outputs.changed }}" == "true" ]; then
             echo "✅ Content updated and pushed to repository" >> $GITHUB_STEP_SUMMARY
-            echo "🚀 Vercel deployment will be triggered automatically" >> $GITHUB_STEP_SUMMARY
+            echo "📊 Changed routes: ${{ steps.manifest.outputs.changed_count }}" >> $GITHUB_STEP_SUMMARY
+            if [ "${{ steps.manifest.outputs.full_rebuild }}" == "true" ]; then
+              echo "🔄 Full rebuild will be triggered" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "⚡ Partial rebuild will be triggered" >> $GITHUB_STEP_SUMMARY
+            fi
+            echo "🚀 Amplify deployment will be triggered automatically" >> $GITHUB_STEP_SUMMARY
           else
             echo "📭 No changes detected - repository unchanged" >> $GITHUB_STEP_SUMMARY
           fi
