@@ -44,7 +44,7 @@ function isNewsArticle(post) {
 // Static routes that don't need API data
 const STATIC_ROUTES = ['/', '/preview', '/llm.html']
 
-// Fetch with timeout
+// Fetch with timeout - resilient to malformed WordPress responses
 async function fetchWithTimeout(url, timeout = API_TIMEOUT) {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), timeout)
@@ -55,7 +55,30 @@ async function fetchWithTimeout(url, timeout = API_TIMEOUT) {
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`)
     }
-    return response.json()
+    
+    // Read as text first to handle malformed responses
+    // WordPress may output PHP warnings/errors (like <br />) before JSON
+    const text = await response.text()
+    
+    // Try direct JSON parse first
+    try {
+      return JSON.parse(text)
+    } catch {
+      // Try to extract JSON array or object from the response
+      // This handles cases where PHP warnings are prepended to JSON
+      const jsonArrayMatch = text.match(/\[[\s\S]*\]$/)
+      const jsonObjectMatch = text.match(/\{[\s\S]*\}$/)
+      
+      if (jsonArrayMatch) {
+        console.warn(`[SSG] ⚠ Extracted JSON array from malformed response for: ${url.substring(0, 80)}...`)
+        return JSON.parse(jsonArrayMatch[0])
+      } else if (jsonObjectMatch) {
+        console.warn(`[SSG] ⚠ Extracted JSON object from malformed response for: ${url.substring(0, 80)}...`)
+        return JSON.parse(jsonObjectMatch[0])
+      }
+      
+      throw new Error(`Invalid JSON response: ${text.substring(0, 100)}...`)
+    }
   } catch (error) {
     clearTimeout(timeoutId)
     if (error.name === 'AbortError') {
