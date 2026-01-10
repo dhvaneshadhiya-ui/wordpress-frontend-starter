@@ -14,8 +14,8 @@ frontend:
         - npm ci
     build:
       commands:
-        # Full SSG pipeline - identical to Netlify build
-        - echo "Starting full SSG build..."
+        # Fast SSG pipeline using cached content from GitHub Action
+        - echo "Starting optimized SSG build..."
         
         # Step 1: Client build
         - npm run build:client
@@ -23,7 +23,8 @@ frontend:
         # Step 2: SSR build for prerendering
         - npm run build:server
         
-        # Step 3: Pre-render all routes (posts, categories, tags, authors)
+        # Step 3: Pre-render routes (uses cached posts.json when USE_LOCAL_POSTS=true)
+        # Set USE_LOCAL_POSTS=true in Amplify environment for fastest builds
         - node prerender.js
         
         # Step 4: Generate robots.txt based on VITE_ENABLE_INDEXING

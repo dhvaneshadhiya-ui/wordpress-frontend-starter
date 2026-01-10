@@ -51,7 +51,6 @@ jobs:
       - name: Fetch WordPress content
         env:
           VITE_WORDPRESS_API_URL: ${{ secrets.VITE_WORDPRESS_API_URL || 'https://dev.igeeksblog.com/wp-json/wp/v2' }}
-          INCREMENTAL_BUILD: ${{ github.event.inputs.force_full_fetch == 'true' && 'false' || 'true' }}
         run: node scripts/fetch-wp-content.js
       
       - name: Generate sitemap
@@ -69,6 +68,8 @@ jobs:
           else
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "📬 Content changes detected!"
+            echo "Changed files:"
+            git diff --staged --name-only
           fi
       
       - name: Commit and push changes
