@@ -6,7 +6,7 @@ interface CacheEntry<T> {
 }
 
 const CACHE_PREFIX = 'igb_cache_';
-const CACHE_VERSION = '1'; // Bump to invalidate all caches on app update
+const CACHE_VERSION = '2'; // Bumped to fix missing _embedded data
 const DEFAULT_TTL = 5 * 60 * 1000; // 5 minutes
 
 export function getCachedData<T>(key: string): T | null {
