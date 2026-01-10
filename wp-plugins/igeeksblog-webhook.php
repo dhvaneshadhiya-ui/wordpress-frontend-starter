@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: iGeeksBlog Deploy Webhook
- * Description: Automatically triggers site rebuild when posts are published, updated, or deleted. Works with Vercel, Netlify, or any webhook-based deployment.
- * Version: 1.1.0
+ * Description: Automatically triggers site rebuild when posts are published, updated, or deleted. Works with Vercel, Netlify, AWS Amplify, or any webhook-based deployment.
+ * Version: 1.2.0
  * Author: iGeeksBlog
  * 
  * Configuration (add to wp-config.php):
@@ -12,6 +12,7 @@
  * Supported platforms:
  * - Vercel: https://api.vercel.com/v1/integrations/deploy/xxx/yyy
  * - Netlify: https://api.netlify.com/build_hooks/xxx
+ * - AWS Amplify: https://webhooks.amplify.{region}.amazonaws.com/prod/webhooks?id=xxx&token=yyy
  */
 
 if (!defined('ABSPATH')) exit;

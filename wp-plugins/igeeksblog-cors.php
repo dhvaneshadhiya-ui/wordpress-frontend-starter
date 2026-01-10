@@ -40,6 +40,17 @@ function igb_is_lovable_origin($origin) {
 }
 
 /**
+ * Check if an origin matches AWS Amplify domains
+ */
+function igb_is_amplify_origin($origin) {
+    // Match *.amplifyapp.com (e.g., main.d1234abcd.amplifyapp.com)
+    if (preg_match('/^https:\/\/[a-z0-9.-]+\.amplifyapp\.com$/', $origin)) {
+        return true;
+    }
+    return false;
+}
+
+/**
  * Check if an origin is allowed
  */
 function igb_is_allowed_origin($origin) {
@@ -54,6 +65,11 @@ function igb_is_allowed_origin($origin) {
     
     // Check Lovable preview domains
     if (igb_is_lovable_origin($origin)) {
+        return true;
+    }
+    
+    // Check AWS Amplify domains
+    if (igb_is_amplify_origin($origin)) {
         return true;
     }
     
