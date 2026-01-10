@@ -19,9 +19,10 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
-# Build settings
+# Build settings - Full SSG pipeline for Netlify
+# Lovable uses simple "vite build" automatically
 [build]
-  command = "npm run build"
+  command = "vite build && vite build --ssr src/entry-server.tsx --outDir dist/server && node prerender.js && node scripts/generate-robots.js && node scripts/generate-sitemap.js"
   publish = "dist"
 
 # Rewrite clean URLs to flat .html files (before SPA fallback)
