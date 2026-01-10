@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { FRONTEND_URL } from '@/lib/constants';
 import { RefreshCw } from 'lucide-react';
+import { usePrerenderReady } from '@/hooks/usePrerenderReady';
 
 export default function CategoryArchive() {
   const { slug } = useParams<{ slug: string }>();
@@ -19,6 +20,9 @@ export default function CategoryArchive() {
   const [loadingTimeout, setLoadingTimeout] = useState(false);
   const { data: category, isLoading: categoryLoading, refetch } = useCategory(slug);
   const { data: postsData, isLoading: postsLoading, isFetching } = useCategoryPosts(slug, page);
+  
+  // Signal prerender ready when category and posts are loaded
+  usePrerenderReady(!categoryLoading && !postsLoading && !!category);
 
   // Loading timeout - show error after 15 seconds
   useEffect(() => {

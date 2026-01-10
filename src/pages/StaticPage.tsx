@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { fetchPage, stripHtml } from '@/lib/wordpress';
 import { FRONTEND_URL } from '@/lib/constants';
 import { RefreshCw } from 'lucide-react';
+import { usePrerenderReady } from '@/hooks/usePrerenderReady';
 import staticPages from '@/data/static-pages.json';
 
 interface StaticPageProps {
@@ -26,6 +27,9 @@ export default function StaticPage({ slug: propSlug }: StaticPageProps) {
     enabled: !!slug,
     staleTime: 1000 * 60 * 60, // 1 hour cache
   });
+  
+  // Signal prerender ready when page is loaded
+  usePrerenderReady(!isLoading && !!page);
 
   // Loading timeout - show error after 15 seconds
   useEffect(() => {

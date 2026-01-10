@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { FRONTEND_URL } from '@/lib/constants';
 import { RefreshCw } from 'lucide-react';
+import { usePrerenderReady } from '@/hooks/usePrerenderReady';
 
 export default function TagArchive() {
   const { slug } = useParams<{ slug: string }>();
@@ -18,6 +19,9 @@ export default function TagArchive() {
   const [loadingTimeout, setLoadingTimeout] = useState(false);
   const { data: tag, isLoading: tagLoading, refetch } = useTag(slug);
   const { data: postsData, isLoading: postsLoading, isFetching } = useTagPosts(slug, page);
+  
+  // Signal prerender ready when tag and posts are loaded
+  usePrerenderReady(!tagLoading && !postsLoading && !!tag);
 
   // Loading timeout - show error after 15 seconds
   useEffect(() => {
