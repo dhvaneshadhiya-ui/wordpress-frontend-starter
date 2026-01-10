@@ -14,8 +14,8 @@ frontend:
       commands:
         - nvm use 22
         - npm ci
-        # Restore cached HTML files for partial builds
-        - node scripts/sync-build-cache.js restore
+        # Note: Cache restore happens directly in prerender.js via getCachedFile()
+        # No need to restore here - it would be overwritten by build:client anyway
     build:
       commands:
         # Fast SSG pipeline using cached content from GitHub Action

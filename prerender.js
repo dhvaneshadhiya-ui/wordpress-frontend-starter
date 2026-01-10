@@ -24,6 +24,9 @@ const USE_LOCAL_POSTS = process.env.USE_LOCAL_POSTS === 'true'
 // Set via: PARTIAL_BUILD=true in Amplify environment variables
 const PARTIAL_BUILD = process.env.PARTIAL_BUILD === 'true'
 
+// Cache version - bump to invalidate old caches when format changes
+const CACHE_VERSION = 2
+
 // MAX_POSTS_TO_PRERENDER: Limit number of individual post pages to pre-render
 // Older posts will be rendered client-side on first visit
 // Default: 200 (reduces build time significantly for large sites)
@@ -1065,7 +1068,15 @@ function loadBuildManifest() {
   const manifestPath = toAbsolute('src/data/build-manifest.json')
   if (fs.existsSync(manifestPath)) {
     try {
-      return JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
+      
+      // Version check - invalidate old manifests
+      if (manifest.version !== CACHE_VERSION) {
+        console.log(`[SSG] Manifest version mismatch (${manifest.version} vs ${CACHE_VERSION}) - forcing full rebuild`)
+        return null
+      }
+      
+      return manifest
     } catch (e) {
       console.warn(`[SSG] ⚠ Could not parse build manifest: ${e.message}`)
     }
@@ -1074,7 +1085,8 @@ function loadBuildManifest() {
 }
 
 /**
- * Check if a cached file exists and is valid
+ * Check if a cached file exists and contains correct content
+ * Validates by checking canonical URL matches the expected route
  */
 function getCachedFile(routeUrl) {
   const cacheFile = routeUrl === '/' 
@@ -1084,7 +1096,36 @@ function getCachedFile(routeUrl) {
       : toAbsolute(`.build-cache${routeUrl}.html`)
   
   if (fs.existsSync(cacheFile)) {
-    return cacheFile
+    try {
+      // Read and validate the cached file contains correct content
+      const content = fs.readFileSync(cacheFile, 'utf-8')
+      
+      // For non-homepage routes, verify canonical URL matches
+      if (routeUrl !== '/') {
+        const canonicalMatch = content.match(/<link rel="canonical" href="([^"]+)"/)
+        if (canonicalMatch) {
+          const canonicalUrl = canonicalMatch[1]
+          // Extract path from canonical URL
+          try {
+            const canonicalPath = new URL(canonicalUrl).pathname.replace(/\.html$/, '').replace(/\/$/, '')
+            const expectedPath = routeUrl.replace(/\.html$/, '').replace(/\/$/, '')
+            
+            // Check if paths match (allowing for trailing slash differences)
+            if (canonicalPath !== expectedPath && canonicalPath !== '/' + expectedPath) {
+              console.warn(`[SSG] ⚠ Cache validation FAILED for ${routeUrl}: canonical mismatch (expected ${expectedPath}, got ${canonicalPath})`)
+              return null // Force regeneration
+            }
+          } catch (urlError) {
+            // If URL parsing fails, skip validation
+          }
+        }
+      }
+      
+      return cacheFile
+    } catch (readError) {
+      console.warn(`[SSG] ⚠ Could not read cached file for ${routeUrl}: ${readError.message}`)
+      return null
+    }
   }
   return null
 }

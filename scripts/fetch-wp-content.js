@@ -23,8 +23,8 @@ const API_TIMEOUT = 60000
 const POSTS_PER_PAGE = 50
 const REQUEST_DELAY = 300
 
-// Manifest configuration
-const MANIFEST_VERSION = 1
+// Manifest configuration - MUST match CACHE_VERSION in prerender.js
+const MANIFEST_VERSION = 2
 const MAX_CHANGED_ROUTES_FOR_PARTIAL = 50  // Force full rebuild if more than this
 
 console.log(`[WP-Fetch] Starting WordPress content fetch...`)
