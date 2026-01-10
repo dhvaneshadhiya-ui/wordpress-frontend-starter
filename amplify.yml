@@ -5,6 +5,8 @@ version: 1
 # - VITE_WORDPRESS_API_URL: https://dev.igeeksblog.com/wp-json/wp/v2
 # - SITE_URL: https://wp.dev.igeeksblog.com
 # - VITE_ENABLE_INDEXING: true (production) / false (staging)
+# - USE_LOCAL_POSTS: true (use cached posts.json for faster builds)
+# - PARTIAL_BUILD: true (enable partial rebuilds - only regenerate changed pages)
 
 frontend:
   phases:
@@ -12,6 +14,8 @@ frontend:
       commands:
         - nvm use 22
         - npm ci
+        # Restore cached HTML files for partial builds
+        - node scripts/sync-build-cache.js restore
     build:
       commands:
         # Fast SSG pipeline using cached content from GitHub Action
@@ -25,6 +29,7 @@ frontend:
         
         # Step 3: Pre-render routes (uses cached posts.json when USE_LOCAL_POSTS=true)
         # Set USE_LOCAL_POSTS=true in Amplify environment for fastest builds
+        # Set PARTIAL_BUILD=true to only regenerate changed pages
         - node prerender.js
         
         # Step 4: Generate robots.txt based on VITE_ENABLE_INDEXING
@@ -32,6 +37,9 @@ frontend:
         
         # Step 5: Generate sitemap.xml from WordPress API
         - node scripts/generate-sitemap.js
+        
+        # Step 6: Save built files to cache for next partial build
+        - node scripts/sync-build-cache.js save
         
         - echo "SSG build complete!"
   
@@ -43,6 +51,7 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
+      - .build-cache/**/*
 
 # Custom headers for caching and security
 customHeaders:

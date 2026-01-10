@@ -5,11 +5,14 @@
  * Run via GitHub Action (daily/webhook) or manually: node scripts/fetch-wp-content.js
  * 
  * This enables fast SSG builds by using cached JSON instead of live API calls
+ * 
+ * NEW: Generates build-manifest.json with content hashes for partial rebuilds
  */
 
 import fs from 'node:fs'
 import path from 'node:path'
 import url from 'node:url'
+import crypto from 'node:crypto'
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 const toAbsolute = (p) => path.resolve(__dirname, '..', p)
@@ -20,8 +23,204 @@ const API_TIMEOUT = 60000
 const POSTS_PER_PAGE = 50
 const REQUEST_DELAY = 300
 
+// Manifest configuration
+const MANIFEST_VERSION = 1
+const MAX_CHANGED_ROUTES_FOR_PARTIAL = 50  // Force full rebuild if more than this
+
 console.log(`[WP-Fetch] Starting WordPress content fetch...`)
 console.log(`[WP-Fetch] API URL: ${WP_API_URL}`)
+
+// ============================================
+// CONTENT HASHING FOR CHANGE DETECTION
+// ============================================
+
+/**
+ * Generate a deterministic hash for content
+ */
+function generateHash(content) {
+  return crypto.createHash('md5').update(content).digest('hex').substring(0, 12)
+}
+
+/**
+ * Generate hash for a post based on key fields
+ */
+function generatePostHash(post) {
+  const hashContent = [
+    post.title?.rendered || '',
+    post.content?.rendered || '',
+    post.modified || post.date || '',
+    String(post.featured_media || ''),
+    JSON.stringify(post.categories || []),
+    JSON.stringify(post.tags || []),
+    String(post.author || '')
+  ].join('|')
+  return generateHash(hashContent)
+}
+
+/**
+ * Generate hash for a category
+ */
+function generateCategoryHash(category) {
+  const hashContent = [
+    category.name || '',
+    category.description || '',
+    String(category.count || 0)
+  ].join('|')
+  return generateHash(hashContent)
+}
+
+/**
+ * Generate hash for a tag
+ */
+function generateTagHash(tag) {
+  const hashContent = [
+    tag.name || '',
+    tag.description || '',
+    String(tag.count || 0)
+  ].join('|')
+  return generateHash(hashContent)
+}
+
+/**
+ * Generate hash for an author
+ */
+function generateAuthorHash(author) {
+  const hashContent = [
+    author.name || '',
+    author.description || '',
+    JSON.stringify(author.avatar_urls || {})
+  ].join('|')
+  return generateHash(hashContent)
+}
+
+/**
+ * Load previous build manifest
+ */
+function loadPreviousManifest() {
+  const manifestPath = toAbsolute('src/data/build-manifest.json')
+  if (fs.existsSync(manifestPath)) {
+    try {
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
+      if (manifest.version === MANIFEST_VERSION) {
+        console.log(`[WP-Fetch] ✓ Loaded previous manifest (${Object.keys(manifest.contentHashes?.posts || {}).length} posts tracked)`)
+        return manifest
+      }
+      console.log(`[WP-Fetch] ⚠ Manifest version mismatch (${manifest.version} vs ${MANIFEST_VERSION}) - will do full rebuild`)
+    } catch (e) {
+      console.warn(`[WP-Fetch] ⚠ Could not parse previous manifest: ${e.message}`)
+    }
+  }
+  return null
+}
+
+/**
+ * Detect changed routes by comparing hashes
+ */
+function detectChangedRoutes(results, previousManifest) {
+  const changedRoutes = new Set()
+  const newHashes = {
+    posts: {},
+    categories: {},
+    tags: {},
+    authors: {}
+  }
+  
+  const prevHashes = previousManifest?.contentHashes || { posts: {}, categories: {}, tags: {}, authors: {} }
+  
+  // Check posts
+  for (const post of results.posts) {
+    const slug = post.slug
+    const hash = generatePostHash(post)
+    newHashes.posts[slug] = hash
+    
+    if (prevHashes.posts[slug] !== hash) {
+      // Post is new or modified
+      changedRoutes.add(`/${slug}`)
+      
+      // Also mark affected archives
+      const categories = post._embedded?.['wp:term']?.[0] || []
+      const tags = post._embedded?.['wp:term']?.[1] || []
+      const author = post._embedded?.['author']?.[0]
+      
+      for (const cat of categories) {
+        changedRoutes.add(`/category/${cat.slug}`)
+      }
+      for (const tag of tags) {
+        changedRoutes.add(`/tag/${tag.slug}`)
+      }
+      if (author?.slug) {
+        changedRoutes.add(`/author/${author.slug}`)
+      }
+    }
+  }
+  
+  // Check if any posts were deleted (existed before, not now)
+  for (const slug of Object.keys(prevHashes.posts)) {
+    if (!newHashes.posts[slug]) {
+      // Post was deleted - need to rebuild archives that might have referenced it
+      changedRoutes.add('/') // Homepage might need update
+      console.log(`[WP-Fetch] Post deleted: ${slug}`)
+    }
+  }
+  
+  // Check categories
+  for (const category of results.categories) {
+    const slug = category.slug
+    const hash = generateCategoryHash(category)
+    newHashes.categories[slug] = hash
+    
+    if (prevHashes.categories[slug] !== hash) {
+      changedRoutes.add(`/category/${slug}`)
+    }
+  }
+  
+  // Check tags
+  for (const tag of results.tags) {
+    const slug = tag.slug
+    const hash = generateTagHash(tag)
+    newHashes.tags[slug] = hash
+    
+    if (prevHashes.tags[slug] !== hash) {
+      changedRoutes.add(`/tag/${slug}`)
+    }
+  }
+  
+  // Check authors
+  for (const author of results.authors) {
+    const slug = author.slug
+    const hash = generateAuthorHash(author)
+    newHashes.authors[slug] = hash
+    
+    if (prevHashes.authors[slug] !== hash) {
+      changedRoutes.add(`/author/${slug}`)
+    }
+  }
+  
+  // Always check if homepage needs update (if any post in top 20 changed)
+  const top20Posts = results.posts.slice(0, 20)
+  for (const post of top20Posts) {
+    if (prevHashes.posts[post.slug] !== newHashes.posts[post.slug]) {
+      changedRoutes.add('/')
+      break
+    }
+  }
+  
+  // If no previous manifest, all routes are "changed" (first build)
+  if (!previousManifest) {
+    console.log(`[WP-Fetch] No previous manifest - marking all routes as changed`)
+    // Don't populate changedRoutes - let it stay empty which means "no partial build"
+    return { changedRoutes: [], newHashes, fullRebuildRequired: true }
+  }
+  
+  const changedArray = Array.from(changedRoutes)
+  const fullRebuildRequired = changedArray.length > MAX_CHANGED_ROUTES_FOR_PARTIAL
+  
+  if (fullRebuildRequired) {
+    console.log(`[WP-Fetch] ⚠ ${changedArray.length} routes changed (>${MAX_CHANGED_ROUTES_FOR_PARTIAL}) - full rebuild required`)
+  }
+  
+  return { changedRoutes: changedArray, newHashes, fullRebuildRequired }
+}
 
 // Fetch with timeout and JSON extraction
 async function fetchWithTimeout(url, timeout = API_TIMEOUT) {
@@ -173,7 +372,7 @@ async function fetchAllContent() {
 }
 
 // Save content to JSON files
-function saveContent(results) {
+function saveContent(results, changeInfo) {
   const dataDir = toAbsolute('src/data')
   
   // Ensure data directory exists
@@ -241,17 +440,52 @@ function saveContent(results) {
     JSON.stringify(metadata, null, 2)
   )
   console.log(`[WP-Fetch] ✓ Saved fetch metadata`)
+  
+  // Save build manifest for partial rebuilds
+  const manifest = {
+    version: MANIFEST_VERSION,
+    generatedAt: new Date().toISOString(),
+    contentHashes: changeInfo.newHashes,
+    changedRoutes: changeInfo.changedRoutes,
+    changedCount: changeInfo.changedRoutes.length,
+    totalPosts: results.posts.length,
+    totalCategories: results.categories.length,
+    totalTags: results.tags.length,
+    totalAuthors: results.authors.length,
+    fullRebuildRequired: changeInfo.fullRebuildRequired
+  }
+  fs.writeFileSync(
+    path.join(dataDir, 'build-manifest.json'),
+    JSON.stringify(manifest, null, 2)
+  )
+  console.log(`[WP-Fetch] ✓ Saved build manifest (${changeInfo.changedRoutes.length} changed routes)`)
 }
 
 // Main execution
 const startTime = Date.now()
 
+// Load previous manifest for change detection
+const previousManifest = loadPreviousManifest()
+
 fetchAllContent()
   .then(results => {
-    saveContent(results)
+    // Detect changes
+    const changeInfo = detectChangedRoutes(results, previousManifest)
+    
+    // Save content and manifest
+    saveContent(results, changeInfo)
+    
     const duration = ((Date.now() - startTime) / 1000).toFixed(1)
     console.log(`\n[WP-Fetch] ✅ Content fetch complete in ${duration}s`)
     console.log(`[WP-Fetch] Posts: ${results.posts.length}, Categories: ${results.categories.length}, Tags: ${results.tags.length}`)
+    console.log(`[WP-Fetch] Changed routes: ${changeInfo.changedRoutes.length}${changeInfo.fullRebuildRequired ? ' (full rebuild required)' : ''}`)
+    
+    // Log some changed routes for visibility
+    if (changeInfo.changedRoutes.length > 0 && changeInfo.changedRoutes.length <= 10) {
+      console.log(`[WP-Fetch] Changed: ${changeInfo.changedRoutes.join(', ')}`)
+    } else if (changeInfo.changedRoutes.length > 10) {
+      console.log(`[WP-Fetch] Changed (first 10): ${changeInfo.changedRoutes.slice(0, 10).join(', ')}...`)
+    }
   })
   .catch(error => {
     console.error(`[WP-Fetch] ❌ Failed: ${error.message}`)

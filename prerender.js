@@ -20,6 +20,10 @@ const ENABLE_INDEXING = process.env.VITE_ENABLE_INDEXING === 'true'
 // Set via: USE_LOCAL_POSTS=true in Amplify environment variables
 const USE_LOCAL_POSTS = process.env.USE_LOCAL_POSTS === 'true'
 
+// PARTIAL_BUILD: Only regenerate changed routes, copy unchanged from cache
+// Set via: PARTIAL_BUILD=true in Amplify environment variables
+const PARTIAL_BUILD = process.env.PARTIAL_BUILD === 'true'
+
 // MAX_POSTS_TO_PRERENDER: Limit number of individual post pages to pre-render
 // Older posts will be rendered client-side on first visit
 // Default: 200 (reduces build time significantly for large sites)
@@ -33,7 +37,7 @@ const MIN_TAG_COUNT = process.env.MIN_TAG_COUNT
   ? parseInt(process.env.MIN_TAG_COUNT) 
   : 5
 
-console.log(`[SSG] Build optimization: USE_LOCAL_POSTS=${USE_LOCAL_POSTS}, MAX_POSTS=${MAX_POSTS_TO_PRERENDER}, MIN_TAG_COUNT=${MIN_TAG_COUNT}`)
+console.log(`[SSG] Build optimization: USE_LOCAL_POSTS=${USE_LOCAL_POSTS}, PARTIAL_BUILD=${PARTIAL_BUILD}, MAX_POSTS=${MAX_POSTS_TO_PRERENDER}, MIN_TAG_COUNT=${MIN_TAG_COUNT}`)
 
 // Category slugs that trigger NewsArticle schema for Google News eligibility
 const NEWS_CATEGORY_SLUGS = ['news', 'breaking-news', 'breaking', 'updates', 'announcements', 'latest']
@@ -1050,10 +1054,63 @@ ${urlEntries.join('\n')}
 </urlset>`
 }
 
+// ============================================
+// PARTIAL BUILD SUPPORT
+// ============================================
+
+/**
+ * Load build manifest for partial builds
+ */
+function loadBuildManifest() {
+  const manifestPath = toAbsolute('src/data/build-manifest.json')
+  if (fs.existsSync(manifestPath)) {
+    try {
+      return JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
+    } catch (e) {
+      console.warn(`[SSG] ⚠ Could not parse build manifest: ${e.message}`)
+    }
+  }
+  return null
+}
+
+/**
+ * Check if a cached file exists and is valid
+ */
+function getCachedFile(routeUrl) {
+  const cacheFile = routeUrl === '/' 
+    ? toAbsolute('.build-cache/index.html')
+    : routeUrl.endsWith('.html')
+      ? toAbsolute(`.build-cache${routeUrl}`)
+      : toAbsolute(`.build-cache${routeUrl}.html`)
+  
+  if (fs.existsSync(cacheFile)) {
+    return cacheFile
+  }
+  return null
+}
+
 // Main prerender function
 ;(async () => {
   const buildStart = Date.now()
   console.log('[SSG] Starting pre-render build...')
+  
+  // Load build manifest for partial builds
+  let manifest = null
+  let changedRoutes = new Set()
+  let isPartialBuild = false
+  
+  if (PARTIAL_BUILD) {
+    manifest = loadBuildManifest()
+    if (manifest && !manifest.fullRebuildRequired && manifest.changedRoutes?.length > 0) {
+      changedRoutes = new Set(manifest.changedRoutes)
+      isPartialBuild = true
+      console.log(`[SSG] ⚡ PARTIAL BUILD MODE: ${changedRoutes.size} routes to regenerate`)
+    } else if (manifest?.fullRebuildRequired) {
+      console.log(`[SSG] Full rebuild required (${manifest.changedCount || 'many'} changes)`)
+    } else {
+      console.log(`[SSG] No valid manifest found - doing full build`)
+    }
+  }
   
   // Read template
   let template = fs.readFileSync(toAbsolute('dist/index.html'), 'utf-8')
@@ -1119,10 +1176,32 @@ ${urlEntries.join('\n')}
   let successCount = 0
   let errorCount = 0
   let validationErrorCount = 0
+  let cacheHitCount = 0
   
   // Render all routes
   for (const routeUrl of routes) {
     try {
+      // PARTIAL BUILD: Check if we can use cached version
+      if (isPartialBuild && !changedRoutes.has(routeUrl)) {
+        const cachedFile = getCachedFile(routeUrl)
+        if (cachedFile) {
+          // Determine destination path
+          let filePath
+          if (routeUrl === '/') {
+            filePath = 'dist/index.html'
+          } else if (routeUrl.endsWith('.html')) {
+            filePath = `dist${routeUrl}`
+          } else {
+            filePath = `dist${routeUrl}.html`
+          }
+          
+          ensureDir(toAbsolute(filePath))
+          fs.copyFileSync(cachedFile, toAbsolute(filePath))
+          cacheHitCount++
+          continue
+        }
+      }
+      
       // Get route data for SSR
       const routeInfo = routeData.get(routeUrl)
       
@@ -1198,7 +1277,10 @@ ${urlEntries.join('\n')}
   if (usingFallback) {
     console.log(`[SSG] ⚠️  USING FALLBACK DATA (WordPress API failed)`);
   }
-  console.log(`[SSG] Total routes generated: ${successCount}`);
+  if (isPartialBuild) {
+    console.log(`[SSG] ⚡ PARTIAL BUILD: ${cacheHitCount} from cache, ${successCount} regenerated`);
+  }
+  console.log(`[SSG] Total routes generated: ${successCount + cacheHitCount}`);
   const categoryCount = [...routeData.entries()].filter(([_, v]) => v.type === 'category').length;
   const tagCount = [...routeData.entries()].filter(([_, v]) => v.type === 'tag').length;
   const authorCount = [...routeData.entries()].filter(([_, v]) => v.type === 'author').length;
@@ -1208,6 +1290,9 @@ ${urlEntries.join('\n')}
   console.log(`[SSG] Tags: ${tagCount}${usingFallback ? ' (local)' : ''}`);
   console.log(`[SSG] Authors: ${authorCount}${usingFallback ? ' (local)' : ''}`);
   console.log(`[SSG] Pages: ${pageCount}`);
+  if (isPartialBuild) {
+    console.log(`[SSG] Cache hits: ${cacheHitCount}`);
+  }
   console.log(`[SSG] Build errors: ${errorCount}`);
   console.log(`[SSG] Validation errors: ${validationErrorCount}`);
   console.log(`[SSG] ======================================\n`);
@@ -1221,5 +1306,5 @@ ${urlEntries.join('\n')}
   }
   
   const duration = ((Date.now() - buildStart) / 1000).toFixed(1)
-  console.log(`[SSG] Build complete: ${successCount} pages, ${errorCount} errors, ${duration}s`)
+  console.log(`[SSG] Build complete: ${successCount} rendered, ${cacheHitCount} cached, ${errorCount} errors, ${duration}s`)
 })()
