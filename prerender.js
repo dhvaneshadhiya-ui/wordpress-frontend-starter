@@ -246,6 +246,15 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
 }
 
+// Sanitize text for safe embedding in JSON-LD script tags
+// This prevents </script> injection and other breaking characters
+function sanitizeForJsonLd(text) {
+  return (text || '')
+    .replace(/</g, '\\u003C')    // Escape < to prevent </script> injection
+    .replace(/>/g, '\\u003E')    // Escape >
+    .replace(/&/g, '\\u0026')    // Escape &
+}
+
 // Get featured image URL from embedded post data
 function getFeaturedImage(post) {
   try {
@@ -293,7 +302,7 @@ function generateSEOHead(route, routeInfo) {
       "@type": "ListItem",
       "position": index + 1,
       "url": `${SITE_URL}/${post.slug}`,
-      "name": stripHtml(post.title?.rendered || post.slug)
+      "name": sanitizeForJsonLd(stripHtml(post.title?.rendered || post.slug))
     }))
     
     const schemas = [
@@ -350,7 +359,9 @@ function generateSEOHead(route, routeInfo) {
     <meta name="twitter:title" content="iGeeksBlog - Apple News, How-To Guides, Tips & App Reviews" />
     <meta name="twitter:description" content="${homepageDescription}" />
     <meta name="twitter:image" content="${SITE_URL}/og-default.png" />
-    ${schemas.map(s => `<script type="application/ld+json">\n    ${JSON.stringify(s)}\n    </script>`).join('\n    ')}`.trim()
+    ${schemas.map(s => `<script type="application/ld+json">
+${JSON.stringify(s)}
+</script>`).join('\n')}`.trim()
   }
   
   // No routeInfo for non-homepage routes
@@ -385,8 +396,8 @@ function generateSEOHead(route, routeInfo) {
     const articleSchema = {
       "@context": "https://schema.org",
       "@type": isNews ? "NewsArticle" : "BlogPosting",
-      "headline": stripHtml(data.title?.rendered || ''),
-      "description": stripHtml(data.excerpt?.rendered || ''),
+      "headline": sanitizeForJsonLd(stripHtml(data.title?.rendered || '')),
+      "description": sanitizeForJsonLd(stripHtml(data.excerpt?.rendered || '')),
       "image": featuredImage ? {
         "@type": "ImageObject",
         "url": featuredImage,
@@ -395,7 +406,7 @@ function generateSEOHead(route, routeInfo) {
       } : undefined,
       "author": {
         "@type": "Person",
-        "name": author,
+        "name": sanitizeForJsonLd(author),
         "url": `${SITE_URL}/author/${authorSlug || 'igeeksblog'}`,
         ...(authorSameAs.length > 0 && { "sameAs": authorSameAs })
       },
@@ -413,7 +424,7 @@ function generateSEOHead(route, routeInfo) {
         "@type": "WebPage",
         "@id": canonicalUrl
       },
-      "keywords": categories.join(', '),
+      "keywords": sanitizeForJsonLd(categories.join(', ')),
       // NewsArticle-specific: dateline for news content
       ...(isNews && {
         "dateline": "San Francisco, CA"
@@ -457,8 +468,8 @@ function generateSEOHead(route, routeInfo) {
     const collectionPageSchema = {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      "name": data.name,
-      "description": description,
+      "name": sanitizeForJsonLd(data.name),
+      "description": sanitizeForJsonLd(stripHtml(data.description || `Browse ${data.name} articles`)),
       "url": canonicalUrl,
       "isPartOf": {
         "@type": "WebSite",
@@ -494,8 +505,8 @@ function generateSEOHead(route, routeInfo) {
     const collectionPageSchema = {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      "name": data.name,
-      "description": description,
+      "name": sanitizeForJsonLd(data.name),
+      "description": sanitizeForJsonLd(stripHtml(data.description || `Browse articles tagged ${data.name}`)),
       "url": canonicalUrl,
       "isPartOf": {
         "@type": "WebSite",
@@ -537,14 +548,14 @@ function generateSEOHead(route, routeInfo) {
       "mainEntity": {
         "@type": "Person",
         "@id": `${canonicalUrl}#person`,
-        "name": data.name,
+        "name": sanitizeForJsonLd(data.name),
         "url": canonicalUrl,
         "image": avatar || undefined,
-        "description": data.description || undefined,
+        "description": sanitizeForJsonLd(data.description) || undefined,
         ...(sameAs.length > 0 && { "sameAs": sameAs })
       },
-      "name": `${data.name} - Author Profile`,
-      "description": description,
+      "name": sanitizeForJsonLd(`${data.name} - Author Profile`),
+      "description": sanitizeForJsonLd(stripHtml(data.description || `Articles by ${data.name}`)),
       "url": canonicalUrl
     }
     
@@ -576,8 +587,8 @@ function generateSEOHead(route, routeInfo) {
     const webPageSchema = {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      "name": title,
-      "description": description,
+      "name": sanitizeForJsonLd(stripHtml(data.title?.rendered || data.slug)),
+      "description": sanitizeForJsonLd(stripHtml(data.excerpt?.rendered || data.content?.rendered || '')),
       "url": canonicalUrl,
       "isPartOf": {
         "@type": "WebSite",
@@ -733,6 +744,17 @@ ${urlEntries.join('\n')}
       
       // Get SEO head for this route
       const seoHead = generateSEOHead(routeUrl, routeInfo)
+      
+      // Validate SEO head for script tag integrity (homepage has multiple schemas)
+      if (routeUrl === '/') {
+        const scriptOpenCount = (seoHead.match(/<script/g) || []).length
+        const scriptCloseCount = (seoHead.match(/<\/script>/g) || []).length
+        if (scriptOpenCount !== scriptCloseCount) {
+          console.error(`[SSG] ⚠️ CRITICAL: Homepage has mismatched script tags: ${scriptOpenCount} open, ${scriptCloseCount} close`)
+        } else {
+          console.log(`[SSG] ✓ Homepage SEO validated: ${scriptOpenCount} schema scripts`)
+        }
+      }
       
       // Inject into template
       let html = template
