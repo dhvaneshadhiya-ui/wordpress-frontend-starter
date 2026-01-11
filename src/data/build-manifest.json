@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "generatedAt": "2026-01-11T06:41:19.246Z",
+  "contentHashes": {
+    "posts": {},
+    "categories": {},
+    "tags": {},
+    "authors": {}
+  },
+  "changedRoutes": [],
+  "changedCount": 0,
+  "totalPosts": 0,
+  "totalCategories": 0,
+  "totalTags": 0,
+  "totalAuthors": 0,
+  "fullRebuildRequired": true
+}
