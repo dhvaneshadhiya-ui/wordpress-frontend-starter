@@ -112,6 +112,15 @@ jobs:
             exit 1
           fi
       
+      - name: Trigger Vercel Deploy
+        if: steps.changes.outputs.changed == 'true' && env.VERCEL_DEPLOY_HOOK_URL != ''
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          echo "🚀 Triggering Vercel deployment..."
+          curl -X POST "$VERCEL_DEPLOY_HOOK_URL"
+          echo "✅ Vercel deploy hook triggered"
+      
       - name: Summary
         run: |
           echo "## WordPress Content Fetch Summary" >> $GITHUB_STEP_SUMMARY
@@ -124,7 +133,11 @@ jobs:
             else
               echo "⚡ Partial rebuild will be triggered" >> $GITHUB_STEP_SUMMARY
             fi
-            echo "🚀 Amplify deployment will be triggered automatically" >> $GITHUB_STEP_SUMMARY
+            if [ -n "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}" ]; then
+              echo "🚀 Vercel deployment triggered" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "⚠️ Vercel deploy hook not configured (optional)" >> $GITHUB_STEP_SUMMARY
+            fi
           else
             echo "📭 No changes detected - repository unchanged" >> $GITHUB_STEP_SUMMARY
           fi
