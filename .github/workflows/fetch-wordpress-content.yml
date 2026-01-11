@@ -93,7 +93,24 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -m "chore: update WordPress content [skip ci]"
-          git push
+          
+          # Pull any changes that occurred during fetch (rebase to avoid merge commits)
+          git pull --rebase origin main
+          
+          # Push with retry logic in case of race condition
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          until git push || [ $RETRY_COUNT -ge $MAX_RETRIES ]; do
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+            echo "Push failed, retrying ($RETRY_COUNT/$MAX_RETRIES)..."
+            git pull --rebase origin main
+            sleep 2
+          done
+          
+          if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
+            echo "Failed to push after $MAX_RETRIES retries"
+            exit 1
+          fi
       
       - name: Summary
         run: |
