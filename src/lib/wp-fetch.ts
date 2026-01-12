@@ -24,22 +24,45 @@ const DEFAULT_REVALIDATE = 3600;
 
 /**
  * Wrapper for fetch that adds Next.js ISR options when available
- * Falls back to standard fetch in non-Next.js environments
+ * Includes retry logic with exponential backoff for 5xx errors
  */
-async function wpFetch(url: string, revalidate: number = DEFAULT_REVALIDATE): Promise<Response> {
-  // In Next.js, the fetch function is extended with a `next` option
-  // In other environments (Vite), we just use standard fetch
+async function wpFetch(
+  url: string, 
+  revalidate: number = DEFAULT_REVALIDATE,
+  retries: number = 3
+): Promise<Response> {
   const options: RequestInit = {};
   
   // Add Next.js-specific options if running in Next.js environment
-  // This check ensures compatibility with both environments
   if (typeof window === 'undefined') {
-    // Server-side: add revalidation hints that Next.js will understand
-    // These are safely ignored in non-Next.js environments
     (options as Record<string, unknown>).next = { revalidate };
   }
   
-  return fetch(url, options);
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const response = await fetch(url, options);
+      
+      // Retry on 502, 503, 504 errors (server overload)
+      if (response.status >= 500 && attempt < retries - 1) {
+        const delay = Math.pow(2, attempt) * 1000; // 1s, 2s, 4s
+        console.warn(`[wp-fetch] ${response.status} error for ${url}, retrying in ${delay}ms...`);
+        await new Promise(r => setTimeout(r, delay));
+        continue;
+      }
+      
+      return response;
+    } catch (error) {
+      if (attempt < retries - 1) {
+        const delay = Math.pow(2, attempt) * 1000;
+        console.warn(`[wp-fetch] Network error for ${url}, retrying in ${delay}ms...`);
+        await new Promise(r => setTimeout(r, delay));
+        continue;
+      }
+      throw error;
+    }
+  }
+  
+  throw new Error(`[wp-fetch] Max retries exceeded for ${url}`);
 }
 
 // ============= Types =============
@@ -170,17 +193,23 @@ export async function fetchPosts(
     searchParams.set('slug', params.slug);
   }
 
-  const response = await wpFetch(`${WP_API_URL}/posts?${searchParams}`, revalidate);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch posts: ${response.status}`);
+  try {
+    const response = await wpFetch(`${WP_API_URL}/posts?${searchParams}`, revalidate);
+    
+    if (!response.ok) {
+      console.error(`[wp-fetch] Failed to fetch posts: ${response.status}`);
+      return { posts: [], totalPages: 0, total: 0 };
+    }
+
+    const posts = await response.json();
+    const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1', 10);
+    const total = parseInt(response.headers.get('X-WP-Total') || '0', 10);
+
+    return { posts, totalPages, total };
+  } catch (error) {
+    console.error('[wp-fetch] Error fetching posts:', error);
+    return { posts: [], totalPages: 0, total: 0 };
   }
-
-  const posts = await response.json();
-  const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1', 10);
-  const total = parseInt(response.headers.get('X-WP-Total') || '0', 10);
-
-  return { posts, totalPages, total };
 }
 
 /**
@@ -207,13 +236,19 @@ export async function fetchCategories(
     searchParams.set('hide_empty', 'true');
   }
 
-  const response = await wpFetch(`${WP_API_URL}/categories?${searchParams}`, revalidate);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch categories: ${response.status}`);
-  }
+  try {
+    const response = await wpFetch(`${WP_API_URL}/categories?${searchParams}`, revalidate);
+    
+    if (!response.ok) {
+      console.error(`[wp-fetch] Failed to fetch categories: ${response.status}`);
+      return [];
+    }
 
-  return response.json();
+    return response.json();
+  } catch (error) {
+    console.error('[wp-fetch] Error fetching categories:', error);
+    return [];
+  }
 }
 
 /**
@@ -223,14 +258,20 @@ export async function fetchCategoryBySlug(
   slug: string,
   revalidate: number = DEFAULT_REVALIDATE
 ): Promise<WPCategory | null> {
-  const response = await wpFetch(`${WP_API_URL}/categories?slug=${slug}`, revalidate);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch category: ${response.status}`);
-  }
+  try {
+    const response = await wpFetch(`${WP_API_URL}/categories?slug=${slug}`, revalidate);
+    
+    if (!response.ok) {
+      console.error(`[wp-fetch] Failed to fetch category: ${response.status}`);
+      return null;
+    }
 
-  const categories = await response.json();
-  return categories[0] || null;
+    const categories = await response.json();
+    return categories[0] || null;
+  } catch (error) {
+    console.error('[wp-fetch] Error fetching category:', error);
+    return null;
+  }
 }
 
 /**
@@ -246,13 +287,19 @@ export async function fetchTags(
     searchParams.set('hide_empty', 'true');
   }
 
-  const response = await wpFetch(`${WP_API_URL}/tags?${searchParams}`, revalidate);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch tags: ${response.status}`);
-  }
+  try {
+    const response = await wpFetch(`${WP_API_URL}/tags?${searchParams}`, revalidate);
+    
+    if (!response.ok) {
+      console.error(`[wp-fetch] Failed to fetch tags: ${response.status}`);
+      return [];
+    }
 
-  return response.json();
+    return response.json();
+  } catch (error) {
+    console.error('[wp-fetch] Error fetching tags:', error);
+    return [];
+  }
 }
 
 /**
@@ -262,14 +309,20 @@ export async function fetchTagBySlug(
   slug: string,
   revalidate: number = DEFAULT_REVALIDATE
 ): Promise<WPTag | null> {
-  const response = await wpFetch(`${WP_API_URL}/tags?slug=${slug}`, revalidate);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch tag: ${response.status}`);
-  }
+  try {
+    const response = await wpFetch(`${WP_API_URL}/tags?slug=${slug}`, revalidate);
+    
+    if (!response.ok) {
+      console.error(`[wp-fetch] Failed to fetch tag: ${response.status}`);
+      return null;
+    }
 
-  const tags = await response.json();
-  return tags[0] || null;
+    const tags = await response.json();
+    return tags[0] || null;
+  } catch (error) {
+    console.error('[wp-fetch] Error fetching tag:', error);
+    return null;
+  }
 }
 
 /**
@@ -282,13 +335,19 @@ export async function fetchAuthors(
   const searchParams = new URLSearchParams();
   searchParams.set('per_page', String(params.perPage || 100));
 
-  const response = await wpFetch(`${WP_API_URL}/users?${searchParams}`, revalidate);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch authors: ${response.status}`);
-  }
+  try {
+    const response = await wpFetch(`${WP_API_URL}/users?${searchParams}`, revalidate);
+    
+    if (!response.ok) {
+      console.error(`[wp-fetch] Failed to fetch authors: ${response.status}`);
+      return [];
+    }
 
-  return response.json();
+    return response.json();
+  } catch (error) {
+    console.error('[wp-fetch] Error fetching authors:', error);
+    return [];
+  }
 }
 
 /**
@@ -298,14 +357,20 @@ export async function fetchAuthorBySlug(
   slug: string,
   revalidate: number = DEFAULT_REVALIDATE
 ): Promise<WPAuthor | null> {
-  const response = await wpFetch(`${WP_API_URL}/users?slug=${slug}`, revalidate);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch author: ${response.status}`);
-  }
+  try {
+    const response = await wpFetch(`${WP_API_URL}/users?slug=${slug}`, revalidate);
+    
+    if (!response.ok) {
+      console.error(`[wp-fetch] Failed to fetch author: ${response.status}`);
+      return null;
+    }
 
-  const authors = await response.json();
-  return authors[0] || null;
+    const authors = await response.json();
+    return authors[0] || null;
+  } catch (error) {
+    console.error('[wp-fetch] Error fetching author:', error);
+    return null;
+  }
 }
 
 /**
