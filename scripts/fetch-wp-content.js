@@ -23,6 +23,9 @@ const API_TIMEOUT = 60000
 const POSTS_PER_PAGE = 50
 const REQUEST_DELAY = 300
 
+// Chunking configuration - keeps each file under ~30MB for GitHub
+const POSTS_PER_CHUNK = 200
+
 // Manifest configuration - MUST match CACHE_VERSION in prerender.js
 const MANIFEST_VERSION = 2
 const MAX_CHANGED_ROUTES_FOR_PARTIAL = 50  // Force full rebuild if more than this
@@ -374,18 +377,61 @@ async function fetchAllContent() {
 // Save content to JSON files
 function saveContent(results, changeInfo) {
   const dataDir = toAbsolute('src/data')
+  const postsDir = path.join(dataDir, 'posts')
   
   // Ensure data directory exists
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true })
   }
   
-  // Save posts (main content file)
+  // Create posts directory for chunks
+  if (!fs.existsSync(postsDir)) {
+    fs.mkdirSync(postsDir, { recursive: true })
+  }
+  
+  // Clean up old chunk files
+  try {
+    const existingChunks = fs.readdirSync(postsDir).filter(f => f.startsWith('chunk-'))
+    for (const chunk of existingChunks) {
+      fs.unlinkSync(path.join(postsDir, chunk))
+    }
+    console.log(`[WP-Fetch] Cleaned up ${existingChunks.length} old chunk files`)
+  } catch (e) {
+    // Directory might be empty or not exist yet
+  }
+  
+  // Split posts into chunks and save (no pretty-print to save space)
+  const chunks = []
+  for (let i = 0; i < results.posts.length; i += POSTS_PER_CHUNK) {
+    const chunkIndex = Math.floor(i / POSTS_PER_CHUNK)
+    const chunkPosts = results.posts.slice(i, i + POSTS_PER_CHUNK)
+    const filename = `chunk-${chunkIndex}.json`
+    
+    fs.writeFileSync(
+      path.join(postsDir, filename),
+      JSON.stringify(chunkPosts)  // Minified JSON to reduce size
+    )
+    
+    const fileSize = (fs.statSync(path.join(postsDir, filename)).size / (1024 * 1024)).toFixed(2)
+    chunks.push({ filename, postCount: chunkPosts.length, sizeMB: parseFloat(fileSize) })
+  }
+  
+  // Save manifest with chunk info
+  const postsIndex = { 
+    chunks: chunks.map(c => c.filename), 
+    totalPosts: results.posts.length,
+    postsPerChunk: POSTS_PER_CHUNK,
+    chunkDetails: chunks
+  }
   fs.writeFileSync(
-    path.join(dataDir, 'posts.json'),
-    JSON.stringify(results.posts, null, 2)
+    path.join(postsDir, 'index.json'),
+    JSON.stringify(postsIndex, null, 2)
   )
-  console.log(`[WP-Fetch] ✓ Saved ${results.posts.length} posts to posts.json`)
+  
+  console.log(`[WP-Fetch] ✓ Saved ${results.posts.length} posts in ${chunks.length} chunks:`)
+  for (const chunk of chunks) {
+    console.log(`[WP-Fetch]   - ${chunk.filename}: ${chunk.postCount} posts (${chunk.sizeMB} MB)`)
+  }
   
   // Save categories
   fs.writeFileSync(

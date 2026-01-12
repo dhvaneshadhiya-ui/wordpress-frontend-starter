@@ -1,6 +1,10 @@
 /**
  * Local data service - provides static taxonomy data for navigation
  * Posts are always fetched from API for real-time content
+ * 
+ * Note: Posts are stored in chunked files (src/data/posts/chunk-*.json) 
+ * to stay under GitHub's 100MB file size limit. The client-side app
+ * fetches posts from the WordPress API, not from local files.
  */
 
 import categoriesData from '@/data/categories.json';

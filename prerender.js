@@ -149,12 +149,31 @@ const localStaticPages = Object.entries(localStaticPagesObj).map(([slug, page]) 
 }))
 
 // Try to load cached posts from GitHub Action (if available)
+// Posts are now stored in chunked files under src/data/posts/
 let localCachedPosts = []
-const cachedPostsPath = toAbsolute('src/data/posts.json')
-if (fs.existsSync(cachedPostsPath)) {
+const postsIndexPath = toAbsolute('src/data/posts/index.json')
+const legacyPostsPath = toAbsolute('src/data/posts.json')
+
+if (fs.existsSync(postsIndexPath)) {
+  // NEW: Load from chunked files
   try {
-    localCachedPosts = JSON.parse(fs.readFileSync(cachedPostsPath, 'utf-8'))
-    console.log(`[SSG] ✓ Loaded ${localCachedPosts.length} cached posts from posts.json`)
+    const postsIndex = JSON.parse(fs.readFileSync(postsIndexPath, 'utf-8'))
+    for (const chunkFile of postsIndex.chunks) {
+      const chunkPath = toAbsolute(`src/data/posts/${chunkFile}`)
+      if (fs.existsSync(chunkPath)) {
+        const chunkPosts = JSON.parse(fs.readFileSync(chunkPath, 'utf-8'))
+        localCachedPosts.push(...chunkPosts)
+      }
+    }
+    console.log(`[SSG] ✓ Loaded ${localCachedPosts.length} cached posts from ${postsIndex.chunks.length} chunk files`)
+  } catch (e) {
+    console.warn(`[SSG] ⚠ Could not parse chunked posts: ${e.message}`)
+  }
+} else if (fs.existsSync(legacyPostsPath)) {
+  // LEGACY: Fallback to single posts.json file
+  try {
+    localCachedPosts = JSON.parse(fs.readFileSync(legacyPostsPath, 'utf-8'))
+    console.log(`[SSG] ✓ Loaded ${localCachedPosts.length} cached posts from legacy posts.json`)
   } catch (e) {
     console.warn(`[SSG] ⚠ Could not parse posts.json: ${e.message}`)
   }
