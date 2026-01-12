@@ -51,6 +51,21 @@ function igb_is_amplify_origin($origin) {
 }
 
 /**
+ * Check if an origin matches Vercel domains
+ */
+function igb_is_vercel_origin($origin) {
+    // Match *.vercel.app (e.g., your-project.vercel.app)
+    if (preg_match('/^https:\/\/[a-z0-9-]+\.vercel\.app$/', $origin)) {
+        return true;
+    }
+    // Match *.vercel.app with branch/commit prefixes (e.g., feature-branch-your-project.vercel.app)
+    if (preg_match('/^https:\/\/[a-z0-9-]+-[a-z0-9-]+\.vercel\.app$/', $origin)) {
+        return true;
+    }
+    return false;
+}
+
+/**
  * Check if an origin is allowed
  */
 function igb_is_allowed_origin($origin) {
@@ -70,6 +85,11 @@ function igb_is_allowed_origin($origin) {
     
     // Check AWS Amplify domains
     if (igb_is_amplify_origin($origin)) {
+        return true;
+    }
+    
+    // Check Vercel domains
+    if (igb_is_vercel_origin($origin)) {
         return true;
     }
     
