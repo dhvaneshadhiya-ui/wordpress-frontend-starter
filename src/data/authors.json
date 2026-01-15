@@ -1,1 +1,1668 @@
-[]
+[
+  {
+    "id": 96,
+    "name": "Abhinav",
+    "url": "",
+    "description": "I have been a tech enthusiast for as long as I can remember. I enjoy explaining tech to the internet and doing this since I was old enough to understand mathematics. At iGeeksBlog, I will be guiding the internet in solving some common issues with their iPhone, iPad, Mac, AirPods, and Apple Watch. When not writing, you can find me preparing for my debut standup show or roaming around with my camera in the whole city.",
+    "link": "https://dev.igeeksblog.com/author/abhinav/",
+    "slug": "abhinav",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/0ed87b99cb3f69281cec0e49f83ff0b2",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/0ed87b99cb3f69281cec0e49f83ff0b2",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/0ed87b99cb3f69281cec0e49f83ff0b2"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/96",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 1199,
+    "name": "Abhinav",
+    "url": "",
+    "description": "Abhinav Anand is a freelance tech journalist, covering all things Apple at iGeeksBlog. He has reported on smartphones, laptops, and artificial intelligence and tracked tech industry layoffs during this time. His work has been published in prestigious publications such as the Financial Express, Android Headlines, SlashGear, and The Mac Observer.",
+    "link": "https://dev.igeeksblog.com/author/abhinav-anand/",
+    "slug": "abhinav-anand",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/86ab7a80ef21aacfcd5aa80e6b3c339c",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/86ab7a80ef21aacfcd5aa80e6b3c339c",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/86ab7a80ef21aacfcd5aa80e6b3c339c"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/1199",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 101,
+    "name": "Anirban",
+    "url": "",
+    "description": "Anirban is a literature post-grad who delves in philosophy and postmodern novels when not writing on tech and gaming. His love for research is only trumped by his love for chai and heavy metal.",
+    "link": "https://dev.igeeksblog.com/author/anirban/",
+    "slug": "anirban",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/e9bf220197e86e3596fa9e938fbd07f7",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/e9bf220197e86e3596fa9e938fbd07f7",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/e9bf220197e86e3596fa9e938fbd07f7"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/101",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 121,
+    "name": "Ankur",
+    "url": "",
+    "description": "I have been an Apple user for over seven years now. At iGeeksBlog, I love creating how-tos and troubleshooting guides that help people do more with their iPhone, iPad, Mac, AirPods, and Apple Watch. In my free time, I like to watch stand up comedy videos, tech documentaries, news debates, and political speeches.",
+    "link": "https://dev.igeeksblog.com/author/ankur/",
+    "slug": "ankur",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/dc6741158c5c4390b6ea5ae29649775e",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/dc6741158c5c4390b6ea5ae29649775e",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/dc6741158c5c4390b6ea5ae29649775e"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/121",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 107,
+    "name": "Anoop",
+    "url": "",
+    "description": "Anoop loves to find solutions for all your doubts on Tech. When he's not on his quest, you can find him on Twitter talking about what's in his mind.",
+    "link": "https://dev.igeeksblog.com/author/anoop/",
+    "slug": "anoop",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/02c327a45bbd26d0e536c488a90a063d",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/02c327a45bbd26d0e536c488a90a063d",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/02c327a45bbd26d0e536c488a90a063d"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/107",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 76,
+    "name": "Arshmeet",
+    "url": "",
+    "description": "A self-professed Geek who loves to explore all things Apple. I thoroughly enjoy discovering new hacks, troubleshooting issues, and finding and reviewing the best products and apps currently available. My expertise also includes curating opinionated and honest editorials. If not this, you might find me surfing the web or listening to audiobooks.",
+    "link": "https://dev.igeeksblog.com/author/arshmeet/",
+    "slug": "arshmeet",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/56cfdc41c9b431002d562ac0b598bf5f",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/56cfdc41c9b431002d562ac0b598bf5f",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/56cfdc41c9b431002d562ac0b598bf5f"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/76",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 109,
+    "name": "Ava Biswas",
+    "url": "",
+    "description": "Ava is a die-hard Apple aficionado and seasoned writer with a knack for breaking down complex tech concepts into easily digestible content. Having honed her writing and editing skills over 4 years at renowned media houses like TechBurner, Ava crafts informative and engaging articles including troubleshooting guides, product reviews, editorials at iGeeksBlog. When not typing, you can find her exploring the latest Apple releases or pondering the future of tech innovation.",
+    "link": "https://dev.igeeksblog.com/author/ava/",
+    "slug": "ava",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/9367ea578aabd9b5a79d44c0a2b45e86",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/9367ea578aabd9b5a79d44c0a2b45e86",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/9367ea578aabd9b5a79d44c0a2b45e86"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/109",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 118,
+    "name": "Ayush",
+    "url": "",
+    "description": "Ayush is a writer with a keen interest in consumer technology and the Apple ecosystem. He has over three years of working experience at several big-name publications, including Guiding Tech, TechPP, and MobiGyaan. Here at iGeeksBlog, he specializes in crafting how-to guides, buying guides, and editorials related to all things Apple.",
+    "link": "https://dev.igeeksblog.com/author/ayush_patel/",
+    "slug": "ayush_patel",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/09d70e8fee95be0ffb78927c48176b09",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/09d70e8fee95be0ffb78927c48176b09",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/09d70e8fee95be0ffb78927c48176b09"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/118",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 114,
+    "name": "Bhaskar",
+    "url": "",
+    "description": "Bhaskar is a tech guru who turned wordsmith. Hiding his B.Tech degree in a closet, he ditched the corporate path to simplify tech for everyone. For the past 5 years, he's been dishing out how-tos, reviews, and sharp insights. But there's more! He's a witty interview champ and has been sharing his wisdom for 3 years. Furthermore, he has honed his editing skills for 1.5 years and is now delving into marketing to assist newcomers. When not jamming his fingers on those mechanical keyboards, you may find him on strings or engaging in sports. And by evening, his quotes will be appearing on your Instagram feeds.",
+    "link": "https://dev.igeeksblog.com/author/bhaskar/",
+    "slug": "bhaskar",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/4b2d5874d0a02fc94f980515e5347cfc",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/4b2d5874d0a02fc94f980515e5347cfc",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/4b2d5874d0a02fc94f980515e5347cfc"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/114",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 2216,
+    "name": "Chris Hufnagel",
+    "url": "",
+    "description": "",
+    "link": "https://dev.igeeksblog.com/author/chrish/",
+    "slug": "chrish",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/45ee68ac17eed0c865ce414997755588",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/45ee68ac17eed0c865ce414997755588",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/45ee68ac17eed0c865ce414997755588"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/2216"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 105,
+    "name": "Darryl",
+    "url": "",
+    "description": "Consumer Technology and Motorcycles are the two things that excite Darryl the most. Why? Because Tech helps better people's lives, and solving people's problems related to tech is something he enjoys. And what about bikes, you ask? Well, drop a gear and disappear.",
+    "link": "https://dev.igeeksblog.com/author/darryl/",
+    "slug": "darryl",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5e3786559132928fb9f2cf852c7ecfec",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5e3786559132928fb9f2cf852c7ecfec",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5e3786559132928fb9f2cf852c7ecfec"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": {
+        "addBackgroundMedia": true,
+        "cropSelectedElements": true,
+        "safeZone": true
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/105",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 49,
+    "name": "Dhvanesh",
+    "url": "",
+    "description": "The founder of iGeeksBlog, Dhvanesh, is an Apple aficionado, who cannot stand even a slight innuendo about Apple products. He dons the cap of editor-in-chief to make sure that articles match the quality standard before they are published.",
+    "link": "https://dev.igeeksblog.com/author/dhvanesh/",
+    "slug": "dhvanesh",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/53a1b29ed4f9b601ddad0ad52ced9528",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/53a1b29ed4f9b601ddad0ad52ced9528",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/53a1b29ed4f9b601ddad0ad52ced9528"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": {
+        "addBackgroundMedia": true,
+        "addLinks": true,
+        "cropElementsWithShapes": true,
+        "cropSelectedElements": true,
+        "embedWebStories": true,
+        "enableSwipe": true,
+        "previewStory": true,
+        "safeZone": true
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/49",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 100,
+    "name": "Gargi Ghosal",
+    "url": "",
+    "description": "Gargi is a writer, storyteller, and researcher. Being a literature post-grad who had her heart set on academia, she started writing on all things tech by chance 5 years ago. Since then, she has been writing for clients across countries and industries. Outside of work, she hosts TEDx shows and Literature festivals. In an ideal world, she's always a minute away from heading off to the mountains.",
+    "link": "https://dev.igeeksblog.com/author/gargighosal/",
+    "slug": "gargighosal",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5556532b1ec04b0f4c57e0fad31802ba",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5556532b1ec04b0f4c57e0fad31802ba",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5556532b1ec04b0f4c57e0fad31802ba"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/100",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 91,
+    "name": "Harshanki",
+    "url": "",
+    "description": "An entrepreneur by heart, I am obsessed with the world of Apple. I survive on Apple products and their updates. Over the last five years, I have been writing all kinds of content that are remotely connected to Apple and sharing across digital platforms. When not writing, you will find me on the court playing basketball or in my room playing the sitar.",
+    "link": "https://dev.igeeksblog.com/author/harshanki-thakker/",
+    "slug": "harshanki-thakker",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/fe7f6bdb6ff0bbbb12c95a086caf6756",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/fe7f6bdb6ff0bbbb12c95a086caf6756",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/fe7f6bdb6ff0bbbb12c95a086caf6756"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/91",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 103,
+    "name": "Idowu",
+    "url": "",
+    "description": "Idowu is an avid tech writer and a software surfer who loves covering knowledge gaps in consumer software, including anything related to iPhones. Well, when he's not reading and learning new things, you'll find Idowu losing gallantly on a solid chessboard or virtually on Lichess.",
+    "link": "https://dev.igeeksblog.com/author/idowu_omisola/",
+    "slug": "idowu_omisola",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5b1be28f742f0bc1961ae0280db3d4d2",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5b1be28f742f0bc1961ae0280db3d4d2",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5b1be28f742f0bc1961ae0280db3d4d2"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/103",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 113,
+    "name": "Jibin",
+    "url": "",
+    "description": "Jibin Joseph is an editor at iGeeksBlog and has excellent attention to detail. He is a voracious reader, with interests ranging from philosophy and history to geopolitics and tech. When not reading or correcting grammar, you’d find him engaging in discussions about football. You can follow him on Twitter and Instagram at @4ibin.",
+    "link": "https://dev.igeeksblog.com/author/jibin_joseph/",
+    "slug": "jibin_joseph",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/efa7faaf56db01695f8db44186194f11",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/efa7faaf56db01695f8db44186194f11",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/efa7faaf56db01695f8db44186194f11"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/113",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 48,
+    "name": "Jignesh",
+    "url": "",
+    "description": "Jignesh Padhiyar is the co-founder of iGeeksBlog.com, who has a keen eye for news, rumors, and all the unusual stuff around Apple products. During his tight schedule, Jignesh finds some moments of respite to share side-splitting content on social media.",
+    "link": "https://dev.igeeksblog.com/author/iosblogger/",
+    "slug": "iosblogger",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/95ea27f1545ae6335264dc29d4a2a70b",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/95ea27f1545ae6335264dc29d4a2a70b",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/95ea27f1545ae6335264dc29d4a2a70b"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/48",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 111,
+    "name": "Keval",
+    "url": "",
+    "description": "My profile will tell you I am a content writer, and my Zodiac will tell you I am Tauras. But the truth is I am a Techofile who dived down the bed of tech sea discovering useful How-Tos and some gorgeous wallpapers. While you are here reading this, I am probably tweeting about tech. Go check that as well.",
+    "link": "https://dev.igeeksblog.com/author/keval/",
+    "slug": "keval",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/f406b25ac0ba9f4abb352632af6b741e",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/f406b25ac0ba9f4abb352632af6b741e",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/f406b25ac0ba9f4abb352632af6b741e"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/111",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 1040,
+    "name": "Luqman",
+    "url": "",
+    "description": "Luqman has a strong passion for technology and provides troubleshooting support and how-to guides for iOS and macOS. Additionally, he keeps up with the latest Apple updates to provide useful content.",
+    "link": "https://dev.igeeksblog.com/author/luqman/",
+    "slug": "luqman",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/29cc6a8b157fa2624a305b98f93b9de0",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/29cc6a8b157fa2624a305b98f93b9de0",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/29cc6a8b157fa2624a305b98f93b9de0"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/1040",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 77,
+    "name": "Mahit",
+    "url": "",
+    "description": "Mahit is an engineer by Education with a corporate stint to his name. He ditched the corporate boardroom wars in favor of the technology battleground. For the better part of a decade, he has worked for popular publishing outlets, including Dennis Publishing, BGR India, AppStorm, MakeUseOf, and iPhonehacks.",
+    "link": "https://dev.igeeksblog.com/author/mahit/",
+    "slug": "mahit",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a4b5ab4ca6357abbff056a83e9554bb3",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a4b5ab4ca6357abbff056a83e9554bb3",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a4b5ab4ca6357abbff056a83e9554bb3"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/77",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 92,
+    "name": "Marcus",
+    "url": "",
+    "description": "Marcus Mears III is a lifelong technology enthusiast with half a decade of experience developing prose that keeps readers in the know. With hundreds of reviews, buying guides, and how-to explainers across a number of tech and lifestyle publications like How-To Geek, MakeUseOf, and iGeeksBlog, Mears’ work helps readers around the globe learn to make the most of their devices and software. He uses a 2016 MacBook Pro as his daily driver laptop and a self-built Windows PC for gaming and productivity.",
+    "link": "https://dev.igeeksblog.com/author/mearsmarcus/",
+    "slug": "mearsmarcus",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/1496820920ad8ee9ff4c87fce258c0a7",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/1496820920ad8ee9ff4c87fce258c0a7",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/1496820920ad8ee9ff4c87fce258c0a7"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/92",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 85,
+    "name": "Mayank",
+    "url": "",
+    "description": "Mayank is a published author and a tech-blogger with over ten years of writing experience for various domains and industries. At iGeeks, he mostly writes about blogs that solve user-problems and guide them on unleashing the full potential of their Apple Device. He can often be found with his headphones on, typing to the rhythm of some country song.",
+    "link": "https://dev.igeeksblog.com/author/mayank/",
+    "slug": "mayank",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a2156b849fd313ddf2e3a04d8fdc168b",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a2156b849fd313ddf2e3a04d8fdc168b",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a2156b849fd313ddf2e3a04d8fdc168b"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/85",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 81,
+    "name": "Mehak",
+    "url": "",
+    "description": "Mehak has a master’s degree in communication and over ten years of writing experience. Her passion for technology and Apple products led her to iGeeksBlog, where she specializes in writing product roundups and app recommendations for fellow Apple users. When not typing away on her MacBook Pro, she loves being lost in a book or out exploring the world.",
+    "link": "https://dev.igeeksblog.com/author/mehak/",
+    "slug": "mehak",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a0c176e9752be6796ed285e7465c4b46",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a0c176e9752be6796ed285e7465c4b46",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a0c176e9752be6796ed285e7465c4b46"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/81",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 99,
+    "name": "Mikhil George",
+    "url": "",
+    "description": "A content creator and tech-enthusiast, there’s nothing that can stop me from delving into the latest tech-innovations. I love exploring the world of tech, and for that matter anything that arouses the ‘Wow’ factor within me.  Apart from all this tech-thingy, I’m a musician, singer, pianist and sport enthusiast. You can find me on YouTube, and Instagram.",
+    "link": "https://dev.igeeksblog.com/author/mikhilgeorge/",
+    "slug": "mikhilgeorge",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/160932b5a355078ff98283e984a7ba11",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/160932b5a355078ff98283e984a7ba11",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/160932b5a355078ff98283e984a7ba11"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/99",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 90,
+    "name": "Nidhi",
+    "url": "",
+    "description": "A tech-aficionado whose superpower lies in blabbering interminably about new technologies. After 4+ years and 4500+ content pieces that helped diverse companies grow, I followed my passion and made iGeeks Media my home. When not gushing over technology, you will find me immersed in a fictional world, either reading or creating one.",
+    "link": "https://dev.igeeksblog.com/author/nidhi-bohra/",
+    "slug": "nidhi-bohra",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/39254b4c76a9df63d0f59a9934548aa6",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/39254b4c76a9df63d0f59a9934548aa6",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/39254b4c76a9df63d0f59a9934548aa6"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": {
+        "addBackgroundMedia": true,
+        "addLinks": true,
+        "cropElementsWithShapes": true,
+        "cropSelectedElements": true,
+        "embedWebStories": true,
+        "enableSwipe": true,
+        "previewStory": true,
+        "safeZone": true
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/90",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 93,
+    "name": "Parth",
+    "url": "",
+    "description": "Parth previously worked at EOTO.tech covering tech news. He is currently freelancing at iGeeksBlog, Guiding Tech, iPhonehacks, and TechWiser writing about apps comparisons, tutorials, software tips and tricks, and diving deep into iOS, Android, macOS, and Windows platforms.",
+    "link": "https://dev.igeeksblog.com/author/parthigb/",
+    "slug": "parthigb",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/7f53074bad12710a2049a559d918831d",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/7f53074bad12710a2049a559d918831d",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/7f53074bad12710a2049a559d918831d"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/93",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 2909,
+    "name": "Parvez Mulla",
+    "url": "",
+    "description": "I am a Computer Science Engineer by education and an avid tech enthusiast and writer by passion, with over 3 years of writing experience. I enjoy exploring the world of technology and am especially fascinated by smartphones. When I step away from the tech realm, I switch to the world of sports, obsessing over football and Formula 1.",
+    "link": "https://dev.igeeksblog.com/author/parvez/",
+    "slug": "parvez",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/be65e61884d04d4f344a3f3bdcb94f01",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/be65e61884d04d4f344a3f3bdcb94f01",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/be65e61884d04d4f344a3f3bdcb94f01"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/2909",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 2908,
+    "name": "Paurush Chaudhary",
+    "url": "https://dev.igeeksblog.com",
+    "description": "With a PG Diploma degree in English Journalism, Paurush dabbles around with the Apple ecosystem in his writing endeavors. Before becoming a writer, he produced videos for tech YouTube channels and worked briefly as a copywriter at an agency. On weekends, he is a full-time cinephile trying to reduce his never-ending watchlist, often making it longer.",
+    "link": "https://dev.igeeksblog.com/author/paurushchaudhary/",
+    "slug": "paurushchaudhary",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/0a3acc32a20841512676b64b49d8f504",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/0a3acc32a20841512676b64b49d8f504",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/0a3acc32a20841512676b64b49d8f504"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/2908",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 108,
+    "name": "Rachel",
+    "url": "",
+    "description": "Rachel, an experienced Apple technology writer since 2021 and a long-time user since 2003, began her journey with a silver iPod Classic. Currently, she owns an array of modern Apple gadgets. At iGeeksBlog, her expertise shines through in the crafting of comprehensive how-to articles, informative guides, and well-curated roundups.",
+    "link": "https://dev.igeeksblog.com/author/rachel-ann-tee-melegrito/",
+    "slug": "rachel-ann-tee-melegrito",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/fac8af90a0dab5469df0daa68ae252dc",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/fac8af90a0dab5469df0daa68ae252dc",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/fac8af90a0dab5469df0daa68ae252dc"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/108",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 3208,
+    "name": "Ravi Teja KNTS",
+    "url": "",
+    "description": "I’ve been writing about tech for over 5 years, with 1000+ articles published so far. From iPhones and MacBooks to Android phones and AI tools, I’ve always enjoyed turning complicated features into simple, jargon-free guides. Recently, I switched sides and joined the Apple camp. Whether you want to try out new features, catch up on the latest news, or tweak your Apple devices, I’m here to help you get the most out of your tech.",
+    "link": "https://dev.igeeksblog.com/author/ravi/",
+    "slug": "ravi",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/e7236816734bb53191d1d019a219354a",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/e7236816734bb53191d1d019a219354a",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/e7236816734bb53191d1d019a219354a"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/3208",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 86,
+    "name": "Ria Sharma",
+    "url": "",
+    "description": "I'm a technical writer who is interested in understanding consumer difficulties and find easy solutions. At iGeeksBlog, I enjoy making how-to and troubleshooting guides that help people do more on their iPhone, iPad. In my spare time, I enjoy listening to music and going to my favorite spots.",
+    "link": "https://dev.igeeksblog.com/author/ria-sharma/",
+    "slug": "ria-sharma",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/0f88c52d6ac9d5ccb8fa35f013da2a6b",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/0f88c52d6ac9d5ccb8fa35f013da2a6b",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/0f88c52d6ac9d5ccb8fa35f013da2a6b"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/86",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 84,
+    "name": "Sagar",
+    "url": "",
+    "description": "I am an aspiring tech blogger who is always in love with new generation iPhones and iPads. At iGeeksBlog, I am dedicated to rendering the How-To's, Troubleshooting bugs, and reviewing apps that are a great deal of help. When I am not writing, I am daydreaming about the future of all things Apple and watching videos of smartphone battles on YouTube.",
+    "link": "https://dev.igeeksblog.com/author/sagar/",
+    "slug": "sagar",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/9bfd397ad6c67d064b8c8d152b12364d",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/9bfd397ad6c67d064b8c8d152b12364d",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/9bfd397ad6c67d064b8c8d152b12364d"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/84",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 112,
+    "name": "Sajid",
+    "url": "",
+    "description": "Sajid Shaik is a tech enthusiast who explains complex concepts in a clear and concise way. For the past 7 years, he has been a regular contributor to tech blogs and publications, including MakeUseOf and iGeeksBlog. Sajid also has extensive knowledge of the Apple ecosystem, which he shares with his readers through his words. He has created a wide range of content, such as How-Tos, Reviews, Listicles, and much more. Aside from that, Sajid has a degree in Electronics and Communication Engineering, which gives him an advantage in better understanding technology at hardware level. Apart from writing, you can find him fiddling with Apple products or keeping up with all things Apple.",
+    "link": "https://dev.igeeksblog.com/author/sajid/",
+    "slug": "sajid",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5db92f129ad61a0b0f88b3ada62de1cb",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5db92f129ad61a0b0f88b3ada62de1cb",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/5db92f129ad61a0b0f88b3ada62de1cb"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/112",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 104,
+    "name": "Sanchit",
+    "url": "",
+    "description": "Hi! I am a tech enthusiast and content creator who loves to keep up with the latest and greatest tech. I love using the power of tech to assist me and others in their daily lives! You would find me making videos or studying during my free time! You can follow me @sanchitgarg_ everywhere!",
+    "link": "https://dev.igeeksblog.com/author/sanchit_garg/",
+    "slug": "sanchit_garg",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/96166497dcc4df374bcb3724a958dc66",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/96166497dcc4df374bcb3724a958dc66",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/96166497dcc4df374bcb3724a958dc66"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/104",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 120,
+    "name": "Sandy",
+    "url": "",
+    "description": "Sandy relishes crafting how-tos, listicles, and explainers, empowering others to unlock the full potential of their Apple devices. She joined iGeeksBlog in 2023, and her decade-long experience in tech writing shines through, starting with Apple products in 2015 and further enriched by collaborations with prestigious publications like Lifewire, How-To Geek, Digital Trends, iDownloadBlog, MakeUseOf, groovyPost, and AppleToolbox.",
+    "link": "https://dev.igeeksblog.com/author/sandy/",
+    "slug": "sandy",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/df4e6461765d554b89bef5284a45b7a2",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/df4e6461765d554b89bef5284a45b7a2",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/df4e6461765d554b89bef5284a45b7a2"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/120",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 95,
+    "name": "Sanuj",
+    "url": "",
+    "description": "Sanuj is passionate about technology and all things Apple. He is currently freelancing at iGeeksBlog and iPhoneHacks, covering news, and writing about comparisons, DIY tutorials, software tips, and tricks, How-Tos, and diving deep into iOS, Android, macOS, and Windows platforms.",
+    "link": "https://dev.igeeksblog.com/author/sanuj-bhatia/",
+    "slug": "sanuj-bhatia",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/1ac854a446e973c39d263315990081a0",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/1ac854a446e973c39d263315990081a0",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/1ac854a446e973c39d263315990081a0"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/95",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 79,
+    "name": "Siddarth Suvarna",
+    "url": "",
+    "description": "Siddharth is a freelance technology writer with over a decade of experience. He has written tutorials, guides, features, how-tos, listicles, and more for sites such as 91mobiles, MySmartPrice, GadgetReview, TheAndroidSoul, and more. In his free time, he loves to travel, ride motorcycles, watch movies/TV shows, and pet dogs.",
+    "link": "https://dev.igeeksblog.com/author/siddarth/",
+    "slug": "siddarth",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/835bd90876960957a33bb2d3d1cb5abe",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/835bd90876960957a33bb2d3d1cb5abe",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/835bd90876960957a33bb2d3d1cb5abe"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/79",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 2906,
+    "name": "sponsored post",
+    "url": "",
+    "description": "A sponsored post is a paid advertisement that promotes a brand or product.",
+    "link": "https://dev.igeeksblog.com/author/sponsoredpost/",
+    "slug": "sponsoredpost",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/348cb856b07141182668e23e40141315",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/348cb856b07141182668e23e40141315",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/348cb856b07141182668e23e40141315"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/2906",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 117,
+    "name": "Srishti",
+    "url": "",
+    "description": "Srishti is a writing enthusiast who has been creating user-friendly content for more than 5 years in the tech space. At iGeeksBlog, she helps readers explore the Apple ecosystem, understand the jargon, and improve their experience. With expertise in buying guides, she helps you find the best accessories amid the pool of choices for Apple products. Her talent for making complicated tech understandable shines through in her writing. When away from her MacBook, you can find her doing a hands-on experience with new products.",
+    "link": "https://dev.igeeksblog.com/author/srishti-pandey/",
+    "slug": "srishti-pandey",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/2b9656338589f7ceb81e8ac17c2eda25",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/2b9656338589f7ceb81e8ac17c2eda25",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/2b9656338589f7ceb81e8ac17c2eda25"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/117",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 3222,
+    "name": "Sumit Sarkar",
+    "url": "",
+    "description": "",
+    "link": "https://dev.igeeksblog.com/author/sumit-sarkar/",
+    "slug": "sumit-sarkar",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/8fdcb9e21f8c7bc5e4d17ff205edac42",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/8fdcb9e21f8c7bc5e4d17ff205edac42",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/8fdcb9e21f8c7bc5e4d17ff205edac42"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/3222"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 2905,
+    "name": "Supreeth Koundinya",
+    "url": "",
+    "description": "Supreeth has been an Apple fanboy ever since he got his hands on an iPod Touch 5 in 2012. After finishing his education in engineering in 2021, he started writing about technology. Ever since then, he's written hundreds of blogs on iPhone, iPad and the Apple Watch. Previously, he worked at Guiding Tech and GadgetsToUse Media.",
+    "link": "https://dev.igeeksblog.com/author/supreeth/",
+    "slug": "supreeth",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/ab938211441b35fa8f866de77b4774d8",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/ab938211441b35fa8f866de77b4774d8",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/ab938211441b35fa8f866de77b4774d8"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/2905",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 69,
+    "name": "Suraj Padmasali",
+    "url": "",
+    "description": "Suraj is an operations head on the iGB team. He contributes to the social media section along with tips and tricks for iPhone, Apple Watch. Apart from blogging, he likes to work out as much as he can in his gym and love to listening to retro music.",
+    "link": "https://dev.igeeksblog.com/author/padmasuraj/",
+    "slug": "padmasuraj",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a016dfb9ae8f836093a8a0ff967b6c4f",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a016dfb9ae8f836093a8a0ff967b6c4f",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/a016dfb9ae8f836093a8a0ff967b6c4f"
+    },
+    "meta": {
+      "web_stories_tracking_optin": true,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": {
+        "addBackgroundMedia": true,
+        "addLinks": true,
+        "cropElementsWithShapes": true,
+        "cropSelectedElements": true,
+        "embedWebStories": true,
+        "enableSwipe": true,
+        "previewStory": true,
+        "safeZone": true
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/69",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 132,
+    "name": "Varun",
+    "url": "https://dev.igeeksblog.com/",
+    "description": "Varun is a passionate technology journalist with over 7 years of experience and a knack for diving deep into everything Apple, PC hardware, and gaming. With an engineering degree in hand, he brings a solid technical foundation to his work, ensuring accuracy and insight in every piece he writes. Varun also contributes to GameRant, Guiding Tech, and The Mac Observer.",
+    "link": "https://dev.igeeksblog.com/author/varun/",
+    "slug": "varun",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/57dd3737b70b0412a4069f334fc26be3",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/57dd3737b70b0412a4069f334fc26be3",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/57dd3737b70b0412a4069f334fc26be3"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/132",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 110,
+    "name": "Venus",
+    "url": "",
+    "description": "Tech Junkie and Computer Science Undergrad, who loves experimenting things and everything Apple.",
+    "link": "https://dev.igeeksblog.com/author/venus/",
+    "slug": "venus",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/6718831b061638427506d559da732c1d",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/6718831b061638427506d559da732c1d",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/6718831b061638427506d559da732c1d"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/110",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 125,
+    "name": "Vikhyat",
+    "url": "",
+    "description": "Vikhyat has a bachelor's degree in Electronic and Communication Engineering and over five years of writing experience. His passion for technology and Apple products led him to the tech writing space, where he specializes in writing App features, How-to guides, and troubleshooting guides for fellow Apple users. When not typing away on his MacBook Pro, he loves exploring the real world.",
+    "link": "https://dev.igeeksblog.com/author/vikhyat/",
+    "slug": "vikhyat",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/804cbd1b14f5799d9a86e546aa41e891",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/804cbd1b14f5799d9a86e546aa41e891",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/804cbd1b14f5799d9a86e546aa41e891"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/125",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 98,
+    "name": "Yash Anand",
+    "url": "",
+    "description": "I'm a die-hard Apple Fanboy who's keen and enthusiastic to learn and explore new things in the world of technology. Besides that, I’m currently an engineering student in the field of Electronics and telecommunications, thus love playing with electronic hardware. When not exploring the world of technology, I love learning about the universe/cosmos, time travel, different paradoxes, and so on.",
+    "link": "https://dev.igeeksblog.com/author/yashanand/",
+    "slug": "yashanand",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/b925f68e9ca82ea208142b36c51209a9",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/b925f68e9ca82ea208142b36c51209a9",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/b925f68e9ca82ea208142b36c51209a9"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/98",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": 130,
+    "name": "Yash Wate",
+    "url": "",
+    "description": "Yash is a tech journalist and writer based in India. He has five years of experience writing features, how-tos, and reviews for various online publications. As an editor at iGeeksBlog, Yash's job is to ensure the articles are polished and suitable for publication. You can also read his work on How-To Geek, MakeUseOf, and TechPP.",
+    "link": "https://dev.igeeksblog.com/author/yashwate/",
+    "slug": "yashwate",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/d6ad950e4b6d38a0b790b88ad55650c6",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/d6ad950e4b6d38a0b790b88ad55650c6",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/d6ad950e4b6d38a0b790b88ad55650c6"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/130",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  }
+]
