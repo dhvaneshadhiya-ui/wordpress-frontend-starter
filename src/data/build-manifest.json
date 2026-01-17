@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generatedAt": "2026-01-16T06:43:43.790Z",
+  "generatedAt": "2026-01-17T06:39:54.425Z",
   "contentHashes": {
     "posts": {},
     "categories": {
@@ -540,10 +540,8 @@
       "yashwate": "b1af69dc880e"
     }
   },
-  "changedRoutes": [
-    "/"
-  ],
-  "changedCount": 1,
+  "changedRoutes": [],
+  "changedCount": 0,
   "totalPosts": 0,
   "totalCategories": 25,
   "totalTags": 458,
