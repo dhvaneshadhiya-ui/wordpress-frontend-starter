@@ -9,13 +9,13 @@ export function TrendingBar({ posts }: TrendingBarProps) {
   if (!posts?.length) return null;
 
   return (
-    <div className="bg-secondary/50 border-b border-border py-2 overflow-hidden">
+<aside className="bg-secondary/50 border-b border-border py-2 overflow-hidden" aria-label="Trending articles">
       <div className="container mx-auto px-4">
         <div className="flex items-center gap-4">
           <span className="shrink-0 text-xs font-semibold uppercase tracking-wider text-[hsl(var(--trending))]">
             Trending
           </span>
-          <div className="flex gap-4 overflow-x-auto scrollbar-hide">
+          <nav className="flex gap-4 overflow-x-auto scrollbar-hide" aria-label="Trending articles navigation">
             {posts.slice(0, 6).map((post) => (
               <Link
                 key={post.id}
@@ -25,9 +25,9 @@ export function TrendingBar({ posts }: TrendingBarProps) {
                 {stripHtml(post.title.rendered)}
               </Link>
             ))}
-          </div>
+          </nav>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
