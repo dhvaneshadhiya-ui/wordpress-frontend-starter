@@ -24,8 +24,8 @@ export function Footer() {
           </div>
 
           {/* Categories */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-foreground">
+          <nav aria-labelledby="footer-categories">
+            <h3 id="footer-categories" className="mb-4 text-sm font-semibold uppercase tracking-wide text-foreground">
               Categories
             </h3>
             <ul className="space-y-2">
@@ -40,11 +40,11 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Links */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-foreground">
+          <nav aria-labelledby="footer-quicklinks">
+            <h3 id="footer-quicklinks" className="mb-4 text-sm font-semibold uppercase tracking-wide text-foreground">
               Quick Links
             </h3>
             <ul className="space-y-2">
@@ -81,7 +81,7 @@ export function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </nav>
         </div>
 
         {/* Copyright */}

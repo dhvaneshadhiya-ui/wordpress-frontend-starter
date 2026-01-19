@@ -19,9 +19,13 @@ export function PostGrid({ posts, isLoading, title, headingId }: PostGridProps) 
     </h2>
   );
 
+  // Use semantic <section> when title is provided (standalone content block)
+  const Wrapper = title ? 'section' : 'div';
+  const wrapperProps = title ? { 'aria-labelledby': headingId } : {};
+
   if (isLoading) {
     return (
-      <div className="py-8">
+      <Wrapper className="py-8" {...wrapperProps}>
         {title && <HeadingContent />}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -51,27 +55,27 @@ export function PostGrid({ posts, isLoading, title, headingId }: PostGridProps) 
             </article>
           ))}
         </div>
-      </div>
+      </Wrapper>
     );
   }
 
   if (!posts.length) {
     return (
-      <div className="py-8">
+      <Wrapper className="py-8" {...wrapperProps}>
         {title && <HeadingContent />}
         <p className="text-muted-foreground">No posts found.</p>
-      </div>
+      </Wrapper>
     );
   }
 
   return (
-    <div className="py-8">
+    <Wrapper className="py-8" {...wrapperProps}>
       {title && <HeadingContent />}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
       </div>
-    </div>
+    </Wrapper>
   );
 }
