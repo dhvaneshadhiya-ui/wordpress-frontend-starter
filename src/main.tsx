@@ -6,14 +6,17 @@ import App from "./App.tsx";
 import "./index.css";
 import { clearStaleVersionCaches } from "./lib/local-cache";
 
-// Unregister any stale service workers that might be caching old content
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(registrations => {
-    for (const registration of registrations) {
-      registration.unregister();
-      console.log('[SW] Unregistered stale service worker');
-    }
-  });
+// Register API caching service worker (production only)
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  navigator.serviceWorker.register('/sw.js')
+    .then((registration) => {
+      console.log('[SW] API caching service worker registered');
+      // Check for updates periodically
+      setInterval(() => registration.update(), 60 * 60 * 1000); // hourly
+    })
+    .catch((error) => {
+      console.warn('[SW] Service worker registration failed:', error);
+    });
 }
 
 // Handle manual cache clearing via URL parameter ?clearCache=1

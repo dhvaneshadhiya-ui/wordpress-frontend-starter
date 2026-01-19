@@ -19,19 +19,27 @@ import {
   getLocalAuthors,
   getLocalAuthorBySlug,
 } from '@/lib/local-data';
-import { getCachedData, setCachedData, generateCacheKey } from '@/lib/local-cache';
+import { 
+  getCachedData, 
+  setCachedData, 
+  generateCacheKey, 
+  isCacheFresh, 
+  getCacheAge,
+  POSTS_TTL,
+  TAXONOMY_TTL 
+} from '@/lib/local-cache';
 import demoPosts from '@/data/demo-posts.json';
 
-// Query config - stale-while-revalidate strategy
-const DEFAULT_STALE_TIME = 5 * 60 * 1000; // 5 minutes
-const LONG_STALE_TIME = 30 * 60 * 1000; // 30 minutes
-const GC_TIME = 60 * 60 * 1000; // 1 hour
+// Query config - extended stale-while-revalidate strategy
+// Cache is shown immediately, background fetch happens if stale
+const FRESH_THRESHOLD = 5 * 60 * 1000; // Consider fresh for 5 minutes (no refetch)
+const GC_TIME = 24 * 60 * 60 * 1000; // 24 hours garbage collection
 
 // Cast demo posts to WPPost type for placeholder
 const typedDemoPosts = demoPosts as unknown as WPPost[];
 
-// Fetch posts with pagination - stale-while-revalidate with localStorage caching
-// Falls back to demo posts when both API and cache fail (for homepage only)
+// Fetch posts with pagination - true stale-while-revalidate with extended caching
+// Shows cached data INSTANTLY, fetches fresh in background only when stale
 export function usePosts(params: {
   page?: number;
   perPage?: number;
@@ -45,36 +53,39 @@ export function usePosts(params: {
   
   type PostsResult = { posts: WPPost[]; totalPages: number; total: number };
   
+  // Get cached data and freshness status BEFORE query
+  const cachedData = getCachedData<PostsResult>(cacheKey);
+  const cacheIsFresh = isCacheFresh(cacheKey);
+  const cacheAge = getCacheAge(cacheKey);
+  
+  // Build fallback: cached data > demo posts (homepage only)
+  const fallbackData = cachedData || (isHomepageRequest ? {
+    posts: typedDemoPosts,
+    totalPages: 1,
+    total: typedDemoPosts.length,
+  } : undefined);
+  
   return useQuery({
     queryKey: ['posts', params],
     queryFn: async () => {
       const result = await fetchPosts(params);
-      // Cache successful result to localStorage
-      setCachedData(cacheKey, result);
+      // Cache successful result with extended TTL
+      setCachedData(cacheKey, result, POSTS_TTL);
       return result;
     },
-    // Show cached data immediately while fetching fresh
-    // For homepage, fall back to demo posts if no cache exists
-    placeholderData: () => {
-      const cached = getCachedData<PostsResult>(cacheKey);
-      if (cached) return cached;
-      
-      // Use demo posts as ultimate fallback for homepage only
-      if (isHomepageRequest) {
-        return {
-          posts: typedDemoPosts,
-          totalPages: 1,
-          total: typedDemoPosts.length,
-        };
-      }
-      return undefined;
-    },
-    staleTime: DEFAULT_STALE_TIME,
+    // CRITICAL: Use initialData to show cached content INSTANTLY (no loading state)
+    initialData: fallbackData,
+    // Tell React Query when this data was last updated (for stale calculation)
+    initialDataUpdatedAt: cacheAge !== null ? Date.now() - cacheAge : undefined,
+    // If cache is fresh (<5 min), don't refetch at all
+    staleTime: cacheIsFresh ? FRESH_THRESHOLD : 0,
     gcTime: GC_TIME,
-    retry: 1, // Reduced for faster fallback
-    retryDelay: 1000, // Fixed delay - no exponential backoff
-    refetchOnMount: true, // Only refetch if stale
-    refetchOnWindowFocus: false, // Don't refetch on tab switch
+    retry: 1,
+    retryDelay: 1000,
+    // Only refetch if cache is stale
+    refetchOnMount: !cacheIsFresh,
+    refetchOnWindowFocus: false,
+    refetchInterval: false, // No polling
   });
 }
 
@@ -84,21 +95,31 @@ export function usePost(slug: string | undefined) {
     queryKey: ['post', slug],
     queryFn: () => fetchPostBySlug(slug!),
     enabled: !!slug,
-    staleTime: DEFAULT_STALE_TIME,
+    staleTime: FRESH_THRESHOLD,
     gcTime: GC_TIME,
     retry: 2,
   });
 }
 
-// Fetch all categories - with local fallback
+// Fetch all categories - with local fallback and extended caching
 export function useCategories() {
+  const cacheKey = 'categories';
+  const cachedData = getCachedData<Awaited<ReturnType<typeof fetchCategories>>>(cacheKey);
+  const cacheIsFresh = isCacheFresh(cacheKey);
+  
   return useQuery({
     queryKey: ['categories'],
-    queryFn: () => fetchCategories({ perPage: 100 }),
-    placeholderData: () => getLocalCategories(),
-    staleTime: LONG_STALE_TIME,
+    queryFn: async () => {
+      const result = await fetchCategories({ perPage: 100 });
+      setCachedData(cacheKey, result, TAXONOMY_TTL);
+      return result;
+    },
+    initialData: cachedData || getLocalCategories(),
+    staleTime: cacheIsFresh ? FRESH_THRESHOLD : 0,
     gcTime: GC_TIME,
     retry: 1,
+    refetchOnMount: !cacheIsFresh,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -109,7 +130,7 @@ export function useCategory(slug: string | undefined) {
     queryFn: () => fetchCategoryBySlug(slug!),
     enabled: !!slug,
     placeholderData: () => slug ? getLocalCategoryBySlug(slug) : undefined,
-    staleTime: LONG_STALE_TIME,
+    staleTime: FRESH_THRESHOLD,
     gcTime: GC_TIME,
     retry: 1,
   });
@@ -123,22 +144,32 @@ export function useCategoryPosts(categorySlug: string | undefined, page: number 
     queryKey: ['categoryPosts', categorySlug, page],
     queryFn: () => fetchPosts({ categories: [category!.id], page, perPage: 12 }),
     enabled: !!category,
-    staleTime: DEFAULT_STALE_TIME,
+    staleTime: FRESH_THRESHOLD,
     gcTime: GC_TIME,
     retry: 2,
     placeholderData: keepPreviousData, // Show previous page while loading new
   });
 }
 
-// Fetch all tags - with local fallback
+// Fetch all tags - with local fallback and extended caching
 export function useTags() {
+  const cacheKey = 'tags';
+  const cachedData = getCachedData<Awaited<ReturnType<typeof fetchTags>>>(cacheKey);
+  const cacheIsFresh = isCacheFresh(cacheKey);
+  
   return useQuery({
     queryKey: ['tags'],
-    queryFn: () => fetchTags({ perPage: 100 }),
-    placeholderData: () => getLocalTags(),
-    staleTime: LONG_STALE_TIME,
+    queryFn: async () => {
+      const result = await fetchTags({ perPage: 100 });
+      setCachedData(cacheKey, result, TAXONOMY_TTL);
+      return result;
+    },
+    initialData: cachedData || getLocalTags(),
+    staleTime: cacheIsFresh ? FRESH_THRESHOLD : 0,
     gcTime: GC_TIME,
     retry: 1,
+    refetchOnMount: !cacheIsFresh,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -149,7 +180,7 @@ export function useTag(slug: string | undefined) {
     queryFn: () => fetchTagBySlug(slug!),
     enabled: !!slug,
     placeholderData: () => slug ? getLocalTagBySlug(slug) : undefined,
-    staleTime: LONG_STALE_TIME,
+    staleTime: FRESH_THRESHOLD,
     gcTime: GC_TIME,
     retry: 1,
   });
@@ -163,22 +194,32 @@ export function useTagPosts(tagSlug: string | undefined, page: number = 1) {
     queryKey: ['tagPosts', tagSlug, page],
     queryFn: () => fetchPosts({ tags: [tag!.id], page, perPage: 12 }),
     enabled: !!tag,
-    staleTime: DEFAULT_STALE_TIME,
+    staleTime: FRESH_THRESHOLD,
     gcTime: GC_TIME,
     retry: 2,
     placeholderData: keepPreviousData, // Show previous page while loading new
   });
 }
 
-// Fetch all authors - with local fallback
+// Fetch all authors - with local fallback and extended caching
 export function useAuthors() {
+  const cacheKey = 'authors';
+  const cachedData = getCachedData<Awaited<ReturnType<typeof fetchAuthors>>>(cacheKey);
+  const cacheIsFresh = isCacheFresh(cacheKey);
+  
   return useQuery({
     queryKey: ['authors'],
-    queryFn: () => fetchAuthors({ perPage: 100 }),
-    placeholderData: () => getLocalAuthors(),
-    staleTime: LONG_STALE_TIME,
+    queryFn: async () => {
+      const result = await fetchAuthors({ perPage: 100 });
+      setCachedData(cacheKey, result, TAXONOMY_TTL);
+      return result;
+    },
+    initialData: cachedData || getLocalAuthors(),
+    staleTime: cacheIsFresh ? FRESH_THRESHOLD : 0,
     gcTime: GC_TIME,
     retry: 1,
+    refetchOnMount: !cacheIsFresh,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -189,7 +230,7 @@ export function useAuthor(slug: string | undefined) {
     queryFn: () => fetchAuthorBySlug(slug!),
     enabled: !!slug,
     placeholderData: () => slug ? getLocalAuthorBySlug(slug) : undefined,
-    staleTime: LONG_STALE_TIME,
+    staleTime: FRESH_THRESHOLD,
     gcTime: GC_TIME,
     retry: 1,
   });
@@ -203,7 +244,7 @@ export function useAuthorPosts(authorSlug: string | undefined, page: number = 1)
     queryKey: ['authorPosts', authorSlug, page],
     queryFn: () => fetchPosts({ author: author!.id, page, perPage: 12 }),
     enabled: !!author,
-    staleTime: DEFAULT_STALE_TIME,
+    staleTime: FRESH_THRESHOLD,
     gcTime: GC_TIME,
     retry: 2,
     placeholderData: keepPreviousData, // Show previous page while loading new
