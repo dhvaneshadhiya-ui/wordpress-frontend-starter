@@ -6,10 +6,13 @@ interface CacheEntry<T> {
 }
 
 const CACHE_PREFIX = 'igb_cache_';
-const CACHE_VERSION = '4'; // Bumped for aggressive cache busting
-const DEFAULT_TTL = 5 * 60 * 1000; // 5 minutes
+const CACHE_VERSION = '5'; // Bumped for new caching strategy
+const DEFAULT_TTL = 60 * 60 * 1000; // 1 hour default
+export const POSTS_TTL = 24 * 60 * 60 * 1000; // 24 hours for posts
+export const TAXONOMY_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days for categories/tags
 
-export function getCachedData<T>(key: string): T | null {
+// Get raw cache entry for metadata access
+function getCacheEntry<T>(key: string): CacheEntry<T> | null {
   try {
     const raw = localStorage.getItem(CACHE_PREFIX + key);
     if (!raw) return null;
@@ -22,11 +25,30 @@ export function getCachedData<T>(key: string): T | null {
       return null;
     }
     
-    // Return data even if expired (stale-while-revalidate)
-    return entry.data;
+    return entry;
   } catch {
     return null;
   }
+}
+
+export function getCachedData<T>(key: string): T | null {
+  const entry = getCacheEntry<T>(key);
+  // Return data even if expired (stale-while-revalidate)
+  return entry?.data ?? null;
+}
+
+// Check if cache is still fresh (not expired)
+export function isCacheFresh(key: string): boolean {
+  const entry = getCacheEntry<unknown>(key);
+  if (!entry) return false;
+  return Date.now() - entry.timestamp < entry.ttl;
+}
+
+// Get cache age in milliseconds (for staleTime calculation)
+export function getCacheAge(key: string): number | null {
+  const entry = getCacheEntry<unknown>(key);
+  if (!entry) return null;
+  return Date.now() - entry.timestamp;
 }
 
 export function setCachedData<T>(key: string, data: T, ttl = DEFAULT_TTL): void {
