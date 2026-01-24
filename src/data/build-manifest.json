@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "generatedAt": "2026-01-23T06:48:47.836Z",
+  "generatedAt": "2026-01-24T06:44:32.007Z",
   "contentHashes": {
     "posts": {
+      "warframe-codes": "f23033849655",
+      "roblox-ophelia-codes": "77bbfef3a4e4",
       "apple-carplay-not-working": "4a8c3c8c2440",
       "best-magsafe-car-mounts-for-iphone": "d1280ffa7dd5",
       "best-roblox-games-to-play-alone": "c40c7c51a03a",
@@ -1400,14 +1402,12 @@
       "organize-mac-with-sparkle-ai": "5e93392939b2",
       "ios-26-underrated-features-wwdc-2025": "428913cd1eb0",
       "whatsapp-soon-support-usernames": "9040669cb933",
-      "apple-shortcuts-app-ai-integration": "c4609c33256a",
-      "how-to-delete-whatsapp-account": "9ebf986b11e6",
-      "macos-tahoe-name-design-leak-wwdc-2025": "08045fa70198"
+      "apple-shortcuts-app-ai-integration": "c4609c33256a"
     },
     "categories": {
       "accessories": "976efe6c395a",
       "airpods": "8ae97976030c",
-      "apple": "8f7e0102d8cb",
+      "apple": "a97b0483eca4",
       "apple-pencil": "1ace11099b15",
       "apple-tv": "5f4d642cb095",
       "apple-vision-pro": "9aa9daa13535",
@@ -1906,6 +1906,7 @@
       "dhvanesh": "c64ad2269588",
       "gargighosal": "18ab4f483a39",
       "harshanki-thakker": "9bbd82a6465a",
+      "tohemant-mca": "e0f14cb15af7",
       "idowu_omisola": "ffee810a4434",
       "jibin_joseph": "55a667b5ee8b",
       "iosblogger": "84292e0355bd",
@@ -1942,15 +1943,16 @@
     }
   },
   "changedRoutes": [
-    "/paid-iphone-apps-gone-free",
-    "/category/apps",
-    "/tag/iphone-apps",
-    "/author/dhvanesh"
+    "/warframe-codes",
+    "/category/apple",
+    "/author/tohemant-mca",
+    "/roblox-ophelia-codes",
+    "/"
   ],
-  "changedCount": 4,
+  "changedCount": 5,
   "totalPosts": 1400,
   "totalCategories": 25,
   "totalTags": 458,
-  "totalAuthors": 47,
+  "totalAuthors": 48,
   "fullRebuildRequired": false
 }

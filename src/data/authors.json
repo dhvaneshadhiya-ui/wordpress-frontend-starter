@@ -498,6 +498,41 @@
     }
   },
   {
+    "id": 129,
+    "name": "Hemant MCA",
+    "url": "",
+    "description": "",
+    "link": "https://dev.igeeksblog.com/author/tohemant-mca/",
+    "slug": "tohemant-mca",
+    "avatar_urls": {
+      "24": "https://secure.gravatar.com/avatar/8caf300eb28ba7550c897c39cba6c15e53dc058a30e9860289f93e8f9f218c5b?s=24&d=mm&r=g",
+      "48": "https://secure.gravatar.com/avatar/8caf300eb28ba7550c897c39cba6c15e53dc058a30e9860289f93e8f9f218c5b?s=48&d=mm&r=g",
+      "96": "https://secure.gravatar.com/avatar/8caf300eb28ba7550c897c39cba6c15e53dc058a30e9860289f93e8f9f218c5b?s=96&d=mm&r=g"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/129",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
     "id": 103,
     "name": "Idowu",
     "url": "",
