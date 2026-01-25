@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generatedAt": "2026-01-24T06:44:32.007Z",
+  "generatedAt": "2026-01-25T06:45:20.009Z",
   "contentHashes": {
     "posts": {
       "warframe-codes": "f23033849655",
@@ -29,7 +29,7 @@
       "plants-vs-brainrots-codes": "bc66bd2db0fd",
       "anime-eternal-codes": "410e66715fe4",
       "whatsapp-crashing-on-iphone": "807aba52900e",
-      "paid-iphone-apps-gone-free": "72eca0c8e4a7",
+      "paid-iphone-apps-gone-free": "80edae99479b",
       "safari-not-working-on-mac": "7c91d25e7494",
       "how-to-use-quick-note-on-ipad": "dfd7eea4834e",
       "macos-terminal-commands": "026c7e7d10d6",
@@ -1943,13 +1943,12 @@
     }
   },
   "changedRoutes": [
-    "/warframe-codes",
-    "/category/apple",
-    "/author/tohemant-mca",
-    "/roblox-ophelia-codes",
-    "/"
+    "/paid-iphone-apps-gone-free",
+    "/category/apps",
+    "/tag/iphone-apps",
+    "/author/dhvanesh"
   ],
-  "changedCount": 5,
+  "changedCount": 4,
   "totalPosts": 1400,
   "totalCategories": 25,
   "totalTags": 458,
