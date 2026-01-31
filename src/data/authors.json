@@ -927,6 +927,41 @@
     }
   },
   {
+    "id": 3217,
+    "name": "Nishant Desai",
+    "url": "",
+    "description": "",
+    "link": "https://dev.igeeksblog.com/author/nishantseo/",
+    "slug": "nishantseo",
+    "avatar_urls": {
+      "24": "https://secure.gravatar.com/avatar/099bd3c6c0117483b7d15ade5931a28e35800f4a19d504a2151519f2cd9fb2cf?s=24&d=mm&r=g",
+      "48": "https://secure.gravatar.com/avatar/099bd3c6c0117483b7d15ade5931a28e35800f4a19d504a2151519f2cd9fb2cf?s=48&d=mm&r=g",
+      "96": "https://secure.gravatar.com/avatar/099bd3c6c0117483b7d15ade5931a28e35800f4a19d504a2151519f2cd9fb2cf?s=96&d=mm&r=g"
+    },
+    "meta": {
+      "web_stories_tracking_optin": true,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/3217",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
     "id": 93,
     "name": "Parth",
     "url": "",
