@@ -6,12 +6,9 @@
     "chunk-3.json",
     "chunk-4.json",
     "chunk-5.json",
-    "chunk-6.json",
-    "chunk-7.json",
-    "chunk-8.json",
-    "chunk-9.json"
+    "chunk-6.json"
   ],
-  "totalPosts": 1900,
+  "totalPosts": 1400,
   "postsPerChunk": 200,
   "chunkDetails": [
     {
@@ -48,21 +45,6 @@
       "filename": "chunk-6.json",
       "postCount": 200,
       "sizeMB": 21.3
-    },
-    {
-      "filename": "chunk-7.json",
-      "postCount": 200,
-      "sizeMB": 23.66
-    },
-    {
-      "filename": "chunk-8.json",
-      "postCount": 200,
-      "sizeMB": 25.49
-    },
-    {
-      "filename": "chunk-9.json",
-      "postCount": 100,
-      "sizeMB": 11.58
     }
   ]
 }
