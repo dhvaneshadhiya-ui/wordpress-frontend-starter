@@ -102,8 +102,7 @@ const ArticleCard = ({ article, isHero = false }: ArticleCardProps) => {
               transition={{ delay: 0.1 }}
               className="absolute left-3 top-3 sm:left-6 sm:top-6"
             >
-              <span className={`inline-flex items-center gap-1.5 sm:gap-2 rounded-md px-2.5 py-1.5 sm:px-4 sm:py-2 font-heading text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-lg ${CATEGORY_COLORS[article.category] || "bg-primary text-primary-foreground"}`}>
-                <Flame className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className={`inline-flex items-center rounded-md px-2.5 py-1.5 sm:px-4 sm:py-2 font-heading text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-lg ${CATEGORY_COLORS[article.category] || "bg-primary text-primary-foreground"}`}>
                 {article.category}
               </span>
             </motion.div>
