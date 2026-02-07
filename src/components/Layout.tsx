@@ -1,5 +1,6 @@
 import { ReactNode, useEffect } from 'react';
 import { Header } from './Header';
+import { DexertoNavigation } from './DexertoNavigation';
 import { TrendingBar } from './TrendingBar';
 import { Footer } from './Footer';
 import { WPPost } from '@/lib/wordpress';
@@ -7,9 +8,10 @@ import { WPPost } from '@/lib/wordpress';
 interface LayoutProps {
   children: ReactNode;
   posts?: WPPost[];
+  useDexertoNav?: boolean;
 }
 
-export function Layout({ children, posts }: LayoutProps) {
+export function Layout({ children, posts, useDexertoNav = false }: LayoutProps) {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -19,8 +21,8 @@ export function Layout({ children, posts }: LayoutProps) {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Header />
-      <TrendingBar posts={posts} />
+      {useDexertoNav ? <DexertoNavigation /> : <Header />}
+      {!useDexertoNav && <TrendingBar posts={posts} />}
       <main className="flex-1">{children}</main>
       <Footer />
     </div>
