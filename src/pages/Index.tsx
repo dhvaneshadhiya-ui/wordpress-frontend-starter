@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { DexertoNavigation } from '@/components/DexertoNavigation';
+import { DexertoTrendingArticles } from '@/components/DexertoTrendingArticles';
 import { Footer } from '@/components/Footer';
 import { PostGrid } from '@/components/PostGrid';
 import { usePosts } from '@/hooks/useWordPress';
@@ -76,6 +77,9 @@ const Index = () => {
       
       {/* Offline/cached content banner */}
       <OfflineBanner isVisible={isOffline || isShowingCached} isUsingDemoData={isOffline} />
+      
+      {/* Featured/Trending Articles Section */}
+      <DexertoTrendingArticles />
       
       <main className="flex-1">
         <div className="container mx-auto px-4">
