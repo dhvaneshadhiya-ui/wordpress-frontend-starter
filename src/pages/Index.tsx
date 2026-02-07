@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { DexertoNavigation } from '@/components/DexertoNavigation';
+import { DexertoTrendingBar } from '@/components/DexertoTrendingBar';
 import { DexertoTrendingArticles } from '@/components/DexertoTrendingArticles';
 import { Footer } from '@/components/Footer';
 import { PostGrid } from '@/components/PostGrid';
@@ -74,6 +75,9 @@ const Index = () => {
       />
       
       <DexertoNavigation />
+      
+      {/* Trending Bar */}
+      <DexertoTrendingBar />
       
       {/* Offline/cached content banner */}
       <OfflineBanner isVisible={isOffline || isShowingCached} isUsingDemoData={isOffline} />
