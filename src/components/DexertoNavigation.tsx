@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Search, Settings, Menu, X, ChevronRight, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { DexertoLogo } from './DexertoLogo';
 import { NAV_ITEMS } from '@/data/nav-items';
 import { SearchModal } from '@/components/SearchModal';
 import {
@@ -11,6 +10,15 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+
+// iGeeksBlog Logo Component
+const IGeeksBlogLogo = ({ className }: { className?: string }) => (
+  <img 
+    src="/logo.png" 
+    alt="iGeeksBlog" 
+    className={className}
+  />
+);
 
 export const DexertoNavigation = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -26,7 +34,7 @@ export const DexertoNavigation = () => {
             {/* Left Side: Logo */}
             <div className="flex items-center gap-6">
               <Link to="/" className="flex items-center">
-                <DexertoLogo className="h-7 sm:h-8 w-auto text-foreground" />
+                <IGeeksBlogLogo className="h-7 sm:h-8 w-auto" />
               </Link>
 
               {/* Desktop Nav Items */}
@@ -183,7 +191,7 @@ export const DexertoNavigation = () => {
             >
               <div className="p-4">
                 <div className="flex items-center justify-between mb-6">
-                  <DexertoLogo className="h-6 w-auto text-foreground" />
+                  <IGeeksBlogLogo className="h-6 w-auto" />
                   <Button
                     variant="ghost"
                     size="icon"

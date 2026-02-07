@@ -12,136 +12,158 @@ export interface NavItem {
   viewAllLabel: string;
 }
 
+// Navigation items based on iGeeksBlog categories
 export const NAV_ITEMS: NavItem[] = [
   {
-    title: 'Gaming',
-    href: '#',
+    title: 'iPhone',
+    href: '/category/iphone',
     popular: [
       {
-        name: 'Call of Duty',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2025/11/14/Black-Ops-7-review.jpg?width=385&quality=75&format=auto'
+        name: 'iPhone 16',
+        href: '/category/iphone',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/09/iPhone-16-Pro-and-iPhone-16-Pro-Max.jpg?wsr'
       },
       {
-        name: 'Pokemon',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2025/02/11/Pokemon-homepage-icon.jpg?width=385&quality=75&format=auto'
+        name: 'iOS 18',
+        href: '/category/ios',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/06/iOS-18-Features.jpg?wsr'
       },
       {
-        name: 'Overwatch',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2025/02/11/overwatch-homepage-icon.jpg?width=385&quality=75&format=auto'
+        name: 'Tips & Tricks',
+        href: '/category/iphone',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/01/Best-iPhone-tips-and-tricks.jpg?wsr'
       },
       {
-        name: 'Fortnite',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2025/02/11/fortnite-homepage-icon.jpg?width=385&quality=75&format=auto'
+        name: 'Troubleshooting',
+        href: '/category/iphone',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/02/How-to-fix-iPhone-not-charging.jpg?wsr'
       }
     ],
-    more: ['EA Sports FC', 'Valorant', 'Apex Legends', 'League of Legends', 'Diablo', 'Counter-Strike 2'],
-    viewAllLabel: 'View All Games'
+    more: ['AirPods', 'Apple Watch', 'CarPlay', 'Shortcuts', 'Siri'],
+    viewAllLabel: 'View All iPhone'
   },
   {
-    title: 'TV & Movies',
-    href: '#',
+    title: 'Mac',
+    href: '/category/mac',
     popular: [
       {
-        name: 'Stranger Things',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2025/12/31/Stranger-Things-Kids.jpg?width=385&quality=75&format=auto'
+        name: 'MacBook Pro',
+        href: '/category/mac',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2023/11/M3-MacBook-Pro-review.jpg?wsr'
       },
       {
-        name: 'Fallout',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2025/12/24/Fallout-Season-2-Episode-4.jpg?width=385&quality=75&format=auto'
+        name: 'macOS',
+        href: '/category/macos',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/06/macOS-Sequoia-features.jpg?wsr'
       },
       {
-        name: 'The Boys',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2024/07/18/homelander-the-boys.jpg?width=385&quality=75&format=auto'
+        name: 'Mac Mini',
+        href: '/category/mac',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/11/M4-Mac-mini-review.jpg?wsr'
       },
       {
-        name: 'Marvel',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2024/03/11/avengers-doomsday.jpeg?width=385&quality=75&format=auto'
+        name: 'iMac',
+        href: '/category/mac',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2023/11/M3-iMac-review.jpg?wsr'
       }
     ],
-    more: ['Netflix', 'Apple TV', 'Hulu', 'Prime Video', 'Disney+'],
-    viewAllLabel: 'View All TV & Movies'
+    more: ['Mac Studio', 'Mac Pro', 'Mac Tips', 'Mac Apps'],
+    viewAllLabel: 'View All Mac'
   },
   {
-    title: 'Entertainment',
-    href: '#',
+    title: 'iPad',
+    href: '/category/ipad',
     popular: [
       {
-        name: 'YouTube',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2025/02/18/Streamer-category-thumbnails-Youtube.jpg?width=385&quality=75&format=auto'
+        name: 'iPad Pro',
+        href: '/category/ipad',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/05/M4-iPad-Pro-review.jpg?wsr'
       },
       {
-        name: 'Twitch',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2025/02/18/Streamer-category-thumbnails-Twitch.jpg?width=385&quality=75&format=auto'
+        name: 'iPadOS',
+        href: '/category/ipados',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/06/iPadOS-18-features.jpg?wsr'
       },
       {
-        name: 'Kick',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2025/02/18/Streamer-category-thumbnails-Kick.jpg?width=385&quality=75&format=auto'
+        name: 'iPad Air',
+        href: '/category/ipad',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/05/M2-iPad-Air-review.jpg?wsr'
       },
       {
-        name: 'TikTok',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2025/02/18/Streamer-category-thumbnails-Tiktok.jpg?width=385&quality=75&format=auto'
+        name: 'iPad Tips',
+        href: '/category/ipad',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/01/Best-iPad-tips-and-tricks.jpg?wsr'
       }
     ],
-    more: ['Viral', 'Food', 'Social Media', 'Tech'],
-    viewAllLabel: 'View All Entertainment'
+    more: ['Apple Pencil', 'Magic Keyboard', 'iPad Apps', 'iPad Accessories'],
+    viewAllLabel: 'View All iPad'
   },
   {
-    title: 'Esports',
-    href: '#',
+    title: 'How To',
+    href: '/category/how-to',
     popular: [
       {
-        name: 'Call of Duty',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2024/07/05/CDL-Champs-OpTic-Texas.jpg?width=385&quality=75&format=auto'
+        name: 'iPhone Guides',
+        href: '/category/how-to',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/01/How-to-use-iPhone.jpg?wsr'
       },
       {
-        name: 'Valorant',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2024/09/04/VCT-champs-header-img.jpg?width=385&quality=75&format=auto'
+        name: 'Mac Guides',
+        href: '/category/how-to',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/01/How-to-use-Mac.jpg?wsr'
       },
       {
-        name: 'League of Legends',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2024/10/01/Faker-wins-worlds-2023.jpg?width=385&quality=75&format=auto'
+        name: 'iPad Guides',
+        href: '/category/how-to',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/01/How-to-use-iPad.jpg?wsr'
       },
       {
-        name: 'Counter-Strike 2',
-        href: '#',
-        image: 'https://www.dexerto.com/cdn-image/wp-content/uploads/2022/07/17/FaZe-IEM-Cologne-Champs.jpg?width=385&quality=75&format=auto'
+        name: 'Apple Watch Guides',
+        href: '/category/how-to',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/01/How-to-use-Apple-Watch.jpg?wsr'
       }
     ],
-    more: ['Apex Legends', 'Overwatch', 'Rocket League', 'Dota 2'],
-    viewAllLabel: 'View All Esports'
+    more: ['Shortcuts', 'Troubleshooting', 'Setup Guides', 'Tips & Tricks'],
+    viewAllLabel: 'View All How To'
   },
   {
-    title: 'Wikis',
-    href: '#',
+    title: 'Apps',
+    href: '/category/apps',
+    popular: [
+      {
+        name: 'Best Apps',
+        href: '/category/apps',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/01/Best-iPhone-apps.jpg?wsr'
+      },
+      {
+        name: 'Games',
+        href: '/category/games',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/01/Best-iPhone-games.jpg?wsr'
+      },
+      {
+        name: 'App Deals',
+        href: '/category/apps',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/01/Best-app-deals.jpg?wsr'
+      },
+      {
+        name: 'Mac Apps',
+        href: '/category/apps',
+        image: 'https://dev.igeeksblog.com/wp-content/uploads/2024/01/Best-Mac-apps.jpg?wsr'
+      }
+    ],
+    more: ['Productivity Apps', 'Photo Apps', 'Video Apps', 'Music Apps'],
+    viewAllLabel: 'View All Apps'
+  },
+  {
+    title: 'Accessories',
+    href: '/category/accessories',
     popular: [],
     more: [],
     viewAllLabel: ''
   },
   {
-    title: 'Videos',
-    href: '#',
-    popular: [],
-    more: [],
-    viewAllLabel: ''
-  },
-  {
-    title: 'More',
-    href: '#',
+    title: 'News',
+    href: '/category/news',
     popular: [],
     more: [],
     viewAllLabel: ''
