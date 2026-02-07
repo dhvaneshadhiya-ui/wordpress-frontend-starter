@@ -8,35 +8,35 @@
   :root {
     /* Light mode - Clean white background with dark text */
     --background: 0 0% 100%;
-    --foreground: 220 20% 20%;
+    --foreground: 0 0% 0%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 20%;
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 20%;
+    --popover-foreground: 0 0% 0%;
 
     /* Primary blue accent matching iGeeksBlog */
-    --primary: 220 70% 50%;
+    --primary: 243.2877 57.4803% 50.1961%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 95%;
-    --secondary-foreground: 220 20% 20%;
+    --secondary: 220.0000 14.2857% 95.8824%;
+    --secondary-foreground: 215.0000 27.9070% 16.8627%;
 
-    --muted: 220 15% 95%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 220.0000 14.2857% 95.8824%;
+    --muted-foreground: 220 8.9362% 46.0784%;
 
-    --accent: 220 70% 50%;
+    --accent: 221.2121 83.1933% 53.3333%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84.2365% 60.1961%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 220 70% 50%;
+    --border: 220 13.0435% 90.9804%;
+    --input: 220 13.0435% 90.9804%;
+    --ring: 243.2877 57.4803% 50.1961%;
 
-    --radius: 0.5rem;
+    --radius: 0.625rem;
 
     /* Category colors */
     --category-howto: 220 70% 45%;
@@ -49,44 +49,63 @@
     --trending: 0 75% 55%;
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 220 70% 50%;
+    --sidebar-foreground: 0 0% 0%;
+    --sidebar-primary: 243.2877 57.4803% 50.1961%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220.0000 14.2857% 95.8824%;
+    --sidebar-accent-foreground: 215.0000 27.9070% 16.8627%;
+    --sidebar-border: 220 13.0435% 90.9804%;
+    --sidebar-ring: 243.2877 57.4803% 50.1961%;
+    --chart-1: 243.2877 57.4803% 50.1961%;
+    --chart-2: 221.2121 83.1933% 53.3333%;
+    --chart-3: 229.4737 83.4146% 59.8039%;
+    --chart-4: 212.3353 83.9196% 60.9804%;
+    --chart-5: 212.4812 83.6478% 68.8235%;
+    --sidebar: 0 0% 100%;
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
   }
 
   .dark {
     /* Dark mode matching iGeeksBlog's dark theme */
-    --background: 222 47% 8%;
-    --foreground: 210 40% 98%;
+    --background: 0 0% 3.9216%;
+    --foreground: 0 0% 98.0392%;
 
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 10.1961%;
+    --card-foreground: 0 0% 98.0392%;
 
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 10.1961%;
+    --popover-foreground: 0 0% 98.0392%;
 
-    --primary: 220 70% 55%;
+    --primary: 246.8456 66.2222% 55.8824%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 222 30% 18%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 240 3.7037% 15.8824%;
+    --secondary-foreground: 240 5.8824% 90%;
 
-    --muted: 222 30% 18%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 240 3.7037% 15.8824%;
+    --muted-foreground: 240 5.0279% 64.9020%;
 
-    --accent: 220 70% 55%;
+    --accent: 217.2193 91.2195% 59.8039%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 73.7089% 41.7647%;
+    --destructive-foreground: 0 0% 98.0392%;
 
-    --border: 222 30% 20%;
-    --input: 222 30% 20%;
-    --ring: 220 70% 55%;
+    --border: 240 3.7037% 15.8824%;
+    --input: 240 3.7037% 15.8824%;
+    --ring: 246.8456 66.2222% 55.8824%;
 
     /* Category colors - slightly brighter for dark mode */
     --category-howto: 220 70% 50%;
@@ -98,13 +117,27 @@
     --trending: 0 75% 55%;
 
     --sidebar-background: 222 47% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 220 70% 55%;
+    --sidebar-foreground: 0 0% 98.0392%;
+    --sidebar-primary: 246.8456 66.2222% 55.8824%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 30% 15%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 222 30% 18%;
-    --sidebar-ring: 220 70% 55%;
+    --sidebar-accent: 240 3.7037% 15.8824%;
+    --sidebar-accent-foreground: 240 5.8824% 90%;
+    --sidebar-border: 240 3.7037% 15.8824%;
+    --sidebar-ring: 246.8456 66.2222% 55.8824%;
+    --chart-1: 246.8456 66.2222% 55.8824%;
+    --chart-2: 217.2193 91.2195% 59.8039%;
+    --chart-3: 213.1169 93.9024% 67.8431%;
+    --chart-4: 205.5814 100% 74.7059%;
+    --chart-5: 212.7835 100% 80.9804%;
+    --sidebar: 0 0% 3.9216%;
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
+    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   }
 }
 
