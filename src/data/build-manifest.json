@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generatedAt": "2026-02-17T07:11:50.282Z",
+  "generatedAt": "2026-02-18T07:15:49.482Z",
   "contentHashes": {
     "posts": {
       "ophelia-codes": "fed7bf6bc8bc",
@@ -1123,7 +1123,7 @@
       "how-to-use-facetime-handoff": "64cbae032af2",
       "how-to-connect-two-airpods-to-one-mac": "a3d8bc86fac2",
       "how-to-reset-iphone-home-screen-layout": "5243a1481d5c",
-      "how-to-transfer-photos-videos-from-iphone-to-mac-windows-pc": "fb7a03a41b67",
+      "how-to-transfer-photos-videos-from-iphone-to-mac-windows-pc": "c27cfe7c2c1d",
       "how-to-zip-unzip-files-on-iphone-ipad": "e6feef261ffb",
       "how-to-change-airpods-pro-ear-tips-for-best-fit": "20a08f95e4c4",
       "how-to-send-disappearing-photos-videos-in-whatsapp": "7fb428e836b3",
@@ -1938,8 +1938,15 @@
       "yashwate": "94bf5c1d6ab1"
     }
   },
-  "changedRoutes": [],
-  "changedCount": 0,
+  "changedRoutes": [
+    "/how-to-transfer-photos-videos-from-iphone-to-mac-windows-pc",
+    "/category/how-to",
+    "/category/iphone",
+    "/category/mac",
+    "/tag/windows-pc",
+    "/author/abhinav"
+  ],
+  "changedCount": 6,
   "totalPosts": 1400,
   "totalCategories": 20,
   "totalTags": 458,
