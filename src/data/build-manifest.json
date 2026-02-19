@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generatedAt": "2026-02-18T07:15:49.482Z",
+  "generatedAt": "2026-02-19T07:13:58.363Z",
   "contentHashes": {
     "posts": {
       "ophelia-codes": "fed7bf6bc8bc",
@@ -30,7 +30,7 @@
       "plants-vs-brainrots-codes": "135d2a985a93",
       "anime-eternal-codes": "48c8239b7c5d",
       "whatsapp-crashing-on-iphone": "50198caea083",
-      "paid-iphone-apps-gone-free": "79964bfacaa5",
+      "paid-iphone-apps-gone-free": "44adb07415c4",
       "safari-not-working-on-mac": "f8837e1352e3",
       "how-to-use-quick-note-on-ipad": "81b0503133a7",
       "macos-terminal-commands": "029d565e0e4d",
@@ -1939,14 +1939,12 @@
     }
   },
   "changedRoutes": [
-    "/how-to-transfer-photos-videos-from-iphone-to-mac-windows-pc",
-    "/category/how-to",
-    "/category/iphone",
-    "/category/mac",
-    "/tag/windows-pc",
-    "/author/abhinav"
+    "/paid-iphone-apps-gone-free",
+    "/category/apps",
+    "/tag/iphone-apps",
+    "/author/dhvanesh"
   ],
-  "changedCount": 6,
+  "changedCount": 4,
   "totalPosts": 1400,
   "totalCategories": 20,
   "totalTags": 458,
