@@ -971,7 +971,8 @@
     "elementor_introduction": {
       "e-apps": true,
       "ai-get-started-announcement": true,
-      "yoast-introduction": true
+      "yoast-introduction": true,
+      "e-editor-one-notice-pointer": true
     },
     "_links": {
       "self": [
