@@ -44,7 +44,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -108,7 +107,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -172,7 +170,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -236,7 +233,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -300,7 +296,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -364,7 +359,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -437,7 +431,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -501,7 +494,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -565,7 +557,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -629,7 +620,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -692,7 +682,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -770,13 +759,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": {
-      "ai-get-started-announcement": true,
-      "yoast-introduction": true,
-      "globals_introduction": true,
-      "e-apps": true,
-      "e-editor-one-notice-pointer": true
-    },
     "_links": {
       "self": [
         {
@@ -840,7 +822,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -904,7 +885,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -967,12 +947,6 @@
         "myspaceUrl": "",
         "wordpressUrl": ""
       }
-    },
-    "elementor_introduction": {
-      "e-apps": true,
-      "ai-get-started-announcement": true,
-      "yoast-introduction": true,
-      "e-editor-one-notice-pointer": true
     },
     "_links": {
       "self": [
@@ -1037,7 +1011,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1101,7 +1074,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1165,7 +1137,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1229,7 +1200,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1293,7 +1263,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1357,7 +1326,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1426,7 +1394,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1490,7 +1457,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1554,7 +1520,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1618,7 +1583,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1691,9 +1655,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": {
-      "yoast-introduction": true
-    },
     "_links": {
       "self": [
         {
@@ -1757,7 +1718,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1821,7 +1781,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1885,7 +1844,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -1949,7 +1907,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2013,7 +1970,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2077,7 +2033,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2141,7 +2096,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2205,7 +2159,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2269,7 +2222,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2333,7 +2285,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2397,7 +2348,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2461,7 +2411,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2525,7 +2474,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2589,7 +2537,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2653,7 +2600,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2717,7 +2663,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2776,7 +2721,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2849,14 +2793,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": {
-      "yoast-introduction": true,
-      "ai-get-started-announcement": true,
-      "globals_introduction": true,
-      "e-apps": true,
-      "exit_to": true,
-      "e-editor-one-notice-pointer": true
-    },
     "_links": {
       "self": [
         {
@@ -2920,7 +2856,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -2984,7 +2919,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -3057,7 +2991,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -3121,7 +3054,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
@@ -3185,7 +3117,6 @@
         "wordpressUrl": ""
       }
     },
-    "elementor_introduction": "",
     "_links": {
       "self": [
         {
