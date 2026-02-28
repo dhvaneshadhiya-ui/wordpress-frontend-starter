@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generatedAt": "2026-02-27T07:08:06.005Z",
+  "generatedAt": "2026-02-28T06:56:22.037Z",
   "contentHashes": {
     "posts": {
       "test-amigos": "86b15ac848d0",
@@ -1938,13 +1938,8 @@
       "yashwate": "94bf5c1d6ab1"
     }
   },
-  "changedRoutes": [
-    "/paid-iphone-apps-gone-free",
-    "/category/apps",
-    "/tag/iphone-apps",
-    "/author/dhvanesh"
-  ],
-  "changedCount": 4,
+  "changedRoutes": [],
+  "changedCount": 0,
   "totalPosts": 1400,
   "totalCategories": 20,
   "totalTags": 458,
