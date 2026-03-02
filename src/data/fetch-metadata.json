@@ -1,11 +1,11 @@
 {
-  "lastFetch": "2026-03-01T06:56:28.628Z",
+  "lastFetch": "2026-03-02T07:11:08.808Z",
   "counts": {
-    "posts": 0,
-    "categories": 0,
-    "tags": 0,
-    "authors": 0,
+    "posts": 1550,
+    "categories": 19,
+    "tags": 202,
+    "authors": 47,
     "pages": 0,
-    "media": 0
+    "media": 1337
   }
 }
