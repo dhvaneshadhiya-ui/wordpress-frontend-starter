@@ -16,6 +16,34 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>I have been a tech enthusiast for as long as I can remember. I enjoy explaining tech to the internet and doing this since I was old enough to understand mathematics. At iGeeksBlog, I will be guiding the internet in solving some common issues with their iPhone, iPad, Mac, AirPods, and Apple Watch. When not writing, you can find me preparing for my debut standup show or roaming around with my camera in the whole city.</p>",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://twitter.com/LeShyGras",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -50,6 +78,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Ltd.",
+      "knows_about": "[{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"},{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"Technology\",\"value\":\"Technology\"}]",
+      "author_excerpt": "Abhinav Anand is a freelance tech journalist, covering all things Apple at iGeeksBlog. He has reported on smartphones, laptops, and artificial intelligence and tracked tech industry layoffs during this time. His work has been published in prestigious publications such as the Financial Express, Android Headlines, SlashGear, and The Mac Observer.",
+      "author_bio": "<blockquote> <p><em>\"Abhinav Anand is a freelance tech journalist, covering all things Apple at iGeeksBlog. He has reported on smartphones, laptops, and artificial intelligence and tracked tech industry layoffs during this time. His work has been published in prestigious publications such as the Financial Express, Android Headlines, SlashGear, and The Mac Observer.\"</em></p> </blockquote> <h1>About Abhinav Anand</h1> <ul> <li>Abhinav is a regular contributor to iGeeksBlog, where he writes how-to guides, explainers, and features.</li> <li> <div>He primarily uses a MacBook Pro and an iPhone 13 for his daily tasks. Besides, he relies on a 9th Gen iPad when he’s away from his desk and has a few Android phones.</div> </li> <li>Abhinav's love for technology began with reading smartphone reviews for fun. In 2021, he turned his hobby into a career in tech journalism. Now, he's the go-to person for \"Which phone/laptop should I buy under X price tag?</li> </ul> <h2>Experience</h2> <div class=\"chat-line__bubble\"> <div class=\"chat-line__body formatted_content\" data-chat--line-formatter-target=\"body\"> <div>Abhinav Anand has contributed to several major publications, including The Mac Observer, ExtremeTech, SlashGear, KnowTechie, Android Headlines, Financial Express, and Economic Times. He holds a B.A. in Journalism and Mass Communication from Guru Gobind Singh Indraprastha University. He specializes in consumer technology, covering smartphones, Apple products, and PC components.</div> </div> </div>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Arts in Journalism and Mass Communication",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://x.com/abhinavajha",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/abhinav-a/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -86,6 +147,39 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"Detailed reviews\",\"value\":\"Detailed reviews\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>Anirban is a literature post-grad who delves in philosophy and postmodern novels when not writing on tech and gaming. His love for research is only trumped by his love for chai and heavy metal.</p>",
+      "alumni_of": [
+        {
+          "name": "Master of Arts in English Literature (British and Commonwealth)",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/anirban-dutta-choudhury-94ba51163/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -120,6 +214,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"},{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"watchOS\",\"value\":\"watchOS\"}]",
+      "author_excerpt": "I have been an Apple user for over seven years now. At iGeeksBlog, I love creating how-tos and troubleshooting guides that help people do more with their iPhone, iPad, Mac, AirPods, and Apple Watch. In my free time, I like to watch stand up comedy videos, tech documentaries, news debates, and political speeches.",
+      "author_bio": "<p>I have been an Apple user for over seven years now. At iGeeksBlog, I love creating how-tos and troubleshooting guides that help people do more with their iPhone, iPad, Mac, AirPods, and Apple Watch. In my free time, I like to watch stand up comedy videos, tech documentaries, news debates, and political speeches.</p>",
+      "alumni_of": [
+        {
+          "name": "",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/iankurthakur/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -156,6 +283,39 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>Anoop loves to find solutions for all your doubts on Tech. When he's not on his quest, you can find him on Twitter talking about what's in his mind.</p>",
+      "alumni_of": [
+        {
+          "name": "Master of Business Administration",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://twitter.com/imbibingnoob",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -190,6 +350,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"},{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"watchOS\",\"value\":\"watchOS\"},{\"label\":\"Detailed reviews\",\"value\":\"Detailed reviews\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>A self-professed Geek who loves to explore all things Apple. I thoroughly enjoy discovering new hacks, troubleshooting issues, and finding and reviewing the best products and apps currently available. My expertise also includes curating opinionated and honest editorials. If not this, you might find me surfing the web or listening to audiobooks.</p>",
+      "alumni_of": [
+        {
+          "name": "B.A. (Hons), Fashion Design",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://twitter.com/arshmeethora",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/arshmeet-kaur-hora-0ab4113b/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -226,6 +419,43 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"Detailed reviews\",\"value\":\"Detailed reviews\"},{\"label\":\"Social Media\",\"value\":\"Social Media\"}]",
+      "author_excerpt": "Ava is a die-hard Apple aficionado and seasoned writer with a knack for breaking down complex tech concepts into easily digestible content. Having honed her writing and editing skills over 4 years at renowned media houses like TechBurner, Ava crafts informative and engaging articles including troubleshooting guides, product reviews, editorials at iGeeksBlog. When not typing, you can find her exploring the latest Apple releases or pondering the future of tech innovation.",
+      "author_bio": "<blockquote> <p><em>\"Ava is a die-hard Apple aficionado and seasoned writer with a knack for breaking down complex tech concepts into easily digestible content. Having honed her writing and editing skills over 4 years at renowned media houses like TechBurner, Ava crafts informative and engaging articles including troubleshooting guides, product reviews, editorials at iGeeksBlog. When not typing, you can find her exploring the latest Apple releases or pondering the future of tech innovation.\"</em></p> </blockquote> <h1>About Ava Biswas</h1> <ul> <li>Ava is a die-hard Apple aficionado and loves testing the latest tech gadgets.</li> <li>She is always on the lookout for issues Apple users are facing, finds solutions, and crafts troubleshooting guides.</li> <li>Her goal to make tech easy for everyone encouraged her to break down complex concepts into easily digestible content.</li> </ul> <h2>Experience</h2> <p>Ava has been employing her professional writing and editing skills for over 4 years at renowned media houses like TechBurner and iGeeksBlog. Using her expertise, she crafts informative and engaging How-To's, troubleshooting guides, product reviews, and editorials. When not typing, you can find her exploring the latest Apple releases or pondering new tech innovations.</p>",
+      "alumni_of": [
+        {
+          "name": "Bachelor's Degree in Computer Applications from Maulana Abul Kalam Azad University of Technology",
+          "url": ""
+        },
+        {
+          "name": "",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -260,6 +490,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"},{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"watchOS\",\"value\":\"watchOS\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>I’m an engineer who eventually found my way into writing. After writing hundreds of articles and blogs in the IT industry, I now explore the world of Apple at iGeeks Media, breaking down features, updates, how-tos, reviews, and ideas into simple, enjoyable reads. When I’m not writing, you’ll probably find me reading. If you’re someone who always carries a book, we’re already friends!</p>",
+      "alumni_of": [
+        {
+          "name": "Master of Arts (MA) in Mass Communication",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "https://www.igeeksblog.com/wp-content/uploads/2026/02/Avadesh-Joshi.jpeg",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/avdhesh-joshi/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -296,6 +559,39 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"},{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"}]",
+      "author_excerpt": "Ayush is a writer with a keen interest in consumer technology and the Apple ecosystem. He has over three years of working experience at several big-name publications, including Guiding Tech, TechPP, and MobiGyaan. Here at iGeeksBlog, he specializes in crafting how-to guides, buying guides, and editorials related to all things Apple.",
+      "author_bio": "<p>Ayush is a writer with a keen interest in consumer technology and the Apple ecosystem. He has over three years of working experience at several big-name publications, including Guiding Tech, TechPP, and MobiGyaan. Here at iGeeksBlog, he specializes in crafting how-to guides, buying guides, and editorials related to all things Apple.</p>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Arts (BA)",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/ayush-patel-tech-writer",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -330,6 +626,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"watchOS\",\"value\":\"watchOS\"}]",
+      "author_excerpt": "Bhaskar is a tech guru who turned wordsmith. Hiding his B.Tech degree in a closet, he ditched the corporate path to simplify tech for everyone. For the past 5 years, he’s been dishing out how-tos, reviews, and sharp insights. But there’s more! He’s a witty interview champ and has been sharing his wisdom for 3 years.",
+      "author_bio": "<p>Bhaskar is a tech guru who turned wordsmith. Hiding his B.Tech degree in a closet, he ditched the corporate path to simplify tech for everyone. For the past 5 years, he's been dishing out how-tos, reviews, and sharp insights. But there's more! He's a witty interview champ and has been sharing his wisdom for 3 years. Furthermore, he has honed his editing skills for 1.5 years and is now delving into marketing to assist newcomers. When not jamming his fingers on those mechanical keyboards, you may find him on strings or engaging in sports. And by evening, his quotes will be appearing on your Instagram feeds.</p>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Technology (BTech)",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://x.com/Bhaskar_2510_",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/bhaskarsharma2510/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -366,6 +695,34 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -398,6 +755,39 @@
         "addBackgroundMedia": true,
         "cropSelectedElements": true,
         "safeZone": true
+      }
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"Detailed reviews\",\"value\":\"Detailed reviews\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<blockquote> <p>Consumer Technology and Motorcycles are the two things that excite Darryl the most. Why? Because Tech helps better people's lives, and solving people's problems related to tech is something he enjoys. And what about bikes, you ask? Well, drop a gear and disappear.</p> </blockquote>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Arts (BA), Psychology and Anthropology",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/darryl-dsouza-94649b211/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
       }
     },
     "_links": {
@@ -444,6 +834,39 @@
         "safeZone": true
       }
     },
+    "aioseo_head_json": {
+      "job_title": "Founder",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"},{\"label\":\"Content Strategist\",\"value\":\"Content Strategist\"},{\"label\":\"Technology\",\"value\":\"Technology\"},{\"label\":\"Internet Marketing\",\"value\":\"Internet Marketing\"},{\"label\":\"Blogging\",\"value\":\"Blogging\"}]",
+      "author_excerpt": "The founder of iGeeksBlog, Dhvanesh, is an Apple aficionado, who cannot stand even a slight innuendo about Apple products. He dons the cap of editor-in-chief to make sure that articles match the quality standard before they are published.",
+      "author_bio": "<blockquote> <p><em>\"The founder of iGeeksBlog, Dhvanesh, is an Apple aficionado, who cannot stand even a slight innuendo about Apple products. He dons the cap of editor-in-chief to make sure that articles match the quality standard before they are published.\"</em></p> </blockquote> <h1>About Dhvanesh</h1> <p>Ever since teenage years, gadgets and technology have held a special place in Dhvanesh's heart. This fascination with gadgets and their inner workings fueled a lifelong passion for exploration and troubleshooting. Disassembled electronic items scattered around the house became a familiar sight during his younger years, a testament to this insatiable curiosity.</p> <h2><strong>From SEO</strong> Expert<strong> to Apple Evangelist</strong></h2> <p>After completing his IT engineering diploma, Dhvanesh's professional journey began with a 4.5-year stint as an SEO executive, honing valuable digital marketing skills. However, the desire to share tech knowledge and connect with a like-minded community proved stronger. In 2012, Dhvanesh embarked on a new adventure, founding iGeeksBlog. This blog became a haven for Apple enthusiasts and tech aficionados seeking insightful and in-depth information about everything Apple.</p> <p><strong>A Decade of iGeeksBlog: Leading the Apple Charge</strong></p> <p>In the past 12 years, Dhvanesh has donned multiple hats at iGeeksBlog. As the founder, he has steered the blog’s vision, ensuring it remains a trusted resource for Apple users worldwide. Additionally, he has been serving as the CEO of iGeeks Media Private Limited for the past 4 years, overseeing the company's growth and development.</p> <p><strong>Beyond Writing: A Multifaceted Approach</strong></p> <p>Dhvanesh isn't just a prolific writer, having penned hundreds of articles for iGeeksBlog. He has also served as the blog’s Editor-in-Chief and Content Strategist, ensuring a consistent flow of high-quality content that caters to the diverse needs of the Apple user base. The passion for exploration extends beyond the written word. He has created numerous YouTube videos for iGeeksBlog, providing visual demonstrations and engaging directly with the audience.</p> <p><strong>Staying Connected with the Apple Ecosystem</strong></p> <p>Dhvanesh's dedication to the Apple community goes a step further. Currently, he also manages the <a href=\"https://newsletter.igeeksblog.com/profile\" target=\"_blank\" rel=\"noopener\" data-wpel-link=\"external\">iGeeksBlog+ weekly newsletter</a>, delivering curated Apple news, gadgets, apps, tips and tricks straight to subscribers' inboxes. This unwavering commitment to Apple technology and a genuine desire to empower fellow users make him a valuable asset to the iGeeksBlog team.</p>",
+      "alumni_of": [
+        {
+          "name": "",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "https://www.igeeksblog.com/wp-content/uploads/2024/08/dhvanesh.jpeg",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://x.com/dhvanesh",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/dhvanesh/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -478,6 +901,34 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -514,6 +965,34 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -548,6 +1027,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>Idowu is an avid tech writer and a software surfer who loves covering knowledge gaps in consumer software, including anything related to iPhones. Well, when he's not reading and learning new things, you'll find Idowu losing gallantly on a solid chessboard or virtually on Lichess.</p>",
+      "alumni_of": [
+        {
+          "name": "Master of Science (MS) in Environmental Microbiology",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/idowu-omisola-58b90b167/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -584,6 +1096,39 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"Detailed reviews\",\"value\":\"Detailed reviews\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<blockquote> <p>Jibin Joseph is an editor at iGeeksBlog and has excellent attention to detail. He is a voracious reader, with interests ranging from philosophy and history to geopolitics and tech. When not reading or correcting grammar, you’d find him engaging in discussions about football. You can follow him on Twitter and Instagram at @4ibin.</p> </blockquote>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Arts (BA)",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://x.com/4ibin",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/jibin-joseph-b9587a47/",
+        "instagramUrl": "https://www.instagram.com/4ibin/",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -618,6 +1163,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"Internet Marketing\",\"value\":\"Internet Marketing\"},{\"label\":\"Technology\",\"value\":\"Technology\"},{\"label\":\"Blogging\",\"value\":\"Blogging\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<blockquote> <p>Jignesh Padhiyar is the co-founder of iGeeksBlog.com, who has a keen eye for news, rumors, and all the unusual stuff around Apple products. During his tight schedule, Jignesh finds some moments of respite to share side-splitting content on social media.</p> </blockquote>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Commerce (BCom)",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://x.com/padhiyarjignesh",
+        "facebookUrl": "https://www.facebook.com/jpadhiyar",
+        "linkedinUrl": "https://www.linkedin.com/in/padhiyarjignesh/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -654,6 +1232,34 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -688,6 +1294,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"},{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"Technology\",\"value\":\"Technology\"}]",
+      "author_excerpt": "Luqman is a dedicated tech enthusiast with over 3 years of experience as a technical writer. He joined iGeeksBlog as a freelance writer and has contributed to other publications like MSPoweruser, TechPP, and TheWindowsClub, focusing on troubleshooting articles and how-to guides for iOS, macOS, Windows, and Android. Luqman stays updated with the latest AI tools, providing insightful reviews and valuable content on emerging technologies.",
+      "author_bio": "<blockquote> <p>Luqman has a strong passion for technology and provides troubleshooting support and how-to guides for iOS and macOS. Additionally, he keeps up with the latest Apple updates to provide useful content.</p> </blockquote>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Science (BS) in Materials Science and Engineering",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/luqman-abdulkabir-6728a322b/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -724,6 +1363,39 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<blockquote> <p>Mahit is an engineer by Education with a corporate stint to his name. He ditched the corporate boardroom wars in favor of the technology battleground. For the better part of a decade, he has worked for popular publishing outlets, including Dennis Publishing, BGR India, AppStorm, MakeUseOf, and iPhonehacks.</p> </blockquote>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Engineering (B.E.) in Mechanical Engineering",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/mahit-huilgol/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -758,6 +1430,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Editor",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"},{\"label\":\"Laptops\",\"value\":\"Laptops\"},{\"label\":\"Mobile\",\"value\":\"Mobile\"},{\"label\":\"Technology\",\"value\":\"Technology\"}]",
+      "author_excerpt": "Marcus Mears III is a lifelong technology enthusiast with half a decade of experience developing prose that keeps readers in the know. With hundreds of reviews, buying guides, and how-to explainers across a number of tech and lifestyle publications like How-To Geek, MakeUseOf, and iGeeksBlog, Mears’ work helps readers around the globe learn to make the most of their devices and software. He uses a 2016 MacBook Pro as his daily driver laptop and a self-built Windows PC for gaming and productivity.",
+      "author_bio": "<blockquote> <p>Marcus Mears III is a lifelong technology enthusiast with half a decade of experience developing prose that keeps readers in the know. With hundreds of reviews, buying guides, and how-to explainers across a number of tech and lifestyle publications like How-To Geek, MakeUseOf, and iGeeksBlog, Mears’ work helps readers around the globe learn to make the most of their devices and software. He uses a 2016 MacBook Pro as his daily driver laptop and a self-built Windows PC for gaming and productivity.</p> </blockquote>",
+      "alumni_of": [
+        {
+          "name": "Computer Science from Collin College in McKinney, Texas",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/marcus-mears-iii-01530919a/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -794,6 +1499,34 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -829,6 +1562,39 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"Detailed reviews\",\"value\":\"Detailed reviews\"},{\"label\":\"Social Media\",\"value\":\"Social Media\"}]",
+      "author_excerpt": "Mehak has a master’s degree in communication and over ten years of writing experience. Her passion for technology and Apple products led her to iGeeksBlog, where she specializes in writing product roundups and app recommendations for fellow Apple users. When not typing away on her MacBook Pro, she loves being lost in a book or out exploring the world.",
+      "author_bio": "<blockquote> <p>Mehak has a master’s degree in communication and over ten years of writing experience. Her passion for technology and Apple products led her to iGeeksBlog, where she specializes in writing product roundups and app recommendations for fellow Apple users. When not typing away on her MacBook Pro, she loves being lost in a book or out exploring the world.</p> </blockquote>",
+      "alumni_of": [
+        {
+          "name": "International Master’s in Children’s Literature",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/mehaksiddiqui/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -863,6 +1629,34 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -908,6 +1702,39 @@
         "safeZone": true
       }
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>A tech-aficionado whose superpower lies in blabbering interminably about new technologies. After 4+ years and 4500+ content pieces that helped diverse companies grow, I followed my passion and made iGeeks Media my home. When not gushing over technology, you will find me immersed in a fictional world, either reading or creating one.</p>",
+      "alumni_of": [
+        {
+          "name": "Master of Commerce (MCom) in Business",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/nidhi-bohra/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -942,6 +1769,34 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -978,6 +1833,39 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>I am a Computer Science Engineer by education and an avid tech enthusiast and writer by passion, with over 3 years of writing experience. I enjoy exploring the world of technology and am especially fascinated by smartphones. When I step away from the tech realm, I switch to the world of sports, obsessing over football and Formula 1.</p>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Engineering (BE) in Computer Science",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/parvezmulla/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -1012,6 +1900,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>With a PG Diploma degree in English Journalism, Paurush dabbles around with the Apple ecosystem in his writing endeavors. Before becoming a writer, he produced videos for tech YouTube channels and worked briefly as a copywriter at an agency. On weekends, he is a full-time cinephile trying to reduce his never-ending watchlist, often making it longer.</p>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Journalism & Mass Communication",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/paurush-chaudhary-a90b3199/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -1048,6 +1969,39 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"},{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"watchOS\",\"value\":\"watchOS\"},{\"label\":\"Detailed reviews\",\"value\":\"Detailed reviews\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>Rachel, an experienced Apple technology writer since 2021 and a long-time user since 2003, began her journey with a silver iPod Classic. Currently, she owns an array of modern Apple gadgets. At iGeeksBlog, her expertise shines through in the crafting of comprehensive how-to articles, informative guides, and well-curated roundups.</p>",
+      "alumni_of": [
+        {
+          "name": "Master of Arts in Education",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -1082,6 +2036,34 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>With over 5 years of hands-on tech writing experience and more than 900 published articles, I’ve explored the best of Apple, Android, and Chrome OS. From iPhones and MacBooks to Pixel devices and Chromebooks, I break down complex features into simple, relatable guides—minus the jargon. Whether you’re customizing your iPhone, troubleshooting your Android, or tweaking Chrome OS settings, my goal is to help you get more out of your tech.</p>",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://x.com/RaviTejaKNTS",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/ravitejaknts/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -1118,6 +2100,34 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -1152,6 +2162,34 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -1188,6 +2226,39 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"Technology\",\"value\":\"Technology\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>Sajid Shaik is a tech enthusiast who explains complex concepts in a clear and concise way. For the past 7 years, he has been a regular contributor to tech blogs and publications, including MakeUseOf and iGeeksBlog. Sajid also has extensive knowledge of the Apple ecosystem, which he shares with his readers through his words. He has created a wide range of content, such as How-Tos, Reviews, Listicles, and much more. Aside from that, Sajid has a degree in Electronics and Communication Engineering, which gives him an advantage in better understanding technology at hardware level. Apart from writing, you can find him fiddling with Apple products or keeping up with all things Apple.</p>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Technology (BTech) in Electrical",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://x.com/yosajidshaik",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/yosajid/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -1222,6 +2293,34 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -1258,6 +2357,34 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -1292,6 +2419,34 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -1328,6 +2483,34 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -1362,6 +2545,34 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "A sponsored post is a paid advertisement that promotes a brand or product.",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -1398,6 +2609,39 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>Srishti is a writing enthusiast who has been creating user-friendly content for more than 5 years in the tech space. At iGeeksBlog, she helps readers explore the Apple ecosystem, understand the jargon, and improve their experience. With expertise in buying guides, she helps you find the best accessories amid the pool of choices for Apple products. Her talent for making complicated tech understandable shines through in her writing. When away from her MacBook, you can find her doing a hands-on experience with new products.</p>",
+      "alumni_of": [
+        {
+          "name": "Master of Arts (M.A.) in English Literature",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/srishti-pandey-186458171/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -1432,6 +2676,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Pvt Ltd.",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"},{\"label\":\"watchOS\",\"value\":\"watchOS\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<blockquote> <p>Supreeth has been an Apple fanboy ever since he got his hands on an iPod Touch 5 in 2012. After finishing his education in engineering in 2021, he started writing about technology. Ever since then, he's written hundreds of blogs on iPhone, iPad and the Apple Watch. Previously, he worked at Guiding Tech and GadgetsToUse Media.</p> </blockquote>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Engineering (B.E.) in Mechanical Engineering",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/supreeth-r-koundinya-b32715173/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -1477,6 +2754,34 @@
         "safeZone": true
       }
     },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"Blogging\",\"value\":\"Blogging\"},{\"label\":\"Internet Marketing\",\"value\":\"Internet Marketing\"},{\"label\":\"Technology\",\"value\":\"Technology\"},{\"label\":\"Apple Ecosystem\",\"value\":\"Apple Ecosystem\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<blockquote> <p><em>\"Suraj is an operations head on the iGB team. He contributes to the social media section along with tips and tricks for iPhone, Apple Watch. Apart from blogging, he likes to work out as much as he can in his gym and love to listening to retro music.\"</em></p> </blockquote> <h1>About Suraj Padmasali</h1> <ul> <li>Suraj oversees daily publishing on iGeeksBlog.com as the operations head at iGeeks Media.</li> <li>Suraj has over 10 years of experience in implementing SEO and social media campaigns with an emphasis on brand integration.</li> <li>He developed an editorial quality management program for iGeeks Media, which is an ongoing effort to continuously optimize static content and create the best possible reader experience.</li> </ul> <h2>Experience</h2> <p>Suraj began his career in SEO. Due to his immense fascination with Apple products and his keen interest in the iPhone, he started writing and editing content for iGeeksBlog. Currently, he is responsible for overseeing the production of content and maintaining editorial quality for iGeeksBlog. He has established strong connections to obtain the latest news and updates from the tech world.</p>",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -1511,6 +2816,39 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"}]",
+      "author_excerpt": "Varun is a passionate technology journalist with over 7 years of experience and a knack for diving deep into everything Apple, PC hardware, and gaming. With an engineering degree in hand, he brings a solid technical foundation to his work, ensuring accuracy and insight in every piece he writes. Varun also contributes to GameRant, Guiding Tech, and The Mac Observer.",
+      "author_bio": "<blockquote> <p>Varun is a passionate technology journalist with over 7 years of experience and a knack for diving deep into everything Apple, PC hardware, and gaming. With an engineering degree in hand, he brings a solid technical foundation to his work, ensuring accuracy and insight in every piece he writes. Varun also contributes to GameRant, Guiding Tech, and The Mac Observer.</p> </blockquote>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Technology (B.Tech) in Computer Science",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://x.com/beingmirchi",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/beingmirchi/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -1547,6 +2885,34 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -1581,6 +2947,43 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "iGeeks Media Private LTD.",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"watchOS\",\"value\":\"watchOS\"},{\"label\":\"Social Media\",\"value\":\"Social Media\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<blockquote> <p><em>\"Vikhyat has a bachelor’s degree in Electronic and Communication Engineering and over five years of writing experience. His passion for technology and Apple products led him to the tech writing space, where he specializes in writing App features, How-to guides, and troubleshooting guides for fellow Apple users. When not typing away on his MacBook Pro, he loves exploring the real world.\"</em></p> </blockquote> <div class=\"author-bio-link\"> </div> <h1>About Vikhyat Rishi</h1> <ul> <li>Vikhyat has over five years of experience writing consumer tech content.</li> <li>During his association with Smartprix and Beebom, Vikhyat has tested, tested, and reviewed numerous gadgets, including but not limited to smartphones, TVs, and more.</li> <li>His passion for technology and Apple products led him to iGeeksBlog, where he specializes in writing How-to and troubleshooting guides for fellow Apple enthusiasts.</li> </ul> <h3>Experience</h3> <p>Vikhyat embarked on his journey in consumer technology writing in 2019, driven by his passion for technology. He has sharpened his skills through associations with Smartprix and Beebom, where he extensively tested and reviewed various gadgets, focusing mainly on smartphones. Currently, Vikhyat specializes in crafting How-to and troubleshooting guides for the Apple ecosystem at iGeeksBlog. When not typing away on his MacBook Air, he loves exploring the real world.</p>",
+      "alumni_of": [
+        {
+          "name": "",
+          "url": ""
+        },
+        {
+          "name": "",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
@@ -1617,6 +3020,39 @@
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
     },
+    "aioseo_head_json": {
+      "job_title": "Tech Writer",
+      "employer": "iGeeks Media Private Limited",
+      "knows_about": "[{\"label\":\"iOS\",\"value\":\"iOS\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>I'm a die-hard Apple Fanboy who's keen and enthusiastic to learn and explore new things in the world of technology. Besides that, I’m currently an engineering student in the field of Electronics and telecommunications, thus love playing with electronic hardware. When not exploring the world of technology, I love learning about the universe/cosmos, time travel, different paradoxes, and so on.</p>",
+      "alumni_of": [
+        {
+          "name": "Bachelor of Engineering in Electronics and Telecommunication",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/yash-anand-6b0017216/",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
     "_links": {
       "self": [
         {
@@ -1651,6 +3087,34 @@
       "web_stories_tracking_optin": false,
       "web_stories_media_optimization": true,
       "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Editor",
+      "employer": "",
+      "knows_about": "[{\"label\":\"macOS\",\"value\":\"macOS\"},{\"label\":\"iOS\",\"value\":\"iOS\"},{\"label\":\"watchOS\",\"value\":\"watchOS\"},{\"label\":\"Detailed reviews\",\"value\":\"Detailed reviews\"}]",
+      "author_excerpt": "Yash is a tech journalist and writer based in India. He has five years of experience writing features, how-tos, and reviews for various online publications. As an editor at iGeeksBlog, Yash's job is to ensure the articles are polished and suitable for publication. You can also read his work on How-To Geek, MakeUseOf, and TechPP.",
+      "author_bio": "<blockquote> <p><em>\"Yash is a tech journalist and writer based in India. He has five years of experience writing features, how-tos, and reviews for various online publications. As an editor at iGeeksBlog, Yash's job is to ensure the articles are polished and suitable for publication. You can also read his work on How-To Geek, MakeUseOf, and TechPP.\"</em></p> </blockquote> <h1>About Yash</h1> <ul> <li><span class=\"TextRun SCXW153165682 BCX2\" lang=\"EN-US\" xml:lang=\"EN-US\" data-contrast=\"none\"><span class=\"NormalTextRun SCXW153165682 BCX2\">Yash edits articles at </span><span class=\"NormalTextRun SpellingErrorV2Themed SCXW153165682 BCX2\">iGeeksBlog</span><span class=\"NormalTextRun SCXW153165682 BCX2\"> to make them suitable for publication.</span></span></li> <li><span class=\"TextRun SCXW261642693 BCX2\" lang=\"EN-US\" xml:lang=\"EN-US\" data-contrast=\"none\"><span class=\"NormalTextRun SCXW261642693 BCX2\">He </span><span class=\"NormalTextRun SCXW261642693 BCX2\">daily drives a MacBook Pro and an iPhone</span><span class=\"NormalTextRun SCXW261642693 BCX2\"> and owns an iPad and several other devices, including a few Android phones.</span></span></li> <li><span class=\"TextRun SCXW74208969 BCX2\" lang=\"EN-US\" xml:lang=\"EN-US\" data-contrast=\"none\"><span class=\"NormalTextRun SCXW74208969 BCX2\">Yash also enjoys spending time exploring DIY electronic projects using Raspberry Pis.</span></span></li> </ul> <h2><span class=\"TextRun SCXW13055408 BCX2\" lang=\"EN-US\" xml:lang=\"EN-US\" data-contrast=\"none\"><span class=\"NormalTextRun SCXW13055408 BCX2\">Experience</span></span></h2> <p>Yash ventured into journalism in 2018 after spending a few years working as a front-end developer. Since then, he has worked with multiple publications where he's written and edited hundreds of articles. Currently, Yash also contributes to How-To Geek, MakeUseOf, and TechPP. He also has experience with reviewing consumer tech products.</p>",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
     },
     "_links": {
       "self": [
