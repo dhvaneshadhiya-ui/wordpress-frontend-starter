@@ -2388,7 +2388,7 @@
   },
   {
     "id": 1380,
-    "count": 17,
+    "count": 18,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/airtag/",
     "name": "AirTag",
@@ -34504,7 +34504,7 @@
   },
   {
     "id": 1845,
-    "count": 1,
+    "count": 2,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/macbook-neo/",
     "name": "MacBook Neo",
@@ -34668,10 +34668,10 @@
       "frequency": "default",
       "tabs": null,
       "local_seo": null,
-      "seo_analyzer_scan_date": null,
+      "seo_analyzer_scan_date": "2026-03-11 07:40:39",
       "breadcrumb_settings": null,
       "created": "2026-03-11 05:17:37",
-      "updated": "2026-03-11 05:17:37"
+      "updated": "2026-03-11 07:40:39"
     },
     "aioseo_breadcrumb": "<div class=\"aioseo-breadcrumbs\"><span class=\"aioseo-breadcrumb\">\n\t<a href=\"https://dev.igeeksblog.com\" title=\"Home\">Home</a>\n</span><span class=\"aioseo-breadcrumb-separator\">–</span><span class=\"aioseo-breadcrumb\">\n\tMacBook Neo\n</span></div>",
     "aioseo_breadcrumb_json": [
@@ -40961,10 +40961,10 @@
       "frequency": "default",
       "tabs": null,
       "local_seo": null,
-      "seo_analyzer_scan_date": null,
+      "seo_analyzer_scan_date": "2026-03-11 07:40:39",
       "breadcrumb_settings": null,
       "created": "2026-03-10 08:44:34",
-      "updated": "2026-03-10 08:44:34"
+      "updated": "2026-03-11 07:40:39"
     },
     "aioseo_breadcrumb": "<div class=\"aioseo-breadcrumbs\"><span class=\"aioseo-breadcrumb\">\n\t<a href=\"https://dev.igeeksblog.com\" title=\"Home\">Home</a>\n</span><span class=\"aioseo-breadcrumb-separator\">–</span><span class=\"aioseo-breadcrumb\">\n\tSMS\n</span></div>",
     "aioseo_breadcrumb_json": [
@@ -44486,7 +44486,7 @@
   },
   {
     "id": 1061,
-    "count": 85,
+    "count": 86,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/whatsapp/",
     "name": "WhatsApp",
