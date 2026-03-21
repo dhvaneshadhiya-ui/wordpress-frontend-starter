@@ -3039,7 +3039,7 @@
   },
   {
     "id": 1060,
-    "count": 50,
+    "count": 51,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/android/",
     "name": "Android",
@@ -3256,7 +3256,7 @@
   },
   {
     "id": 1827,
-    "count": 14,
+    "count": 16,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/android-apps/",
     "name": "Android Apps",
@@ -8845,10 +8845,10 @@
       "frequency": "default",
       "tabs": null,
       "local_seo": null,
-      "seo_analyzer_scan_date": null,
+      "seo_analyzer_scan_date": "2026-03-20 07:35:06",
       "breadcrumb_settings": null,
       "created": "2026-03-19 09:37:18",
-      "updated": "2026-03-19 09:37:18"
+      "updated": "2026-03-20 07:35:06"
     },
     "aioseo_breadcrumb": "<div class=\"aioseo-breadcrumbs\"><span class=\"aioseo-breadcrumb\">\n\t<a href=\"https://dev.igeeksblog.com\" title=\"Home\">Home</a>\n</span><span class=\"aioseo-breadcrumb-separator\">–</span><span class=\"aioseo-breadcrumb\">\n\tApple's 50th Anniversary\n</span></div>",
     "aioseo_breadcrumb_json": [
@@ -15408,7 +15408,7 @@
   },
   {
     "id": 1139,
-    "count": 90,
+    "count": 91,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/instagram/",
     "name": "Instagram",
@@ -30164,7 +30164,7 @@
   },
   {
     "id": 1025,
-    "count": 175,
+    "count": 176,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/iphone-apps/",
     "name": "iPhone Apps",
@@ -41665,7 +41665,7 @@
   },
   {
     "id": 1096,
-    "count": 193,
+    "count": 194,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/social-media/",
     "name": "Social Media",
