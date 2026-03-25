@@ -1,7 +1,7 @@
 [
   {
     "id": 1034,
-    "count": 412,
+    "count": 371,
     "description": "Explore curated guides and reviews on must-have accessories for your devices. Find picks for iPhone, iPad, Mac, Apple Watch, and more, with practical advice to help you choose the right accessories to enhance your tech experience. ",
     "link": "https://dev.igeeksblog.com/category/accessories/",
     "name": "Accessories",
@@ -879,7 +879,7 @@
   },
   {
     "id": 1143,
-    "count": 213,
+    "count": 212,
     "description": "Explore the latest Apple Watch news, tips, tutorials, apps, accessories, and buying guides to get the most out of your Apple Watch.",
     "link": "https://dev.igeeksblog.com/category/apple-watch/",
     "name": "Apple Watch",
@@ -1101,17 +1101,17 @@
   {
     "id": 1023,
     "count": 277,
-    "description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, and Mac. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps. \r\n",
+    "description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, Mac, and Android. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.",
     "link": "https://dev.igeeksblog.com/category/apps/",
     "name": "Apps",
     "slug": "apps",
     "taxonomy": "category",
     "parent": 0,
     "meta": [],
-    "aioseo_head": "\n\t\t<!-- All in One SEO Pro 4.9.5.1 - aioseo.com -->\n\t<meta name=\"description\" content=\"Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, and Mac. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.\" />\n\t<meta name=\"robots\" content=\"noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n\t<meta name=\"google-site-verification\" content=\"zX-wCWSDj3M4J1V8hXjlWzOZ_iNmmNcvQIJeXU-0GDs\" />\n\t<meta name=\"msvalidate.01\" content=\"E89AE73DFF5DE526B9CC11093B0864BA\" />\n\t<link rel=\"canonical\" href=\"https://dev.igeeksblog.com/category/apps/\" />\n\t<meta name=\"generator\" content=\"All in One SEO Pro (AIOSEO) 4.9.5.1\" />\n\t\t<meta property=\"og:locale\" content=\"en_US\" />\n\t\t<meta property=\"og:site_name\" content=\"iGeeksBlog\" />\n\t\t<meta property=\"og:type\" content=\"article\" />\n\t\t<meta property=\"og:title\" content=\"Apps – iGeeksBlog\" />\n\t\t<meta property=\"og:description\" content=\"Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, and Mac. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.\" />\n\t\t<meta property=\"og:url\" content=\"https://dev.igeeksblog.com/category/apps/\" />\n\t\t<meta property=\"og:image\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<meta property=\"og:image:secure_url\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<meta property=\"article:publisher\" content=\"https://facebook.com/iGeeksBlog\" />\n\t\t<meta name=\"twitter:card\" content=\"summary_large_image\" />\n\t\t<meta name=\"twitter:site\" content=\"@iGeeksBlog\" />\n\t\t<meta name=\"twitter:title\" content=\"Apps – iGeeksBlog\" />\n\t\t<meta name=\"twitter:description\" content=\"Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, and Mac. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.\" />\n\t\t<meta name=\"twitter:image\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<script type=\"application/ld+json\" class=\"aioseo-schema\">\n\t\t\t{\"@context\":\"https:\\/\\/schema.org\",\"@graph\":[{\"@type\":\"BreadcrumbList\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#breadcrumblist\",\"itemListElement\":[{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com#listItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https:\\/\\/dev.igeeksblog.com\",\"nextItem\":{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/category\\/apps\\/#listItem\",\"name\":\"Apps\"}},{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/category\\/apps\\/#listItem\",\"position\":2,\"name\":\"Apps\",\"previousItem\":{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com#listItem\",\"name\":\"Home\"}}]},{\"@type\":\"CollectionPage\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#collectionpage\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/\",\"name\":\"Apps \\u2013 iGeeksBlog\",\"description\":\"Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, and Mac. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.\",\"inLanguage\":\"en-US\",\"isPartOf\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#website\"},\"breadcrumb\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#breadcrumblist\"}},{\"@type\":\"Organization\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#organization\",\"name\":\"iGeeksBlog\",\"description\":\"iGeeksBlog is your global go-to source for Apple, tech, and gaming. Get the latest news, reviews, and tips to stay ahead in the fast-paced tech world.\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/\",\"email\":\"info@igeeksblog.com\",\"telephone\":\"+917405186763\",\"foundingDate\":\"2012-10-03\",\"numberOfEmployees\":{\"@type\":\"QuantitativeValue\",\"minValue\":10,\"maxValue\":30},\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https:\\/\\/www.igeeksblog.com\\/wp-content\\/uploads\\/2024\\/02\\/iGeeksBlog-Logo-Retina.png\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#organizationLogo\"},\"image\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#organizationLogo\"},\"sameAs\":[\"https:\\/\\/facebook.com\\/iGeeksBlog\",\"https:\\/\\/x.com\\/iGeeksBlog\",\"https:\\/\\/instagram.com\\/iGeeksBlog\",\"https:\\/\\/pinterest.com\\/iGeeksBlog\",\"https:\\/\\/youtube.com\\/iGeeksBlog\",\"https:\\/\\/linkedin.com\\/in\\/iGeeksBlog\",\"https:\\/\\/threads.com\\/@iGeeksBlog\"]},{\"@type\":\"WebSite\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#website\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/\",\"name\":\"iGeeksBlog\",\"alternateName\":\"iGB\",\"description\":\"Your go-to source for Apple, tech, and gaming.\",\"inLanguage\":\"en-US\",\"publisher\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#organization\"}}]}\n\t\t</script>\n\t\t<script type=\"text/javascript\">\n\t\t\t(function(c,l,a,r,i,t,y){\n\t\t\tc[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;\n\t\t\tt.src=\"https://www.clarity.ms/tag/\"+i+\"?ref=aioseo\";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);\n\t\t})(window, document, \"clarity\", \"script\", \"lvbtm2kaet\");\n\t\t</script>\n\t\t<!-- All in One SEO Pro -->\r\n\t\t<title>Apps – iGeeksBlog</title>\n\n",
+    "aioseo_head": "\n\t\t<!-- All in One SEO Pro 4.9.5.1 - aioseo.com -->\n\t<meta name=\"description\" content=\"Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, Mac, and Android. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.\" />\n\t<meta name=\"robots\" content=\"noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n\t<meta name=\"google-site-verification\" content=\"zX-wCWSDj3M4J1V8hXjlWzOZ_iNmmNcvQIJeXU-0GDs\" />\n\t<meta name=\"msvalidate.01\" content=\"E89AE73DFF5DE526B9CC11093B0864BA\" />\n\t<link rel=\"canonical\" href=\"https://dev.igeeksblog.com/category/apps/\" />\n\t<meta name=\"generator\" content=\"All in One SEO Pro (AIOSEO) 4.9.5.1\" />\n\t\t<meta property=\"og:locale\" content=\"en_US\" />\n\t\t<meta property=\"og:site_name\" content=\"iGeeksBlog\" />\n\t\t<meta property=\"og:type\" content=\"article\" />\n\t\t<meta property=\"og:title\" content=\"Apps – iGeeksBlog\" />\n\t\t<meta property=\"og:description\" content=\"Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, Mac, and Android. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.\" />\n\t\t<meta property=\"og:url\" content=\"https://dev.igeeksblog.com/category/apps/\" />\n\t\t<meta property=\"og:image\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<meta property=\"og:image:secure_url\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<meta property=\"article:publisher\" content=\"https://facebook.com/iGeeksBlog\" />\n\t\t<meta name=\"twitter:card\" content=\"summary_large_image\" />\n\t\t<meta name=\"twitter:site\" content=\"@iGeeksBlog\" />\n\t\t<meta name=\"twitter:title\" content=\"Apps – iGeeksBlog\" />\n\t\t<meta name=\"twitter:description\" content=\"Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, Mac, and Android. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.\" />\n\t\t<meta name=\"twitter:image\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<script type=\"application/ld+json\" class=\"aioseo-schema\">\n\t\t\t{\"@context\":\"https:\\/\\/schema.org\",\"@graph\":[{\"@type\":\"BreadcrumbList\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#breadcrumblist\",\"itemListElement\":[{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com#listItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https:\\/\\/dev.igeeksblog.com\",\"nextItem\":{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/category\\/apps\\/#listItem\",\"name\":\"Apps\"}},{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/category\\/apps\\/#listItem\",\"position\":2,\"name\":\"Apps\",\"previousItem\":{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com#listItem\",\"name\":\"Home\"}}]},{\"@type\":\"CollectionPage\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#collectionpage\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/\",\"name\":\"Apps \\u2013 iGeeksBlog\",\"description\":\"Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, Mac, and Android. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.\",\"inLanguage\":\"en-US\",\"isPartOf\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#website\"},\"breadcrumb\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#breadcrumblist\"}},{\"@type\":\"Organization\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#organization\",\"name\":\"iGeeksBlog\",\"description\":\"iGeeksBlog is your global go-to source for Apple, tech, and gaming. Get the latest news, reviews, and tips to stay ahead in the fast-paced tech world.\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/\",\"email\":\"info@igeeksblog.com\",\"telephone\":\"+917405186763\",\"foundingDate\":\"2012-10-03\",\"numberOfEmployees\":{\"@type\":\"QuantitativeValue\",\"minValue\":10,\"maxValue\":30},\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https:\\/\\/www.igeeksblog.com\\/wp-content\\/uploads\\/2024\\/02\\/iGeeksBlog-Logo-Retina.png\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#organizationLogo\"},\"image\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#organizationLogo\"},\"sameAs\":[\"https:\\/\\/facebook.com\\/iGeeksBlog\",\"https:\\/\\/x.com\\/iGeeksBlog\",\"https:\\/\\/instagram.com\\/iGeeksBlog\",\"https:\\/\\/pinterest.com\\/iGeeksBlog\",\"https:\\/\\/youtube.com\\/iGeeksBlog\",\"https:\\/\\/linkedin.com\\/in\\/iGeeksBlog\",\"https:\\/\\/threads.com\\/@iGeeksBlog\"]},{\"@type\":\"WebSite\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#website\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/\",\"name\":\"iGeeksBlog\",\"alternateName\":\"iGB\",\"description\":\"Your go-to source for Apple, tech, and gaming.\",\"inLanguage\":\"en-US\",\"publisher\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#organization\"}}]}\n\t\t</script>\n\t\t<script type=\"text/javascript\">\n\t\t\t(function(c,l,a,r,i,t,y){\n\t\t\tc[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;\n\t\t\tt.src=\"https://www.clarity.ms/tag/\"+i+\"?ref=aioseo\";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);\n\t\t})(window, document, \"clarity\", \"script\", \"lvbtm2kaet\");\n\t\t</script>\n\t\t<!-- All in One SEO Pro -->\r\n\t\t<title>Apps – iGeeksBlog</title>\n\n",
     "aioseo_head_json": {
       "title": "Apps – iGeeksBlog",
-      "description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, and Mac. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.",
+      "description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, Mac, and Android. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.",
       "canonical_url": "https://dev.igeeksblog.com/category/apps/",
       "robots": "noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
       "keywords": "",
@@ -1157,7 +1157,7 @@
             "@id": "https://dev.igeeksblog.com/wp-json/wp/v2/categories/#collectionpage",
             "url": "https://dev.igeeksblog.com/wp-json/wp/v2/categories/",
             "name": "Apps – iGeeksBlog",
-            "description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, and Mac. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.",
+            "description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, Mac, and Android. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.",
             "inLanguage": "en-US",
             "isPartOf": {
               "@id": "https://dev.igeeksblog.com/#website"
@@ -1216,7 +1216,7 @@
       "og:site_name": "iGeeksBlog",
       "og:type": "article",
       "og:title": "Apps – iGeeksBlog",
-      "og:description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, and Mac. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.",
+      "og:description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, Mac, and Android. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.",
       "og:url": "https://dev.igeeksblog.com/category/apps/",
       "og:image": "https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg",
       "og:image:secure_url": "https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg",
@@ -1224,13 +1224,13 @@
       "twitter:card": "summary_large_image",
       "twitter:site": "@iGeeksBlog",
       "twitter:title": "Apps – iGeeksBlog",
-      "twitter:description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, and Mac. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.",
+      "twitter:description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, Mac, and Android. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.",
       "twitter:image": "https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg"
     },
     "aioseo_meta_data": {
       "term_id": "1023",
       "title": null,
-      "description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, and Mac. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.",
+      "description": "Discover recommendations, tutorials, and deep dives into the best apps for iPhone, iPad, Mac, and Android. From productivity and creativity to utilities and hidden gems, this category helps you get more out of your apps.",
       "keywords": null,
       "canonical_url": null,
       "og_title": null,
@@ -1268,10 +1268,10 @@
       "frequency": "default",
       "tabs": null,
       "local_seo": null,
-      "seo_analyzer_scan_date": "2026-02-20 09:55:58",
+      "seo_analyzer_scan_date": "2026-03-24 12:16:39",
       "breadcrumb_settings": null,
       "created": "2024-07-30 06:59:53",
-      "updated": "2026-02-20 09:55:58"
+      "updated": "2026-03-24 12:16:39"
     },
     "aioseo_breadcrumb": "<div class=\"aioseo-breadcrumbs\"><span class=\"aioseo-breadcrumb\">\n\t<a href=\"https://dev.igeeksblog.com\" title=\"Home\">Home</a>\n</span><span class=\"aioseo-breadcrumb-separator\">–</span><span class=\"aioseo-breadcrumb\">\n\tApps\n</span></div>",
     "aioseo_breadcrumb_json": [
@@ -1321,7 +1321,7 @@
   },
   {
     "id": 1055,
-    "count": 173,
+    "count": 174,
     "description": "",
     "link": "https://dev.igeeksblog.com/category/editorial/",
     "name": "Editorial",
@@ -1539,18 +1539,18 @@
   },
   {
     "id": 1040,
-    "count": 154,
-    "description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, and macOS. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.\r\n",
+    "count": 155,
+    "description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.\r\n",
     "link": "https://dev.igeeksblog.com/category/games/",
     "name": "Games",
     "slug": "games",
     "taxonomy": "category",
     "parent": 0,
     "meta": [],
-    "aioseo_head": "\n\t\t<!-- All in One SEO Pro 4.9.5.1 - aioseo.com -->\n\t<meta name=\"description\" content=\"Find timely game recommendations, tips, and gaming news for iOS, iPadOS, and macOS. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.\" />\n\t<meta name=\"robots\" content=\"noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n\t<meta name=\"google-site-verification\" content=\"zX-wCWSDj3M4J1V8hXjlWzOZ_iNmmNcvQIJeXU-0GDs\" />\n\t<meta name=\"msvalidate.01\" content=\"E89AE73DFF5DE526B9CC11093B0864BA\" />\n\t<link rel=\"canonical\" href=\"https://dev.igeeksblog.com/category/games/\" />\n\t<meta name=\"generator\" content=\"All in One SEO Pro (AIOSEO) 4.9.5.1\" />\n\t\t<meta property=\"og:locale\" content=\"en_US\" />\n\t\t<meta property=\"og:site_name\" content=\"iGeeksBlog\" />\n\t\t<meta property=\"og:type\" content=\"article\" />\n\t\t<meta property=\"og:title\" content=\"Games – iGeeksBlog\" />\n\t\t<meta property=\"og:description\" content=\"Find timely game recommendations, tips, and gaming news for iOS, iPadOS, and macOS. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.\" />\n\t\t<meta property=\"og:url\" content=\"https://dev.igeeksblog.com/category/games/\" />\n\t\t<meta property=\"og:image\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<meta property=\"og:image:secure_url\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<meta property=\"article:publisher\" content=\"https://facebook.com/iGeeksBlog\" />\n\t\t<meta name=\"twitter:card\" content=\"summary_large_image\" />\n\t\t<meta name=\"twitter:site\" content=\"@iGeeksBlog\" />\n\t\t<meta name=\"twitter:title\" content=\"Games – iGeeksBlog\" />\n\t\t<meta name=\"twitter:description\" content=\"Find timely game recommendations, tips, and gaming news for iOS, iPadOS, and macOS. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.\" />\n\t\t<meta name=\"twitter:image\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<script type=\"application/ld+json\" class=\"aioseo-schema\">\n\t\t\t{\"@context\":\"https:\\/\\/schema.org\",\"@graph\":[{\"@type\":\"BreadcrumbList\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#breadcrumblist\",\"itemListElement\":[{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com#listItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https:\\/\\/dev.igeeksblog.com\",\"nextItem\":{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/category\\/games\\/#listItem\",\"name\":\"Games\"}},{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/category\\/games\\/#listItem\",\"position\":2,\"name\":\"Games\",\"previousItem\":{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com#listItem\",\"name\":\"Home\"}}]},{\"@type\":\"CollectionPage\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#collectionpage\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/\",\"name\":\"Games \\u2013 iGeeksBlog\",\"description\":\"Find timely game recommendations, tips, and gaming news for iOS, iPadOS, and macOS. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.\",\"inLanguage\":\"en-US\",\"isPartOf\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#website\"},\"breadcrumb\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#breadcrumblist\"}},{\"@type\":\"Organization\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#organization\",\"name\":\"iGeeksBlog\",\"description\":\"iGeeksBlog is your global go-to source for Apple, tech, and gaming. Get the latest news, reviews, and tips to stay ahead in the fast-paced tech world.\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/\",\"email\":\"info@igeeksblog.com\",\"telephone\":\"+917405186763\",\"foundingDate\":\"2012-10-03\",\"numberOfEmployees\":{\"@type\":\"QuantitativeValue\",\"minValue\":10,\"maxValue\":30},\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https:\\/\\/www.igeeksblog.com\\/wp-content\\/uploads\\/2024\\/02\\/iGeeksBlog-Logo-Retina.png\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#organizationLogo\"},\"image\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#organizationLogo\"},\"sameAs\":[\"https:\\/\\/facebook.com\\/iGeeksBlog\",\"https:\\/\\/x.com\\/iGeeksBlog\",\"https:\\/\\/instagram.com\\/iGeeksBlog\",\"https:\\/\\/pinterest.com\\/iGeeksBlog\",\"https:\\/\\/youtube.com\\/iGeeksBlog\",\"https:\\/\\/linkedin.com\\/in\\/iGeeksBlog\",\"https:\\/\\/threads.com\\/@iGeeksBlog\"]},{\"@type\":\"WebSite\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#website\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/\",\"name\":\"iGeeksBlog\",\"alternateName\":\"iGB\",\"description\":\"Your go-to source for Apple, tech, and gaming.\",\"inLanguage\":\"en-US\",\"publisher\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#organization\"}}]}\n\t\t</script>\n\t\t<script type=\"text/javascript\">\n\t\t\t(function(c,l,a,r,i,t,y){\n\t\t\tc[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;\n\t\t\tt.src=\"https://www.clarity.ms/tag/\"+i+\"?ref=aioseo\";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);\n\t\t})(window, document, \"clarity\", \"script\", \"lvbtm2kaet\");\n\t\t</script>\n\t\t<!-- All in One SEO Pro -->\r\n\t\t<title>Games – iGeeksBlog</title>\n\n",
+    "aioseo_head": "\n\t\t<!-- All in One SEO Pro 4.9.5.1 - aioseo.com -->\n\t<meta name=\"description\" content=\"Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.\" />\n\t<meta name=\"robots\" content=\"noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n\t<meta name=\"google-site-verification\" content=\"zX-wCWSDj3M4J1V8hXjlWzOZ_iNmmNcvQIJeXU-0GDs\" />\n\t<meta name=\"msvalidate.01\" content=\"E89AE73DFF5DE526B9CC11093B0864BA\" />\n\t<link rel=\"canonical\" href=\"https://dev.igeeksblog.com/category/games/\" />\n\t<meta name=\"generator\" content=\"All in One SEO Pro (AIOSEO) 4.9.5.1\" />\n\t\t<meta property=\"og:locale\" content=\"en_US\" />\n\t\t<meta property=\"og:site_name\" content=\"iGeeksBlog\" />\n\t\t<meta property=\"og:type\" content=\"article\" />\n\t\t<meta property=\"og:title\" content=\"Games – iGeeksBlog\" />\n\t\t<meta property=\"og:description\" content=\"Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.\" />\n\t\t<meta property=\"og:url\" content=\"https://dev.igeeksblog.com/category/games/\" />\n\t\t<meta property=\"og:image\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<meta property=\"og:image:secure_url\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<meta property=\"article:publisher\" content=\"https://facebook.com/iGeeksBlog\" />\n\t\t<meta name=\"twitter:card\" content=\"summary_large_image\" />\n\t\t<meta name=\"twitter:site\" content=\"@iGeeksBlog\" />\n\t\t<meta name=\"twitter:title\" content=\"Games – iGeeksBlog\" />\n\t\t<meta name=\"twitter:description\" content=\"Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.\" />\n\t\t<meta name=\"twitter:image\" content=\"https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg\" />\n\t\t<script type=\"application/ld+json\" class=\"aioseo-schema\">\n\t\t\t{\"@context\":\"https:\\/\\/schema.org\",\"@graph\":[{\"@type\":\"BreadcrumbList\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#breadcrumblist\",\"itemListElement\":[{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com#listItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https:\\/\\/dev.igeeksblog.com\",\"nextItem\":{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/category\\/games\\/#listItem\",\"name\":\"Games\"}},{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/category\\/games\\/#listItem\",\"position\":2,\"name\":\"Games\",\"previousItem\":{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com#listItem\",\"name\":\"Home\"}}]},{\"@type\":\"CollectionPage\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#collectionpage\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/\",\"name\":\"Games \\u2013 iGeeksBlog\",\"description\":\"Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.\",\"inLanguage\":\"en-US\",\"isPartOf\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#website\"},\"breadcrumb\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#breadcrumblist\"}},{\"@type\":\"Organization\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#organization\",\"name\":\"iGeeksBlog\",\"description\":\"iGeeksBlog is your global go-to source for Apple, tech, and gaming. Get the latest news, reviews, and tips to stay ahead in the fast-paced tech world.\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/\",\"email\":\"info@igeeksblog.com\",\"telephone\":\"+917405186763\",\"foundingDate\":\"2012-10-03\",\"numberOfEmployees\":{\"@type\":\"QuantitativeValue\",\"minValue\":10,\"maxValue\":30},\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https:\\/\\/www.igeeksblog.com\\/wp-content\\/uploads\\/2024\\/02\\/iGeeksBlog-Logo-Retina.png\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#organizationLogo\"},\"image\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#organizationLogo\"},\"sameAs\":[\"https:\\/\\/facebook.com\\/iGeeksBlog\",\"https:\\/\\/x.com\\/iGeeksBlog\",\"https:\\/\\/instagram.com\\/iGeeksBlog\",\"https:\\/\\/pinterest.com\\/iGeeksBlog\",\"https:\\/\\/youtube.com\\/iGeeksBlog\",\"https:\\/\\/linkedin.com\\/in\\/iGeeksBlog\",\"https:\\/\\/threads.com\\/@iGeeksBlog\"]},{\"@type\":\"WebSite\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#website\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/\",\"name\":\"iGeeksBlog\",\"alternateName\":\"iGB\",\"description\":\"Your go-to source for Apple, tech, and gaming.\",\"inLanguage\":\"en-US\",\"publisher\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#organization\"}}]}\n\t\t</script>\n\t\t<script type=\"text/javascript\">\n\t\t\t(function(c,l,a,r,i,t,y){\n\t\t\tc[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;\n\t\t\tt.src=\"https://www.clarity.ms/tag/\"+i+\"?ref=aioseo\";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);\n\t\t})(window, document, \"clarity\", \"script\", \"lvbtm2kaet\");\n\t\t</script>\n\t\t<!-- All in One SEO Pro -->\r\n\t\t<title>Games – iGeeksBlog</title>\n\n",
     "aioseo_head_json": {
       "title": "Games – iGeeksBlog",
-      "description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, and macOS. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.",
+      "description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.",
       "canonical_url": "https://dev.igeeksblog.com/category/games/",
       "robots": "noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
       "keywords": "",
@@ -1596,7 +1596,7 @@
             "@id": "https://dev.igeeksblog.com/wp-json/wp/v2/categories/#collectionpage",
             "url": "https://dev.igeeksblog.com/wp-json/wp/v2/categories/",
             "name": "Games – iGeeksBlog",
-            "description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, and macOS. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.",
+            "description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.",
             "inLanguage": "en-US",
             "isPartOf": {
               "@id": "https://dev.igeeksblog.com/#website"
@@ -1655,7 +1655,7 @@
       "og:site_name": "iGeeksBlog",
       "og:type": "article",
       "og:title": "Games – iGeeksBlog",
-      "og:description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, and macOS. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.",
+      "og:description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.",
       "og:url": "https://dev.igeeksblog.com/category/games/",
       "og:image": "https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg",
       "og:image:secure_url": "https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg",
@@ -1663,13 +1663,13 @@
       "twitter:card": "summary_large_image",
       "twitter:site": "@iGeeksBlog",
       "twitter:title": "Games – iGeeksBlog",
-      "twitter:description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, and macOS. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.",
+      "twitter:description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.",
       "twitter:image": "https://pro-igeeksblog-igeeksblog.jmwsyz.easypanel.host/wp-content/uploads/2022/08/iGeeksBlog.jpg"
     },
     "aioseo_meta_data": {
       "term_id": "1040",
       "title": null,
-      "description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, and macOS. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.",
+      "description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.",
       "keywords": null,
       "canonical_url": null,
       "og_title": null,
@@ -1707,10 +1707,10 @@
       "frequency": "default",
       "tabs": null,
       "local_seo": null,
-      "seo_analyzer_scan_date": "2026-02-20 09:56:01",
+      "seo_analyzer_scan_date": "2026-03-24 12:16:39",
       "breadcrumb_settings": null,
       "created": "2024-07-30 06:59:53",
-      "updated": "2026-02-20 09:56:01"
+      "updated": "2026-03-24 12:16:39"
     },
     "aioseo_breadcrumb": "<div class=\"aioseo-breadcrumbs\"><span class=\"aioseo-breadcrumb\">\n\t<a href=\"https://dev.igeeksblog.com\" title=\"Home\">Home</a>\n</span><span class=\"aioseo-breadcrumb-separator\">–</span><span class=\"aioseo-breadcrumb\">\n\tGames\n</span></div>",
     "aioseo_breadcrumb_json": [
@@ -2450,7 +2450,7 @@
   },
   {
     "id": 1028,
-    "count": 1528,
+    "count": 1509,
     "description": "Stay up to date with everything iPhone. From how-tos and tips to app picks and battery advice, this category helps you get the most out of your iPhone. \r\n",
     "link": "https://dev.igeeksblog.com/category/iphone/",
     "name": "iPhone",
@@ -3388,7 +3388,7 @@
   },
   {
     "id": 1709,
-    "count": 592,
+    "count": 594,
     "description": "Stay updated with the latest developments in tech and the Apple ecosystem. We bring you breaking news, launch announcements, industry trends, leaks, insights, and major updates from Apple and beyond. ",
     "link": "https://dev.igeeksblog.com/category/news/",
     "name": "News",
