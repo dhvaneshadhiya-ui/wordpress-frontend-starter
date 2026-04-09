@@ -1773,7 +1773,7 @@
   },
   {
     "id": 1040,
-    "count": 163,
+    "count": 164,
     "description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, this section highlights games worth your time.\r\n",
     "link": "https://dev.igeeksblog.com/category/games/",
     "name": "Games",
@@ -2915,7 +2915,7 @@
   },
   {
     "id": 1764,
-    "count": 134,
+    "count": 135,
     "description": "",
     "link": "https://dev.igeeksblog.com/category/wallpaper/iphone-wallpaper/",
     "name": "iPhone Wallpapers",
@@ -3638,7 +3638,7 @@
   },
   {
     "id": 1709,
-    "count": 627,
+    "count": 630,
     "description": "Stay updated with the latest developments in tech and the Apple ecosystem. We bring you breaking news, launch announcements, industry trends, leaks, insights, and major updates from Apple and beyond. ",
     "link": "https://dev.igeeksblog.com/category/news/",
     "name": "News",
@@ -4071,6 +4071,226 @@
       "wp:post_type": [
         {
           "href": "https://dev.igeeksblog.com/wp-json/wp/v2/posts?categories=1280"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 1851,
+    "count": 1,
+    "description": "",
+    "link": "https://dev.igeeksblog.com/category/windows/",
+    "name": "Windows",
+    "slug": "windows",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": [],
+    "aioseo_head": "\n\t\t<!-- All in One SEO Pro 4.9.5.2 - aioseo.com -->\n\t<meta name=\"robots\" content=\"noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n\t<meta name=\"google-site-verification\" content=\"zX-wCWSDj3M4J1V8hXjlWzOZ_iNmmNcvQIJeXU-0GDs\" />\n\t<meta name=\"msvalidate.01\" content=\"E89AE73DFF5DE526B9CC11093B0864BA\" />\n\t<link rel=\"canonical\" href=\"https://dev.igeeksblog.com/category/windows/\" />\n\t<meta name=\"generator\" content=\"All in One SEO Pro (AIOSEO) 4.9.5.2\" />\n\t\t<meta property=\"og:locale\" content=\"en_US\" />\n\t\t<meta property=\"og:site_name\" content=\"iGeeksBlog\" />\n\t\t<meta property=\"og:type\" content=\"article\" />\n\t\t<meta property=\"og:title\" content=\"Windows – iGeeksBlog\" />\n\t\t<meta property=\"og:url\" content=\"https://dev.igeeksblog.com/category/windows/\" />\n\t\t<meta property=\"og:image\" content=\"https://dev.igeeksblog.com/wp-content/uploads/2026/04/iGeeksBlog-Everything-Tech.jpg\" />\n\t\t<meta property=\"og:image:secure_url\" content=\"https://dev.igeeksblog.com/wp-content/uploads/2026/04/iGeeksBlog-Everything-Tech.jpg\" />\n\t\t<meta property=\"og:image:width\" content=\"1200\" />\n\t\t<meta property=\"og:image:height\" content=\"675\" />\n\t\t<meta property=\"article:publisher\" content=\"https://facebook.com/iGeeksBlog\" />\n\t\t<meta name=\"twitter:card\" content=\"summary_large_image\" />\n\t\t<meta name=\"twitter:site\" content=\"@iGeeksBlog\" />\n\t\t<meta name=\"twitter:title\" content=\"Windows – iGeeksBlog\" />\n\t\t<meta name=\"twitter:image\" content=\"https://dev.igeeksblog.com/wp-content/uploads/2026/04/iGeeksBlog-Everything-Tech.jpg\" />\n\t\t<script type=\"application/ld+json\" class=\"aioseo-schema\">\n\t\t\t{\"@context\":\"https:\\/\\/schema.org\",\"@graph\":[{\"@type\":\"BreadcrumbList\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#breadcrumblist\",\"itemListElement\":[{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com#listItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https:\\/\\/dev.igeeksblog.com\",\"nextItem\":{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/category\\/windows\\/#listItem\",\"name\":\"Windows\"}},{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/category\\/windows\\/#listItem\",\"position\":2,\"name\":\"Windows\",\"previousItem\":{\"@type\":\"ListItem\",\"@id\":\"https:\\/\\/dev.igeeksblog.com#listItem\",\"name\":\"Home\"}}]},{\"@type\":\"CollectionPage\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#collectionpage\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/\",\"name\":\"Windows \\u2013 iGeeksBlog\",\"inLanguage\":\"en-US\",\"isPartOf\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#website\"},\"breadcrumb\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#breadcrumblist\"}},{\"@type\":\"Organization\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#organization\",\"name\":\"iGeeksBlog\",\"description\":\"iGeeksBlog is your global go-to source for Apple, tech, and gaming. Get the latest news, reviews, and tips to stay ahead in the fast-paced tech world.\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/\",\"email\":\"info@igeeksblog.com\",\"telephone\":\"+917405186763\",\"foundingDate\":\"2012-10-03\",\"numberOfEmployees\":{\"@type\":\"QuantitativeValue\",\"minValue\":10,\"maxValue\":30},\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https:\\/\\/www.igeeksblog.com\\/wp-content\\/uploads\\/2024\\/02\\/iGeeksBlog-Logo-Retina.png\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#organizationLogo\"},\"image\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/wp-json\\/wp\\/v2\\/categories\\/#organizationLogo\"},\"sameAs\":[\"https:\\/\\/facebook.com\\/iGeeksBlog\",\"https:\\/\\/x.com\\/iGeeksBlog\",\"https:\\/\\/instagram.com\\/iGeeksBlog\",\"https:\\/\\/pinterest.com\\/iGeeksBlog\",\"https:\\/\\/youtube.com\\/iGeeksBlog\",\"https:\\/\\/linkedin.com\\/in\\/iGeeksBlog\",\"https:\\/\\/threads.com\\/@iGeeksBlog\"]},{\"@type\":\"WebSite\",\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#website\",\"url\":\"https:\\/\\/dev.igeeksblog.com\\/\",\"name\":\"iGeeksBlog\",\"alternateName\":\"iGB\",\"description\":\"Your go-to source for Apple, tech, and gaming.\",\"inLanguage\":\"en-US\",\"publisher\":{\"@id\":\"https:\\/\\/dev.igeeksblog.com\\/#organization\"}}]}\n\t\t</script>\n\t\t<script type=\"text/javascript\">\n\t\t\t(function(c,l,a,r,i,t,y){\n\t\t\tc[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;\n\t\t\tt.src=\"https://www.clarity.ms/tag/\"+i+\"?ref=aioseo\";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);\n\t\t})(window, document, \"clarity\", \"script\", \"lvbtm2kaet\");\n\t\t</script>\n\t\t<!-- All in One SEO Pro -->\r\n\t\t<title>Windows – iGeeksBlog</title>\n\n",
+    "aioseo_head_json": {
+      "title": "Windows – iGeeksBlog",
+      "description": "",
+      "canonical_url": "https://dev.igeeksblog.com/category/windows/",
+      "robots": "noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
+      "keywords": "",
+      "webmasterTools": {
+        "google-site-verification": "zX-wCWSDj3M4J1V8hXjlWzOZ_iNmmNcvQIJeXU-0GDs",
+        "msvalidate.01": "E89AE73DFF5DE526B9CC11093B0864BA",
+        "miscellaneous": ""
+      },
+      "schema": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://dev.igeeksblog.com/wp-json/wp/v2/categories/#breadcrumblist",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "@id": "https://dev.igeeksblog.com#listItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://dev.igeeksblog.com",
+                "nextItem": {
+                  "@type": "ListItem",
+                  "@id": "https://dev.igeeksblog.com/category/windows/#listItem",
+                  "name": "Windows"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "@id": "https://dev.igeeksblog.com/category/windows/#listItem",
+                "position": 2,
+                "name": "Windows",
+                "previousItem": {
+                  "@type": "ListItem",
+                  "@id": "https://dev.igeeksblog.com#listItem",
+                  "name": "Home"
+                }
+              }
+            ]
+          },
+          {
+            "@type": "CollectionPage",
+            "@id": "https://dev.igeeksblog.com/wp-json/wp/v2/categories/#collectionpage",
+            "url": "https://dev.igeeksblog.com/wp-json/wp/v2/categories/",
+            "name": "Windows – iGeeksBlog",
+            "inLanguage": "en-US",
+            "isPartOf": {
+              "@id": "https://dev.igeeksblog.com/#website"
+            },
+            "breadcrumb": {
+              "@id": "https://dev.igeeksblog.com/wp-json/wp/v2/categories/#breadcrumblist"
+            }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://dev.igeeksblog.com/#organization",
+            "name": "iGeeksBlog",
+            "description": "iGeeksBlog is your global go-to source for Apple, tech, and gaming. Get the latest news, reviews, and tips to stay ahead in the fast-paced tech world.",
+            "url": "https://dev.igeeksblog.com/",
+            "email": "info@igeeksblog.com",
+            "telephone": "+917405186763",
+            "foundingDate": "2012-10-03",
+            "numberOfEmployees": {
+              "@type": "QuantitativeValue",
+              "minValue": 10,
+              "maxValue": 30
+            },
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.igeeksblog.com/wp-content/uploads/2024/02/iGeeksBlog-Logo-Retina.png",
+              "@id": "https://dev.igeeksblog.com/wp-json/wp/v2/categories/#organizationLogo"
+            },
+            "image": {
+              "@id": "https://dev.igeeksblog.com/wp-json/wp/v2/categories/#organizationLogo"
+            },
+            "sameAs": [
+              "https://facebook.com/iGeeksBlog",
+              "https://x.com/iGeeksBlog",
+              "https://instagram.com/iGeeksBlog",
+              "https://pinterest.com/iGeeksBlog",
+              "https://youtube.com/iGeeksBlog",
+              "https://linkedin.com/in/iGeeksBlog",
+              "https://threads.com/@iGeeksBlog"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://dev.igeeksblog.com/#website",
+            "url": "https://dev.igeeksblog.com/",
+            "name": "iGeeksBlog",
+            "alternateName": "iGB",
+            "description": "Your go-to source for Apple, tech, and gaming.",
+            "inLanguage": "en-US",
+            "publisher": {
+              "@id": "https://dev.igeeksblog.com/#organization"
+            }
+          }
+        ]
+      },
+      "og:locale": "en_US",
+      "og:site_name": "iGeeksBlog",
+      "og:type": "article",
+      "og:title": "Windows – iGeeksBlog",
+      "og:url": "https://dev.igeeksblog.com/category/windows/",
+      "og:image": "https://dev.igeeksblog.com/wp-content/uploads/2026/04/iGeeksBlog-Everything-Tech.jpg",
+      "og:image:secure_url": "https://dev.igeeksblog.com/wp-content/uploads/2026/04/iGeeksBlog-Everything-Tech.jpg",
+      "og:image:width": 1200,
+      "og:image:height": 675,
+      "article:publisher": "https://facebook.com/iGeeksBlog",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@iGeeksBlog",
+      "twitter:title": "Windows – iGeeksBlog",
+      "twitter:image": "https://dev.igeeksblog.com/wp-content/uploads/2026/04/iGeeksBlog-Everything-Tech.jpg"
+    },
+    "aioseo_meta_data": {
+      "term_id": "1851",
+      "title": null,
+      "description": null,
+      "keywords": null,
+      "canonical_url": null,
+      "og_title": null,
+      "og_description": null,
+      "og_object_type": "default",
+      "og_image_type": "default",
+      "og_image_custom_url": null,
+      "og_image_custom_fields": null,
+      "og_custom_image_width": null,
+      "og_custom_image_height": null,
+      "og_video": null,
+      "og_custom_url": null,
+      "og_article_section": null,
+      "og_article_tags": null,
+      "twitter_use_og": false,
+      "twitter_card": "default",
+      "twitter_image_type": "default",
+      "twitter_image_custom_url": null,
+      "twitter_image_custom_fields": null,
+      "twitter_title": null,
+      "twitter_description": null,
+      "pillar_content": null,
+      "robots_default": true,
+      "robots_noindex": false,
+      "robots_noarchive": false,
+      "robots_nosnippet": false,
+      "robots_nofollow": false,
+      "robots_noimageindex": false,
+      "robots_noodp": false,
+      "robots_notranslate": false,
+      "robots_max_snippet": null,
+      "robots_max_videopreview": null,
+      "robots_max_imagepreview": "large",
+      "priority": null,
+      "frequency": "default",
+      "tabs": null,
+      "local_seo": null,
+      "seo_analyzer_scan_date": "2026-04-08 10:59:33",
+      "breadcrumb_settings": null,
+      "created": "2026-04-08 09:34:25",
+      "updated": "2026-04-08 10:59:33"
+    },
+    "aioseo_breadcrumb": "<div class=\"aioseo-breadcrumbs\"><span class=\"aioseo-breadcrumb\">\n\t<a href=\"https://dev.igeeksblog.com\" title=\"Home\">Home</a>\n</span><span class=\"aioseo-breadcrumb-separator\">–</span><span class=\"aioseo-breadcrumb\">\n\tWindows\n</span></div>",
+    "aioseo_breadcrumb_json": [
+      {
+        "label": "Home",
+        "link": "https://dev.igeeksblog.com"
+      },
+      {
+        "label": "Windows",
+        "link": "https://dev.igeeksblog.com/category/windows/"
+      }
+    ],
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/categories/1851",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/categories"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/taxonomies/category"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/posts?categories=1851"
         }
       ],
       "curies": [
