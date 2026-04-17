@@ -12212,10 +12212,10 @@
       "frequency": "default",
       "tabs": null,
       "local_seo": null,
-      "seo_analyzer_scan_date": null,
+      "seo_analyzer_scan_date": "2026-04-16 15:55:33",
       "breadcrumb_settings": null,
       "created": "2026-04-16 06:34:31",
-      "updated": "2026-04-16 06:34:31"
+      "updated": "2026-04-16 15:55:33"
     },
     "aioseo_breadcrumb": "<div class=\"aioseo-breadcrumbs\"><span class=\"aioseo-breadcrumb\">\n\t<a href=\"https://dev.igeeksblog.com\" title=\"Home\">Home</a>\n</span><span class=\"aioseo-breadcrumb-separator\">–</span><span class=\"aioseo-breadcrumb\">\n\tGames Codes\n</span></div>",
     "aioseo_breadcrumb_json": [
