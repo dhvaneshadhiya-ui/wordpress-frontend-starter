@@ -1953,6 +1953,74 @@
     }
   },
   {
+    "id": 3226,
+    "name": "Priye Rai",
+    "url": "",
+    "description": "",
+    "link": "https://dev.igeeksblog.com/author/priye-rai/",
+    "slug": "priye-rai",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/63d9382c05c09e2a8bebcdf4f61bd9fc",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/63d9382c05c09e2a8bebcdf4f61bd9fc",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/63d9382c05c09e2a8bebcdf4f61bd9fc"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "Game Journalist",
+      "employer": "iGeeks Media Private Ltd.",
+      "knows_about": "[{\"label\":\"Gaming\",\"value\":\"Gaming\"}]",
+      "author_excerpt": "#author_bio",
+      "author_bio": "<p>Priye brings with him a deeply entrenched love for video games, alongside an experience of producing write-ups and videos for popular Indian and overseas publications. Having seen gaming grow tremendously over the years, he believes video games are the most comprehensive form of entertainment and considers them to be art. On the odd days when he’s not slaying a boss or obsessively hunting for collectibles in his virtual worlds, he may be found watching football or superhero flicks.</p>",
+      "alumni_of": [
+        {
+          "name": "",
+          "url": ""
+        }
+      ],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "https://x.com/pj1tcp/",
+        "facebookUrl": "",
+        "linkedinUrl": "https://www.linkedin.com/in/priye-rai/",
+        "instagramUrl": "https://www.instagram.com/pj1tcp/",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/3226",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
     "id": 108,
     "name": "Rachel Ann Tee-Melegrito",
     "url": "",
@@ -2531,7 +2599,7 @@
   },
   {
     "id": 2906,
-    "name": "sponsored post",
+    "name": "Sponsored Post",
     "url": "",
     "description": "A sponsored post is a paid advertisement that promotes a brand or product.",
     "link": "https://dev.igeeksblog.com/author/sponsoredpost/",
