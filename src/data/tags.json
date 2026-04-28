@@ -29951,10 +29951,10 @@
       "frequency": "default",
       "tabs": null,
       "local_seo": null,
-      "seo_analyzer_scan_date": null,
+      "seo_analyzer_scan_date": "2026-04-27 20:53:36",
       "breadcrumb_settings": null,
       "created": "2026-04-27 06:39:23",
-      "updated": "2026-04-27 06:39:23"
+      "updated": "2026-04-27 20:53:36"
     },
     "aioseo_breadcrumb": "<div class=\"aioseo-breadcrumbs\"><span class=\"aioseo-breadcrumb\">\n\t<a href=\"https://dev.igeeksblog.com\" title=\"Home\">Home</a>\n</span><span class=\"aioseo-breadcrumb-separator\">–</span><span class=\"aioseo-breadcrumb\">\n\tiPhone 18\n</span></div>",
     "aioseo_breadcrumb_json": [
@@ -38764,7 +38764,7 @@
   },
   {
     "id": 1773,
-    "count": 15,
+    "count": 16,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/nature-wallpapers/",
     "name": "Nature Wallpapers",
@@ -45553,7 +45553,7 @@
   },
   {
     "id": 1061,
-    "count": 98,
+    "count": 99,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/whatsapp/",
     "name": "WhatsApp",
