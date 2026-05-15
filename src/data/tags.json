@@ -2848,7 +2848,7 @@
   },
   {
     "id": 1060,
-    "count": 60,
+    "count": 61,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/android/",
     "name": "Android",
@@ -11993,10 +11993,10 @@
       "frequency": "default",
       "tabs": null,
       "local_seo": null,
-      "seo_analyzer_scan_date": null,
+      "seo_analyzer_scan_date": "2026-05-14 09:08:42",
       "breadcrumb_settings": null,
       "created": "2026-05-14 05:56:44",
-      "updated": "2026-05-14 05:56:44"
+      "updated": "2026-05-14 09:08:42"
     },
     "aioseo_breadcrumb": "<div class=\"aioseo-breadcrumbs\"><span class=\"aioseo-breadcrumb\">\n\t<a href=\"https://dev.igeeksblog.com\" title=\"Home\">Home</a>\n</span><span class=\"aioseo-breadcrumb-separator\">–</span><span class=\"aioseo-breadcrumb\">\n\tfortn\n</span></div>",
     "aioseo_breadcrumb_json": [
@@ -12046,7 +12046,7 @@
   },
   {
     "id": 1857,
-    "count": 9,
+    "count": 10,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/fortnite/",
     "name": "Fortnite",
@@ -40954,7 +40954,7 @@
   },
   {
     "id": 1722,
-    "count": 116,
+    "count": 117,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/roblox/",
     "name": "Roblox",
@@ -43801,7 +43801,7 @@
   },
   {
     "id": 1373,
-    "count": 4,
+    "count": 5,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/telegram/",
     "name": "Telegram",
