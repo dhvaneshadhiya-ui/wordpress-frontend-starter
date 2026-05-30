@@ -12431,10 +12431,10 @@
       "frequency": "default",
       "tabs": null,
       "local_seo": null,
-      "seo_analyzer_scan_date": null,
+      "seo_analyzer_scan_date": "2026-05-29 16:34:56",
       "breadcrumb_settings": null,
       "created": "2026-05-29 07:36:41",
-      "updated": "2026-05-29 07:36:41"
+      "updated": "2026-05-29 16:34:56"
     },
     "aioseo_breadcrumb": "<div class=\"aioseo-breadcrumbs\"><span class=\"aioseo-breadcrumb\">\n\t<a href=\"https://dev.igeeksblog.com\" title=\"Home\">Home</a>\n</span><span class=\"aioseo-breadcrumb-separator\">–</span><span class=\"aioseo-breadcrumb\">\n\tGalaxy S26 Ultra\n</span></div>",
     "aioseo_breadcrumb_json": [
@@ -13745,10 +13745,10 @@
       "frequency": "default",
       "tabs": null,
       "local_seo": null,
-      "seo_analyzer_scan_date": null,
+      "seo_analyzer_scan_date": "2026-05-29 16:34:57",
       "breadcrumb_settings": null,
       "created": "2026-05-29 04:30:24",
-      "updated": "2026-05-29 04:30:25"
+      "updated": "2026-05-29 16:34:57"
     },
     "aioseo_breadcrumb": "<div class=\"aioseo-breadcrumbs\"><span class=\"aioseo-breadcrumb\">\n\t<a href=\"https://dev.igeeksblog.com\" title=\"Home\">Home</a>\n</span><span class=\"aioseo-breadcrumb-separator\">–</span><span class=\"aioseo-breadcrumb\">\n\tGTA 6\n</span></div>",
     "aioseo_breadcrumb_json": [
@@ -41392,7 +41392,7 @@
   },
   {
     "id": 1722,
-    "count": 125,
+    "count": 126,
     "description": "",
     "link": "https://dev.igeeksblog.com/tag/roblox/",
     "name": "Roblox",
