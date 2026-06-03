@@ -1,16 +1,14 @@
 {
   "version": 2,
-  "generatedAt": "2026-06-02T10:48:27.673Z",
+  "generatedAt": "2026-06-03T11:11:45.946Z",
   "contentHashes": {
     "posts": {},
     "categories": {},
     "tags": {},
     "authors": {}
   },
-  "changedRoutes": [
-    "/"
-  ],
-  "changedCount": 1,
+  "changedRoutes": [],
+  "changedCount": 0,
   "totalPosts": 0,
   "totalCategories": 0,
   "totalTags": 0,
