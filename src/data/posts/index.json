@@ -23,118 +23,118 @@
     "chunk-20.json",
     "chunk-21.json"
   ],
-  "totalPosts": 4372,
+  "totalPosts": 4378,
   "postsPerChunk": 200,
   "chunkDetails": [
     {
       "filename": "chunk-0.json",
       "postCount": 200,
-      "sizeMB": 17.49
+      "sizeMB": 17.25
     },
     {
       "filename": "chunk-1.json",
       "postCount": 200,
-      "sizeMB": 18.26
+      "sizeMB": 19.08
     },
     {
       "filename": "chunk-2.json",
       "postCount": 200,
-      "sizeMB": 18.77
+      "sizeMB": 18.3
     },
     {
       "filename": "chunk-3.json",
       "postCount": 200,
-      "sizeMB": 24.89
+      "sizeMB": 24.29
     },
     {
       "filename": "chunk-4.json",
       "postCount": 200,
-      "sizeMB": 23.1
+      "sizeMB": 23.3
     },
     {
       "filename": "chunk-5.json",
       "postCount": 200,
-      "sizeMB": 21.99
+      "sizeMB": 22.51
     },
     {
       "filename": "chunk-6.json",
       "postCount": 200,
-      "sizeMB": 27.86
+      "sizeMB": 28.11
     },
     {
       "filename": "chunk-7.json",
       "postCount": 200,
-      "sizeMB": 24.4
+      "sizeMB": 24.16
     },
     {
       "filename": "chunk-8.json",
       "postCount": 200,
-      "sizeMB": 27.94
+      "sizeMB": 28.06
     },
     {
       "filename": "chunk-9.json",
       "postCount": 200,
-      "sizeMB": 24.2
+      "sizeMB": 25.47
     },
     {
       "filename": "chunk-10.json",
       "postCount": 200,
-      "sizeMB": 22.39
+      "sizeMB": 22.33
     },
     {
       "filename": "chunk-11.json",
       "postCount": 200,
-      "sizeMB": 25.64
+      "sizeMB": 25.22
     },
     {
       "filename": "chunk-12.json",
       "postCount": 200,
-      "sizeMB": 24.71
+      "sizeMB": 24.49
     },
     {
       "filename": "chunk-13.json",
       "postCount": 200,
-      "sizeMB": 23.84
+      "sizeMB": 24.07
     },
     {
       "filename": "chunk-14.json",
       "postCount": 200,
-      "sizeMB": 23.87
+      "sizeMB": 24.01
     },
     {
       "filename": "chunk-15.json",
       "postCount": 200,
-      "sizeMB": 21.92
+      "sizeMB": 22.16
     },
     {
       "filename": "chunk-16.json",
       "postCount": 200,
-      "sizeMB": 23.48
+      "sizeMB": 23.34
     },
     {
       "filename": "chunk-17.json",
       "postCount": 200,
-      "sizeMB": 23.62
+      "sizeMB": 23.68
     },
     {
       "filename": "chunk-18.json",
       "postCount": 200,
-      "sizeMB": 21.99
+      "sizeMB": 21.76
     },
     {
       "filename": "chunk-19.json",
       "postCount": 200,
-      "sizeMB": 19.64
+      "sizeMB": 19.78
     },
     {
       "filename": "chunk-20.json",
       "postCount": 200,
-      "sizeMB": 18.28
+      "sizeMB": 18.17
     },
     {
       "filename": "chunk-21.json",
-      "postCount": 172,
-      "sizeMB": 15.54
+      "postCount": 178,
+      "sizeMB": 16.14
     }
   ]
 }
