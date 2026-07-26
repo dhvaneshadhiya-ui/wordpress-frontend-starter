@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generatedAt": "2026-07-25T08:27:29.354Z",
+  "generatedAt": "2026-07-26T08:45:45.214Z",
   "contentHashes": {
     "posts": {
       "samsung-galaxy-z-fold8-vs-pixel-10-pro-fold": "443ec78aa80e",
@@ -25,7 +25,7 @@
       "apple-upgrade-leasing-program-klarna": "0b9941d82697",
       "instagram-restrict-vs-block": "df62d24c2434",
       "claude-code-now-supports-apples-ios-simulator-on-mac": "47a7774b6231",
-      "paid-iphone-apps-gone-free": "25f05b3faaae",
+      "paid-iphone-apps-gone-free": "a2199853032d",
       "chatgpt-plus-vs-claude-pro": "7af726d044dc",
       "see-mutual-friends-on-snapchat": "70efe1f12d0f",
       "how-to-install-macos-golden-gate-27-beta": "825cec4ef0c8",
@@ -4851,31 +4851,12 @@
     }
   },
   "changedRoutes": [
-    "/samsung-galaxy-z-fold8-vs-pixel-10-pro-fold",
-    "/category/editorial",
-    "/author/ava",
-    "/gojo-satoru-wallpapers-for-iphone",
-    "/category/iphone-wallpaper",
-    "/category/wallpaper",
-    "/tag/anime-wallpapers",
     "/paid-iphone-apps-gone-free",
     "/category/apps",
     "/tag/iphone-apps",
-    "/author/dhvanesh",
-    "/snap-specs-ai-powered-ar-glasses",
-    "/category/news",
-    "/author/vikhyat",
-    "/fortnite-sprites-types-variants-explained",
-    "/category/games",
-    "/tag/fortnite",
-    "/author/priye-rai",
-    "/how-to-use-custom-email-domains-with-icloud-mail",
-    "/category/how-to",
-    "/tag/icloud",
-    "/author/arshmeet",
-    "/"
+    "/author/dhvanesh"
   ],
-  "changedCount": 23,
+  "changedCount": 4,
   "totalPosts": 4551,
   "totalCategories": 19,
   "totalTags": 221,
