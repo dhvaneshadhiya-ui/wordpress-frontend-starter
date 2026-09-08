@@ -809,6 +809,69 @@
     }
   },
   {
+    "id": 3228,
+    "name": "Dhruv Bhatnagar",
+    "url": "",
+    "description": "",
+    "link": "https://dev.igeeksblog.com/author/dhruv-bhatnagar/",
+    "slug": "dhruv-bhatnagar",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/14633c681577619a3beec8a46ad484ae5f7cd857d84976e2b031a35055ab2307",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/14633c681577619a3beec8a46ad484ae5f7cd857d84976e2b031a35055ab2307",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/14633c681577619a3beec8a46ad484ae5f7cd857d84976e2b031a35055ab2307"
+    },
+    "meta": {
+      "web_stories_tracking_optin": false,
+      "web_stories_media_optimization": true,
+      "web_stories_onboarding": []
+    },
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/3228",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
     "id": 49,
     "name": "Dhvanesh Adhiya",
     "url": "",
