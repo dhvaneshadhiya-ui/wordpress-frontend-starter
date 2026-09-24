@@ -1564,65 +1564,6 @@
     }
   },
   {
-    "id": 99,
-    "name": "Mikhil George",
-    "url": "",
-    "description": "A content creator and tech-enthusiast, there’s nothing that can stop me from delving into the latest tech-innovations. I love exploring the world of tech, and for that matter anything that arouses the ‘Wow’ factor within me.  Apart from all this tech-thingy, I’m a musician, singer, pianist and sport enthusiast. You can find me on YouTube, and Instagram.",
-    "link": "https://dev.igeeksblog.com/author/mikhilgeorge/",
-    "slug": "mikhilgeorge",
-    "avatar_urls": {
-      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/1fe41874c9fce894b92fb29bbac12efb69bdc8fe540b7df744b90040a551e4ce",
-      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/1fe41874c9fce894b92fb29bbac12efb69bdc8fe540b7df744b90040a551e4ce",
-      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/1fe41874c9fce894b92fb29bbac12efb69bdc8fe540b7df744b90040a551e4ce"
-    },
-    "meta": [],
-    "aioseo_head_json": {
-      "job_title": "",
-      "employer": "",
-      "knows_about": [],
-      "author_excerpt": "",
-      "author_bio": "",
-      "alumni_of": [],
-      "awards": [],
-      "spoken_languages": [],
-      "author_image": "",
-      "author_bio_url": "",
-      "social_profiles": {
-        "twitterUrl": "",
-        "facebookUrl": "",
-        "linkedinUrl": "",
-        "instagramUrl": "",
-        "youtubeUrl": "",
-        "pinterestUrl": "",
-        "tiktokUrl": "",
-        "blueskyUrl": "",
-        "threadsUrl": "",
-        "tumblrUrl": "",
-        "soundCloudUrl": "",
-        "wikipediaUrl": "",
-        "myspaceUrl": "",
-        "wordpressUrl": ""
-      }
-    },
-    "_links": {
-      "self": [
-        {
-          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/99",
-          "targetHints": {
-            "allow": [
-              "GET"
-            ]
-          }
-        }
-      ],
-      "collection": [
-        {
-          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
-        }
-      ]
-    }
-  },
-  {
     "id": 90,
     "name": "Nidhi Bohra",
     "url": "",
