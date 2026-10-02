@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    {
+      "name": "agricidaniel-claude-seo",
+      "source": "https://github.com/AgricIDaniel/claude-seo",
+      "version": "2.2.0"
+    }
+  ]
+}
