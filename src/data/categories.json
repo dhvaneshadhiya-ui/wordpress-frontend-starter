@@ -1,7 +1,7 @@
 [
   {
     "id": 1034,
-    "count": 364,
+    "count": 362,
     "description": "Explore curated guides and reviews on must-have accessories for your devices. Find picks for iPhone, iPad, Mac, Apple Watch, Google Pixel and more, with practical advice to help you choose the right accessories to enhance your tech experience. ",
     "link": "https://dev.igeeksblog.com/category/accessories/",
     "name": "Accessories",
@@ -229,7 +229,7 @@
   },
   {
     "id": 1215,
-    "count": 45,
+    "count": 46,
     "description": "Explore the latest AirPods tips, guides, troubleshooting, features, and news. Learn how to get the most out of your Apple AirPods and AirPods Pro.",
     "link": "https://dev.igeeksblog.com/category/airpods/",
     "name": "AirPods",
@@ -1822,7 +1822,7 @@
   },
   {
     "id": 1040,
-    "count": 423,
+    "count": 425,
     "description": "Find timely game recommendations, tips, and gaming news for iOS, iPadOS, macOS, and Android. From casual favorites to immersive hits like Roblox, Fortnite this section highlights games worth your time.",
     "link": "https://dev.igeeksblog.com/category/games/",
     "name": "Games",
@@ -2050,7 +2050,7 @@
   },
   {
     "id": 1026,
-    "count": 2296,
+    "count": 2295,
     "description": "Explore step-by-step how-to guides for iPhone, iPad, Mac, Apple Watch, and more. Learn tips, tricks, and solutions to get the most from your Apple devices.",
     "link": "https://dev.igeeksblog.com/category/how-to/",
     "name": "How-to",
@@ -2761,7 +2761,7 @@
   },
   {
     "id": 1028,
-    "count": 1534,
+    "count": 1533,
     "description": "Stay up to date with everything iPhone. From how-tos and tips to app picks and battery advice, this category helps you get the most out of your iPhone. \r\n",
     "link": "https://dev.igeeksblog.com/category/iphone/",
     "name": "iPhone",
@@ -3244,7 +3244,7 @@
   },
   {
     "id": 1045,
-    "count": 643,
+    "count": 642,
     "description": "Everything Mac in one place. Get expert tips, tricks, how-tos, troubleshooting guides, and insights tailored for macOS users. Whether you’re a beginner or a pro, we help you master your Mac. \r\n",
     "link": "https://dev.igeeksblog.com/category/mac/",
     "name": "Mac",
@@ -3657,13 +3657,13 @@
       "frequency": "default",
       "tabs": null,
       "local_seo": null,
-      "seo_analyzer_scan_date": "2026-06-01 17:49:30",
+      "seo_analyzer_scan_date": "2026-10-12 10:23:29",
       "focus_keyword": null,
       "additional_keywords": null,
       "truseo_locale": null,
       "breadcrumb_settings": null,
       "created": "2025-07-02 09:05:27",
-      "updated": "2026-06-01 17:49:30",
+      "updated": "2026-10-12 10:23:29",
       "og_image_url": null,
       "og_image_width": null,
       "og_image_height": null,
@@ -3727,7 +3727,7 @@
   },
   {
     "id": 1709,
-    "count": 1020,
+    "count": 1024,
     "description": "Stay updated with the latest developments in tech and the Apple ecosystem. We bring you breaking news, launch announcements, industry trends, leaks, insights, and major updates from Apple and beyond. ",
     "link": "https://dev.igeeksblog.com/category/news/",
     "name": "News",
