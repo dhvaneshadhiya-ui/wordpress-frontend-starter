@@ -693,6 +693,60 @@
     }
   },
   {
+    "id": 3227,
+    "name": "Claude Profile",
+    "url": "",
+    "description": "",
+    "link": "https://dev.igeeksblog.com/author/claude/",
+    "slug": "claude",
+    "avatar_urls": {
+      "24": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/8182842fbdf6983ea8183557b27fe39b90ccfc3a54d29745d67804f2739ff608",
+      "48": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/8182842fbdf6983ea8183557b27fe39b90ccfc3a54d29745d67804f2739ff608",
+      "96": "https://dev.igeeksblog.com/wp-content/uploads/gravatars/8182842fbdf6983ea8183557b27fe39b90ccfc3a54d29745d67804f2739ff608"
+    },
+    "meta": [],
+    "aioseo_head_json": {
+      "job_title": "",
+      "employer": "",
+      "knows_about": [],
+      "author_excerpt": "",
+      "author_bio": "",
+      "alumni_of": [],
+      "awards": [],
+      "spoken_languages": [],
+      "author_image": "",
+      "author_bio_url": "",
+      "social_profiles": {
+        "twitterUrl": "",
+        "facebookUrl": "",
+        "linkedinUrl": "",
+        "instagramUrl": "",
+        "youtubeUrl": "",
+        "pinterestUrl": "",
+        "tiktokUrl": "",
+        "blueskyUrl": "",
+        "threadsUrl": "",
+        "tumblrUrl": "",
+        "soundCloudUrl": "",
+        "wikipediaUrl": "",
+        "myspaceUrl": "",
+        "wordpressUrl": ""
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users/3227"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://dev.igeeksblog.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  },
+  {
     "id": 105,
     "name": "Darryl Dsouza",
     "url": "",
